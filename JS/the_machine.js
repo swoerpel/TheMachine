@@ -24,9 +24,14 @@ class Machine {
         // console.log(this.palettes)
     }
 
-    Initialize(key){
+    Initialize(key, mask_mode = false){
+        this.mask_mode = mask_mode
         this.static_params = config[key]
-        this.static_params.png_path = '../images//' + key + '//';
+        let path_params = key.split('_')
+        if(mask_mode)
+            this.static_params.png_path = '../images//' + path_params[0] + '_M//';
+        else
+            this.static_params.png_path = '../images//' + key + '//';
         this.estimateGenerationTime();
         return this.total_batch_time;
 
@@ -48,21 +53,21 @@ class Machine {
     Generate(){
         // will be loop once timing is  figured out
         let image_count = 0;
-        let start = now();
         let interval = setInterval(()=>{
             console.log('image_count', image_count)
             if(image_count >= this.palette_names.length){
                 clearInterval(interval);
             }
             let params = new Object(this.static_params)
-            // params.image_id = "#000000".replace(/0/g,function(){return (~~(Math.random()*16)).toString(16);});
             params.palette = this.palette_names[image_count]
             params.image_id = params.palette
+            if(this.mask_mode){
+                params.palette = 'binary'
+                params.image_id = image_count.toString();
+            }
             this.generate_image(params);
             image_count++;
         },this.interval_step)
-        let end = now();
-        console.log('total time taken to generate ', this.palette_names.length, ' images ->',(end-start).toFixed(3))
     }
 
 
