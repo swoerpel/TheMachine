@@ -1,0 +1,9 @@
+{
+  "composite_A": {
+    "groups": {
+      "top": "triangle_A",
+      "bottom": "triangle_A",
+      "mask": "circle_A"
+    }
+  }
+}

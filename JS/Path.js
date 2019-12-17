@@ -88,7 +88,7 @@ class Path {
             new_grid.push(row)
         }
         // grid = grid.map((row, index) => { return (index % 2 == 0 ? row.reverse() : row) })
-        console.log('color path grid', new_grid)
+        // console.log('color path grid', new_grid)
         return new_grid;
     }
 
@@ -96,8 +96,8 @@ class Path {
         let grid = this.default();
         let new_grid = []
         for (let i = 0; i < grid.length; i++) {
-            console.log('row', i, grid[i])
-            console.log('rev', i, grid[i].reverse())
+            // console.log('row', i, grid[i])
+            // console.log('rev', i, grid[i].reverse())
             if (i % 2 == 0) {
                 new_grid.push(grid[i].reverse())
             }
@@ -106,7 +106,7 @@ class Path {
             }
         }
         // grid = grid.map((row, index) => { return (index % 2 == 0 ? row.reverse() : row) })
-        console.log('color path grid', new_grid)
+        // console.log('color path grid', new_grid)
         return new_grid;
     }
 
