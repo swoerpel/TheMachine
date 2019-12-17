@@ -1,5 +1,5 @@
 import sys
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter, ImageOps    
 from os import listdir
 from os.path import isfile, join
 import random
@@ -20,18 +20,56 @@ class Manipulator:
         self.params['composite_group_path'] = '../images/' + self.path_params[0] + '/group_' + self.path_params[1] + '/'
 
 
-    def Generate()
+    def Generate(self):
         self.composite_images = []
-        for i in range(1):
+        for i in range(4):
             composite_image_name = str(i + 1) #round(random.random() * 1000000)
             composite_image = self.generate_composite(composite_image_name)
             self.composite_images.append(composite_image)
             
-        print('Saving Composite Image...',self.params['composite_group_path']+'chez.png')
-        self.composite_images[0].save(self.params['composite_group_path']+'chez.png')
+        # print('Saving Composite Image...',self.params['composite_group_path']+'chez.png')
+        # self.composite_images[0].save(self.params['composite_group_path']+'chez.png')
 
+        # combined_images = []
+        # for i in range(4):
+        #     im = Image.alpha_composite(self.composite_images[i],self.composite_images[(i + 1) % 4])
+        #     combined_images.append(im)
+
+        im_width = self.composite_images[0].size[0]
+        im_height = self.composite_images[0].size[1]
+        composite_group_width = im_width * 2
+        composite_group_height = im_height * 2
+        composite_group = Image.new('RGBA', (composite_group_width, composite_group_height))
+
+        for i in range(2):
+            for j in range(2):
+                # im = self.edge_detect(self.composite_images[i])
+                # im = ImageOps.invert(im)
+                composite_group.paste(im, (im_width * i, im_height * j))
+            # composite_group.paste(combined_images[i],(im_width * i,0))
+            # composite_group.paste(self.composite_images[i], (im_width * i,0))
+        
+        print('Saving Composite Group...', self.params['composite_group_path'] + 'chez.png')
+        composite_group.save(self.params['composite_group_path']+'chez.png')
+        # self.composite_images[0].save(self.params['composite_group_path']+'chez_A.png')
+        # im = self.edge_detect(self.composite_images[0])#.save(self.params['composite_group_path']+'chez_B.png')
+        # ImageOps.invert(im).save(self.params['composite_group_path']+'chez_B.png')
+
+
+        # bailey = Image.open(self.params['composite_group_path']+'bailey.jpg')
+        # self.edge_detect(bailey).save(self.params['composite_group_path']+'bailey_A.png')
+
+        
     # edit composites (edge detect, brightness, saturation, colorize?)
     # combine composites (config A,B,C)
+    def edge_detect(self,img):
+        img = img.convert('L')
+        img = img.filter(ImageFilter.EDGE_ENHANCE)
+        img = img.filter(ImageFilter.EDGE_ENHANCE)
+        img = img.filter(ImageFilter.EDGE_ENHANCE)
+        img = img.filter(ImageFilter.EDGE_ENHANCE)
+        img = img.filter(ImageFilter.FIND_EDGES)
+        return img
 
     def generate_composite(self, image_id):
 
