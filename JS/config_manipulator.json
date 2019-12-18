@@ -2,8 +2,26 @@
   "composite_A": {
     "groups": {
       "top": "triangle_A",
-      "bottom": "triangle_A",
-      "mask": "circle_A"
+      "bottom": "circle_C",
+      "mask": "circle_B"
+    },
+    "mode": "single",
+    "layout" : [2,2],
+    "options":{
+      "edge_detect": true
+    }
+
+  },
+  "composite_B": {
+    "groups": {
+      "top": "triangle_A",
+      "bottom": "triangle_C",
+      "mask": "circle_B"
+    },
+    "mode": "group",
+    "layout" : [5,5],
+    "options":{
+      "edge_detect": false
     }
   }
 }

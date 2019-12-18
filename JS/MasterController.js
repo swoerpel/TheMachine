@@ -20,14 +20,14 @@ class MasterController {
             },
             rule_template: Templates.rule_templates[this.step_shape],
             grid_size: Templates.grid_sizes[this.grid_size_index],
-            color_rand: .3,
+            color_rand: .4,
             stroke_weights: Templates.stroke_weight_templates[this.step_shape],
             step_path: Templates.step_paths.index,
             color_path: Templates.color_paths.index,
             ant_count: 20,
             ant_origins_random: false,
             duration: 1000,
-            color_spread: 10,
+            color_spread: 5,
         }
         return vital_params;
     }
@@ -282,9 +282,10 @@ function DrawCircles(grid_values, colors, color_machine) {
                 concentric_sub_stroke_weights = Templates.ant_attributes.sub_shape.stroke_weights;
             concentric_sub_stroke_weights.map((sw) => {
                 let concentric_circle = new paper.Path.Circle(local_origin, radius);
-                let color_val = colors[Math.floor(Math.random() * colors.length)]
+                // let color_val = colors[Math.floor(Math.random() * colors.length)]
+                concentric_circle.fillColor = color_machine(Math.random() > 0.5).hex();
                 // concentric_circle.fillColor = color_machine(Math.random() > 0.5).hex();
-                concentric_circle.fillColor = color_machine(color_val).hex();
+                // concentric_circle.fillColor = color_machine(color_val).hex();
                 concentric_circle.scale(sw, concentric_circle.bounds.center);
             });
         }
@@ -318,13 +319,14 @@ function DrawTriangles(grid_values, colors, color_machine) {
             grid_values.rotation.map((rot, index) => {
                 // if (Math.random() < .6) {
                 concentric_sub_stroke_weights.map((sw, index) => {
-
+                    
                     local_radius = radius * sw
                     let triangle = new paper.Path();
                     triangle.strokeWidth = 0
                     triangle.add(new paper.Point(local_origin.x - local_radius, local_origin.y - local_radius));
                     triangle.add(new paper.Point(local_origin.x - local_radius, local_origin.y + local_radius));
                     triangle.add(new paper.Point(local_origin.x + local_radius, local_origin.y + local_radius));
+
                     let color_val = colors[Math.floor(Math.random() * colors.length)]
                     // triangle.fillColor = color_machine(Math.random() > 0.5).hex();
                     triangle.fillColor = color_machine(color_val).hex();
