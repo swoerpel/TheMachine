@@ -1,27 +1,45 @@
 {
   "composite_A": {
     "groups": {
-      "top": "triangle_A",
-      "bottom": "circle_C",
-      "mask": "circle_B"
+      "top": "triangle_C",
+      "bottom": "triangle_C",
+      "mask": "circle_C"
     },
     "mode": "single",
     "layout" : [2,2],
     "options":{
-      "edge_detect": true
-    }
+      "edge_detect": true,
+      "colorize": false
+    },
+    "colorize_colors" : ["yellow", "blue"]
 
   },
   "composite_B": {
     "groups": {
-      "top": "triangle_A",
+      "top": "triangle_C",
       "bottom": "triangle_C",
       "mask": "circle_B"
     },
     "mode": "group",
-    "layout" : [5,5],
+    "layout" : [5,4],
     "options":{
-      "edge_detect": false
-    }
+      "edge_detect": false,
+      "colorize": false
+    },
+    "colorize_colors" : ["red", "blue"]
+  },
+  "composite_C": {
+    "groups": {
+      "top": "triangle_C",
+      "bottom": "triangle_C",
+      "mask": "circle_C"
+    },
+    "mode": "single",
+    "layout" : [5,4],
+    "options":{
+      "edge_detect": false,
+      "colorize": false
+    },
+    "colorize_colors" : ["red", "blue"]
   }
 }

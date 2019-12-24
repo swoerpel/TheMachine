@@ -7,7 +7,7 @@ import json
 import copy
 import numpy as np
 
-composite_key = 'composite_A'
+composite_key = 'composite_C'
 
 class Manipulator:
 
@@ -32,6 +32,8 @@ class Manipulator:
             self.im_height = composite_image.size[1]
             if self.params['options']['edge_detect']:
                 composite_image = self.enhance_edges(composite_image)
+            if self.params['options']['colorize']:
+                composite_image = self.colorize(composite_image,self.params['colorize_colors'][0],self.params['colorize_colors'][1])
 
             full_path = self.params['composite_group_path'] + composite_image_name + '.png'
             print('Saving image at ',full_path)
@@ -65,13 +67,16 @@ class Manipulator:
 
             if self.params['options']['edge_detect']:
                 composite_group = self.edge_detect(composite_group)
+            if self.params['options']['colorize']:
+                composite_image = self.colorize(composite_image, self.params['colorize_colors'][0],self.params['colorize_colors'][1])
             full_path = self.params['composite_group_path'] + image_name + 'final.png'
             print('Saving image at ',full_path)
             composite_group.save(full_path)
 
-                     # im = self.edge_detect(self.composite_images[i])
-        #         # im = ImageOps.invert(im)
-
+    def colorize(self,img, low_color, high_color):
+        print('colorizing...')
+        img = img.convert('L')
+        return ImageOps.colorize(img, black=low_color, white = high_color) 
 
     def generate_composite(self, image_id):
 
@@ -91,6 +96,10 @@ class Manipulator:
         bottom_group_names =  [f for f in listdir(bottom_source) if isfile(join(bottom_source, f))]
         mask_group_names =    [f for f in listdir(mask_source)   if isfile(join(mask_source, f))]
 
+
+
+        # top_image_name =    'miradors.png'
+        # bottom_image_name = 'florida_citrus.png'
         top_image_name =    random.choice(top_group_names)
         bottom_image_name = random.choice(bottom_group_names)
         mask_image_name =   random.choice(mask_group_names)
@@ -103,76 +112,36 @@ class Manipulator:
 
         # print(top_image,bottom_image,mask)
 
-        # mask = self.change_contrast_multi(mask, [500])
-        mask = mask.convert('L')
-        enhancer= ImageEnhance.Contrast(mask)
-        # mask = enhancer.enhance(4.0)
+        mask = self.binary(mask)
         final_img = Image.composite(bottom_image, top_image, mask)
         return final_img
 
-    # edit composites (edge detect, brightness, saturation, colorize?)
-    # combine composites (config A,B,C)
     def enhance_edges(self,image):
         img = copy.copy(image)
         img = img.convert('L')
-
-        # img = img.filter(ImageFilter.FIND_EDGES)
-
         img = img.filter(ImageFilter.EDGE_ENHANCE)
         img = img.filter(ImageFilter.EDGE_ENHANCE)
         img = img.filter(ImageFilter.EDGE_ENHANCE)
         img = img.filter(ImageFilter.EDGE_ENHANCE)
         img = img.filter(ImageFilter.FIND_EDGES)
-        th = 155 # the value has to be adjusted for an image of interest 
-        img = img.point(lambda i: i < th and 255)
-        # datas = img.getdata()
-        # print(datas)
-        # for item in datas:
-        #     print('item',item)
-        #     if item[0] == 255 and item[1] == 255 and item[2] == 255:
-        #         newData.append((255, 255, 255, 0))
-        #     else:
-        #         newData.append((0,0,0,255))
-        # img.putdata(newData)
+        img = self.binary(img)
+
+        datas = img.getdata()
+        newData = []
+        print('edge detect...')
+        for item in datas:
+            if item[0] == 255 and item[1] == 255 and item[2] == 255:
+                newData.append((255, 255, 255, 0))
+            else:
+                newData.append(item)
+        img.putdata(newData)
         return Image.alpha_composite(image, img)
-        # img = img.convert("RGBA")
-        # datas = list(img.getdata())
 
-        # newData = []
-        # grid = np.zeros((self.im_width,self.im_height))
-        # # print(datas)
-
-        # index = 0
-        # grid = []
-        # for i in range(self.im_height):
-        #     row = []
-        #     for j in range(self.im_width):
-        #         row.append(datas[index])
-        #         index += 1
-        #     grid.append(row)
-
-        # for i in range(self.im_width):
-        #     for j in range(self.im_height):
-        #             item = grid[i][j]
-        #             if item[0] == 255 and item[1] == 255 and item[2] == 255: # if black
-        #                 grid[i][j] = (255, 255, 255, 0) # transparent
-        #             else: # color area white
-        #                 grid[i][j] = (0,0,0,255)
-        #                 grid[(i + 1) % self.im_width][(j)     % self.im_height] = (0,0,0,255)
-        #                 grid[(i)     % self.im_width][(j + 1) % self.im_height] = (0,0,0,255)
-        #                 grid[(i - 1) % self.im_width][(j)     % self.im_height] = (0,0,0,255)
-        #                 grid[(i)     % self.im_width][(j - 1) % self.im_height] = (0,0,0,255)
-
-        # for item in datas:
-        #     if item[0] == 255 and item[1] == 255 and item[2] == 255:
-        #         newData.append((255, 255, 255, 0))
-        #     else:
-        #         newData.append((0,0,0,255))
-        # grid = np.array(grid).flatten()
-        # img.putdata(grid.flatten())
-        
-
-
+    def binary(self, img):
+        img = img.convert("RGBA")
+        threshold = 155
+        img = img.point(lambda i: i < threshold and 255)
+        return img.convert('L')
 
     def change_contrast_multi(self,img, steps):
         width, height = img.size
