@@ -56,7 +56,7 @@ module.exports = {
     grid_scale: { x: 1, y: 1 },
     grid_size: 1,
     stroke_weights: [1,.5],
-    rotation: [0, 90, 180, 270],
+    rotation: [0],
     sub_shapes: [1, 2],
     sub_stroke_weights: [1]
   },
@@ -106,14 +106,14 @@ module.exports = {
   },
   block_A: {
     step_shape: 3,
-    step_path: 1, // overlap order path
-    color_path: 2, // color sequence path
+    step_path: 3, // overlap order path
+    color_path: 3, // color sequence path
     grid_scale: { x: 1, y: 1 },
     grid_size: 1,
-    stroke_weights: [2, 1, 0.5],
+    stroke_weights: [3,2,1,.5],
     rotation: [0],
     sub_shapes: [1, 2],
-    sub_stroke_weights: [1, 0.5]
+    sub_stroke_weights: [1]
   },
   block_B: {
     step_shape: 3,

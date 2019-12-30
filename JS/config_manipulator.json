@@ -14,8 +14,8 @@
       "bottom": "triangle_C",
       "mask": "circle_B"
     },
-    "mode": "group",
-    "group_mode": "A"
+    "mode": "single",
+    "group_mode": "B"
   },
   "composite_C": {
     "groups": {

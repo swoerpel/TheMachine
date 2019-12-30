@@ -7,7 +7,7 @@ import json
 import copy
 import numpy as np
 
-composite_key = 'composite_C'
+composite_key = 'composite_B'
 
 class Manipulator:
 
