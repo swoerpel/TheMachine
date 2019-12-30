@@ -137,11 +137,18 @@ class MasterController {
         let color_origins = color_path.map((c) => { return (c * color_step) });
         let color_magnitude = (ss) => { return ((color_step * 2) / ss) }
         let origin_index = 0;
+
+
+        // EXPERIMENTAL ZONE ====================================
+        let city_heights = []
+        for (let i = 0; i < this.vital_params.grid_size.x; i++) {
+            city_heights.push(Math.floor(Math.random() * (this.vital_params.grid_size.y - 1)))
+        }
+        //=======================================================
+
         for (let i = 0; i < this.vital_params.grid_size.x; i++) {
             for (let j = 0; j < this.vital_params.grid_size.y; j++) {
                 let origin = step_path[origin_index];
-
-
                 let current_grid = grid[i][j];
                 let color_sub_step = color_magnitude(current_grid.sub_shape)
                 let tile_colors = []
@@ -153,7 +160,39 @@ class MasterController {
                         this.vital_params.color_rand)
                 }
                 origin_index++;
-                // console.log('current grid', current_grid)
+
+
+                // EXPERIMENTAL ZONE =============================
+
+                // if ((i + j) % 2 == 0 && (2*i + 3) % 2 == 0)
+                //     current_grid.color = 1
+                // else
+                //     current_grid.color = 0
+
+                // if (i < city_heights[j])
+                //     current_grid.color = 1
+                // else
+                //     current_grid.color = 0
+                // if(i % 2 == 0)
+                    // current_grid.color = 1
+                // else
+                    // current_grid.color = 0
+                // if ( 2 * i + 1) )
+                // if (i % 2 == 0){
+                //     if(j % 2 == 0)
+                //         current_grid.color = 1
+                //     else
+                //         current_grid.color = 0
+                // }
+                // else{
+                //     if(j % 2 == 0)
+                //         current_grid.color = 0
+                //     else
+                //         current_grid.color = 1
+                // }
+                
+                
+                // ===============================================
                 let grid_values = {
                     origin: origin,
                     width: this.paper_width / this.vital_params.grid_size.x,
@@ -258,8 +297,9 @@ function DrawSquares(grid_values, colors, color_machine) {
                 let con_size = new paper.Size(size.width, size.height);
                 let concentric_square = new paper.Path.Rectangle(local_origin, con_size);
                 let color_val = colors[Math.floor(Math.random() * colors.length)]
-                // concentric_square.fillColor = color_machine(Math.random() > 0.5).hex();
-                concentric_square.fillColor = color_machine(color_val).hex();
+                concentric_square.fillColor = color_machine(Math.random() > 0.5).hex();
+                // concentric_square.fillColor = color_machine(grid_values.color).hex();
+                // concentric_square.fillColor = color_machine(color_val).hex();
                 concentric_square.scale(sw, concentric_square.bounds.center);
             });
         }
@@ -285,7 +325,7 @@ function DrawCircles(grid_values, colors, color_machine) {
                 // let color_val = colors[Math.floor(Math.random() * colors.length)]
                 concentric_circle.fillColor = color_machine(Math.random() > 0.5).hex();
                 // concentric_circle.fillColor = color_machine(Math.random() > 0.5).hex();
-                // concentric_circle.fillColor = color_machine(color_val).hex();
+                // concentric_circle.fillColor = color_machine(grid_values.color).hex();
                 concentric_circle.scale(sw, concentric_circle.bounds.center);
             });
         }

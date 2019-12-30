@@ -24,19 +24,16 @@ class Machine {
     // console.log(this.palettes)
   }
 
-  Initialize(key, mask_mode = false) {
-    this.mask_mode = mask_mode;
+  Initialize(key, mode = false) {
+    this.mode = mode;
     this.static_params = config[key];
     let path_params = key.split("_");
     this.static_params.png_path = "../images//" + path_params[0] + "//";
-    if (mask_mode)
+    if (mode == 'mask')
       this.static_params.png_path += "mask_" + path_params[1] + "//";
+    else if( mode == 'custom')
+      this.static_params.png_path += "custom" + "//"// + path_params[1] + "//";
     else this.static_params.png_path += "group_" + path_params[1] + "//";
-    // if (mask_mode)
-    //   this.static_params.png_path =
-    //     "../images//" + path_params[0] + "_M" + path_params[1] + "//";
-    // else this.static_params.png_path = "../images//" + key + "//";
-    
     this.estimateGenerationTime();
     return this.total_batch_time;
   }
@@ -69,7 +66,11 @@ class Machine {
       let params = new Object(this.static_params);
       params.palette = this.palette_names[image_count];
       params.image_id = params.palette;
-      if (this.mask_mode) {
+      if (this.mode == 'custom') {
+        params.palette = "binary";
+        params.image_id = Math.floor(Math.random()*16777215).toString(16);
+      }
+      if (this.mode == 'mask') {
         params.palette = "binary";
         params.image_id = image_count.toString();
       }

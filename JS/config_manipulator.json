@@ -5,14 +5,7 @@
       "bottom": "triangle_C",
       "mask": "circle_C"
     },
-    "mode": "single",
-    "layout" : [2,2],
-    "options":{
-      "edge_detect": true,
-      "colorize": false
-    },
-    "colorize_colors" : ["yellow", "blue"]
-
+    "mode": "single"
   },
   "composite_B": {
     "groups": {
@@ -20,26 +13,14 @@
       "bottom": "triangle_C",
       "mask": "circle_B"
     },
-    "mode": "group",
-    "layout" : [5,4],
-    "options":{
-      "edge_detect": false,
-      "colorize": false
-    },
-    "colorize_colors" : ["red", "blue"]
+    "mode": "group"
   },
   "composite_C": {
     "groups": {
       "top": "triangle_C",
       "bottom": "triangle_C",
-      "mask": "circle_C"
+      "mask": "triangle_C"
     },
-    "mode": "single",
-    "layout" : [5,4],
-    "options":{
-      "edge_detect": false,
-      "colorize": false
-    },
-    "colorize_colors" : ["red", "blue"]
+    "mode": "group"
   }
 }
