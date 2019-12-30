@@ -43,9 +43,14 @@ class Manipulator:
         image_name = str(round(random.random() * 1000000))
 
         base_image = self.generate_composite(image_name + '_base.png')
-        top_right = base_image.transpose(Image.FLIP_LEFT_RIGHT)
-        bottom_left = base_image.transpose(Image.FLIP_TOP_BOTTOM)
-        bottom_right = base_image.transpose(Image.ROTATE_180)
+        if self.params['group_mode'] == 'A':
+            top_right = base_image.transpose(Image.FLIP_LEFT_RIGHT)
+            bottom_right = base_image.transpose(Image.ROTATE_180)
+            bottom_left = base_image.transpose(Image.FLIP_TOP_BOTTOM)
+        if self.params['group_mode'] == 'B':
+            top_right = base_image.transpose(Image.ROTATE_90)
+            bottom_right = base_image.transpose(Image.ROTATE_180)
+            bottom_left = base_image.transpose(Image.ROTATE_270)
 
         self.im_width = base_image.size[0]
         self.im_height = base_image.size[1]

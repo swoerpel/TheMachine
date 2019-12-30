@@ -5,7 +5,8 @@
       "bottom": "triangle_C",
       "mask": "circle_C"
     },
-    "mode": "single"
+    "mode": "single",
+    "group_mode": "A"
   },
   "composite_B": {
     "groups": {
@@ -13,14 +14,16 @@
       "bottom": "triangle_C",
       "mask": "circle_B"
     },
-    "mode": "group"
+    "mode": "group",
+    "group_mode": "A"
   },
   "composite_C": {
     "groups": {
       "top": "triangle_C",
       "bottom": "triangle_C",
-      "mask": "triangle_C"
+      "mask": "circle_B"
     },
-    "mode": "group"
+    "mode": "group",
+    "group_mode": "A"
   }
 }
