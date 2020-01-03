@@ -74,6 +74,11 @@ class Machine {
   }
 
   generate_image(params) {
+    // console.log(params.palette)
+    if (params.custom_mode){
+      params.palette = 'binary'
+      params.image_id = Math.floor(Math.random() * 1000000).toString()
+    }
     let color_machine = chroma.scale(this.palettes[params.palette]);
     let master_controller = new MasterController();
     master_controller.SetPaths(params.png_path, params.png_path);
