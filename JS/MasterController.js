@@ -58,8 +58,9 @@ class MasterController {
         // console.log(svg)
         // console.log('IMAGE ID: ', this.image_id)
         // this.ExportSVG(svg, this.image_id);
-        let png_path = this.ExportPNG(svg, this.image_id);
-        return png_path
+
+        if (this.save_image)
+            this.ExportPNG(svg, this.image_id);
     }
 
     SetPaths(svg_path, png_path) {
@@ -119,6 +120,14 @@ class MasterController {
 
     SetImageId(image_id) {
         this.image_id = image_id
+    }
+
+    SetSaveImage(save_image){
+        this.save_image = save_image
+    }
+
+    SetCustomMode(custom_mode){
+        this.custom_mode = custom_mode
     }
 
     linearize_array(grid) {

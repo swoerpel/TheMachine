@@ -2,7 +2,7 @@
   "composite_A": {
     "groups": {
       "top": "triangle_B",
-      "bottom": "triangle_B",
+      "bottom": "square_C",
       "mask": "circle_C"
     },
     "mode": "single",

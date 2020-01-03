@@ -24,14 +24,12 @@ class Machine {
     // console.log(this.palettes)
   }
 
-  Initialize(key, mode = false) {
-    this.mode = mode;
+  Initialize(key, custom = false) {
+    this.custom_mode = custom;
     this.static_params = config[key];
     let path_params = key.split("_");
     this.static_params.png_path = "../images//" + path_params[0] + "//";
-    if (mode == 'mask')
-      this.static_params.png_path += "mask_" + path_params[1] + "//";
-    else if( mode == 'custom')
+    if(custom)
       this.static_params.png_path += "custom" + "//"// + path_params[1] + "//";
     else this.static_params.png_path += "group_" + path_params[1] + "//";
     this.estimateGenerationTime();
@@ -45,6 +43,8 @@ class Machine {
     params.palette = this.palette_names[
       Math.floor(Math.random() * this.palette_names.length)
     ];
+    params.custom_mode = this.custom_mode
+    params.save_image = false
     var start = now();
     this.generate_image(params);
     var end = now();
@@ -66,14 +66,8 @@ class Machine {
       let params = new Object(this.static_params);
       params.palette = this.palette_names[image_count];
       params.image_id = params.palette;
-      if (this.mode == 'custom') {
-        params.palette = "binary";
-        params.image_id = Math.floor(Math.random()*16777215).toString(16);
-      }
-      if (this.mode == 'mask') {
-        params.palette = "binary";
-        params.image_id = image_count.toString();
-      }
+      params.custom_mode = this.custom_mode
+      params.save_image = true
       this.generate_image(params);
       image_count++;
     }, this.interval_step);
@@ -93,6 +87,8 @@ class Machine {
     master_controller.SetRotation(params.rotation);
     master_controller.SetSubShapes(params.sub_shapes);
     master_controller.SetSubStrokeWeights(params.sub_stroke_weights);
+    master_controller.SetCustomMode(params.custom_mode)
+    master_controller.SetSaveImage(params.save_image)
     master_controller.GenerateImage(color_machine);
   }
 }
