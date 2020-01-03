@@ -7,7 +7,7 @@ import json
 import copy
 import numpy as np
 
-composite_key = 'composite_C'
+composite_key = 'composite_A'
 
 class Manipulator:
 
@@ -76,7 +76,7 @@ class Manipulator:
 
         top_source =    '../images//' + top_param[0]    + '//' + 'group_' + top_param[1] + '/'
         bottom_source = '../images//' + bottom_param[0] + '//' + 'group_' + bottom_param[1] + '/'
-        mask_source =   '../images//' + mask_param[0]   + '//' + 'mask_'  + mask_param[1] + '/'
+        mask_source =   '../images//' + mask_param[0]   + '//' + 'group_'  + mask_param[1] + '/'
 
         # print(top_source,bottom_source,mask_source)
 
@@ -155,6 +155,7 @@ class Manipulator:
         return Image.alpha_composite(image, edge_mask)
 
     def binary(self, img):
+        img = img.convert('L')
         img = img.convert("RGBA")
         threshold = 155
         img = img.point(lambda i: i < threshold and 255)
