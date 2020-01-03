@@ -113,8 +113,8 @@ class MasterController {
         this.save_image = save_image
     }
 
-    SetCustomMode(custom_mode){
-        this.custom_mode = custom_mode
+    SetCustomMode(custom){
+        this.custom = new Object(custom)
 
     }
 
@@ -158,7 +158,7 @@ class MasterController {
                 }
                 origin_index++;
 
-                if(this.custom_mode){
+                if(this.custom.active){
                     if(j % 2 == 0)
                         current_grid.color = 1
                     else
@@ -208,13 +208,13 @@ class MasterController {
                 let colors = tile_colors.reverse()
                 // let colors = this.SetColors(Templates.ant_attributes.color.style, grid_values.color)
                 if (this.vital_params.step_shape.name == 'square')
-                    DrawSquares(grid_values, colors, this.color_machine, this.custom_mode);
+                    DrawSquares(grid_values, colors, this.color_machine, this.custom);
                 if (this.vital_params.step_shape.name == 'circle')
-                    DrawCircles(grid_values, colors, this.color_machine,this.custom_mode);
+                    DrawCircles(grid_values, colors, this.color_machine,this.custom);
                 if (this.vital_params.step_shape.name == 'triangle')
-                    DrawTriangles(grid_values, colors, this.color_machine,this.custom_mode);
+                    DrawTriangles(grid_values, colors, this.color_machine,this.custom);
                 if (this.vital_params.step_shape.name == 'cube')
-                    DrawCustomShape(grid_values, colors, this.color_machine,this.custom_mode);
+                    DrawCustomShape(grid_values, colors, this.color_machine,this.custom);
             }
         }
 
@@ -283,8 +283,8 @@ function DrawBackground(color = 'black') {
 }
 
 
-function DrawSquares(grid_values, colors, color_machine, custom_mode) {
-    console.log('color value!', grid_values.color)
+function DrawSquares(grid_values, colors, color_machine, custom) {
+    // console.log('color value!', grid_values.color)
     for (let k = 0; k < grid_values.sub_shape; k++) {
         for (let l = 0; l < grid_values.sub_shape; l++) {
             let x_local_origin = grid_values.origin.x + grid_values.width / grid_values.sub_shape * k
@@ -301,7 +301,7 @@ function DrawSquares(grid_values, colors, color_machine, custom_mode) {
                 let con_size = new paper.Size(size.width, size.height);
                 let concentric_square = new paper.Path.Rectangle(local_origin, con_size);
                 let color_val = colors[Math.floor(Math.random() * colors.length)]
-                if (custom_mode)
+                if (custom.active)
                     color_val = grid_values.color
                 concentric_square.fillColor = color_machine(color_val).hex();
                 concentric_square.scale(sw, concentric_square.bounds.center);
@@ -310,7 +310,7 @@ function DrawSquares(grid_values, colors, color_machine, custom_mode) {
     }
 }
 
-function DrawCircles(grid_values, colors, color_machine,custom_mode) {
+function DrawCircles(grid_values, colors, color_machine,custom) {
     for (let k = 0; k < grid_values.sub_shape; k++) {
         for (let l = 0; l < grid_values.sub_shape; l++) {
             let radius = grid_values.width / grid_values.sub_shape / 2
@@ -325,7 +325,7 @@ function DrawCircles(grid_values, colors, color_machine,custom_mode) {
             concentric_sub_stroke_weights.map((sw) => {
                 let concentric_circle = new paper.Path.Circle(local_origin, radius);
                 let color_val = colors[Math.floor(Math.random() * colors.length)]
-                if (custom_mode)
+                if (custom.active)
                     color_val = grid_values.color
                 concentric_square.fillColor = color_machine(color_val).hex();
                 concentric_circle.scale(sw, concentric_circle.bounds.center);
@@ -335,7 +335,7 @@ function DrawCircles(grid_values, colors, color_machine,custom_mode) {
 }
 
 
-function DrawTriangles(grid_values, colors, color_machine,custom_mode) {
+function DrawTriangles(grid_values, colors, color_machine,custom) {
     for (let k = 0; k < grid_values.sub_shape; k++) {
         for (let l = 0; l < grid_values.sub_shape; l++) {
             let radius = grid_values.width / grid_values.sub_shape / 2
@@ -359,7 +359,7 @@ function DrawTriangles(grid_values, colors, color_machine,custom_mode) {
                     triangle.add(new paper.Point(local_origin.x + local_radius, local_origin.y + local_radius));
                     // triangle.fillColor = color_machine(Math.random() > 0.5).hex();
                     let color_val = colors[Math.floor(Math.random() * colors.length)]
-                    if (custom_mode)
+                    if (custom.active)
                         color_val = grid_values.color
                     concentric_square.fillColor = color_machine(color_val).hex();
                     triangle.rotate(rot, local_origin)
@@ -369,7 +369,7 @@ function DrawTriangles(grid_values, colors, color_machine,custom_mode) {
     }
 }
 
-function DrawCustomShape(grid_values, colors, color_machine,custom_mode) {
+function DrawCustomShape(grid_values, colors, color_machine,custom) {
     let block_machine = new Block()
     let block_type_count = block_machine.GetBlockTypeCount();
     for (let k = 0; k < grid_values.sub_shape; k++) {
@@ -382,7 +382,7 @@ function DrawCustomShape(grid_values, colors, color_machine,custom_mode) {
             grid_values.stroke_weight.map((sw) => {
                 let block = block_machine.GenerateBlock(local_origin, radius * sw, block_type);
                 let color_val = colors[Math.floor(Math.random() * colors.length)]
-                if (custom_mode)
+                if (custom.active)
                     color_val = grid_values.color
                 concentric_square.fillColor = color_machine(color_val).hex();
                 block.map((face) => {

@@ -24,12 +24,12 @@ class Machine {
     // console.log(this.palettes)
   }
 
-  Initialize(key, custom = false) {
-    this.custom_mode = custom;
+  Initialize(key, custom) {
+    this.custom = new Object(custom);
     this.static_params = config[key];
     let path_params = key.split("_");
     this.static_params.png_path = "../images//" + path_params[0] + "//";
-    if(custom)
+    if(custom.active)
       this.static_params.png_path += "custom" + "//"// + path_params[1] + "//";
     else this.static_params.png_path += "group_" + path_params[1] + "//";
     this.estimateGenerationTime();
@@ -43,7 +43,7 @@ class Machine {
     params.palette = this.palette_names[
       Math.floor(Math.random() * this.palette_names.length)
     ];
-    params.custom_mode = this.custom_mode
+    params.custom = new Object(this.custom)
     params.save_image = false
     var start = now();
     this.generate_image(params);
@@ -66,7 +66,7 @@ class Machine {
       let params = new Object(this.static_params);
       params.palette = this.palette_names[image_count];
       params.image_id = params.palette;
-      params.custom_mode = this.custom_mode
+      params.custom = new Object(this.custom);
       params.save_image = true
       this.generate_image(params);
       image_count++;
@@ -75,7 +75,7 @@ class Machine {
 
   generate_image(params) {
     // console.log(params.palette)
-    if (params.custom_mode){
+    if (params.custom.active){
       params.palette = 'binary'
       params.image_id = Math.floor(Math.random() * 1000000).toString()
     }
@@ -92,7 +92,7 @@ class Machine {
     master_controller.SetRotation(params.rotation);
     master_controller.SetSubShapes(params.sub_shapes);
     master_controller.SetSubStrokeWeights(params.sub_stroke_weights);
-    master_controller.SetCustomMode(params.custom_mode)
+    master_controller.SetCustomMode(params.custom)
     master_controller.SetSaveImage(params.save_image)
     master_controller.GenerateImage(color_machine);
   }

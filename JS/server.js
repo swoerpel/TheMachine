@@ -6,6 +6,12 @@ let machine = new Machine();
 // optional param: bool
 // use custom mask folder
 
-let total_batch_time = machine.Initialize('square_C',true); 
+let custom = {
+    active: false,
+    setting: 'A',
+}
+
+
+let total_batch_time = machine.Initialize('square_C',custom); 
 console.log('total batch time', total_batch_time)
 machine.Generate();
