@@ -8,6 +8,6 @@ let machine = new Machine();
 // 'mask'          : black and white image saved to mask folder
 // 'custom'        : saves to folder with unique names 
 
-let total_batch_time = machine.Initialize('block_A', ''); 
+let total_batch_time = machine.Initialize('triangle_C', ''); 
 console.log('total batch time', total_batch_time)
 machine.Generate();

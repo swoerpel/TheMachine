@@ -21,9 +21,9 @@
     "groups": {
       "top": "triangle_C",
       "bottom": "triangle_C",
-      "mask": "circle_B"
+      "mask": "triangle_A"
     },
     "mode": "group",
-    "group_mode": "A"
+    "group_mode": "B"
   }
 }
