@@ -7,8 +7,8 @@ let machine = new Machine();
 // use custom mask folder
 
 let custom = {
-    active: false,
-    setting: 'A',
+    active: true,
+    setting: 'B',
 }
 
 

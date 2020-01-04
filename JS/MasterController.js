@@ -6,6 +6,7 @@ var Grid = require('./Grid.js');
 var ColorSequencer = require('./ColorSequencer.js');
 var Path = require('./Path.js');
 var Block = require('./Block.js');
+var Custom = require('./custom_masks.js')
 class MasterController {
     constructor() {
         this.grid_size_index = 0;
@@ -150,8 +151,6 @@ class MasterController {
                 let color_sub_step = color_magnitude(current_grid.sub_shape)
                 let tile_colors = []
                 for (let k = 0; k < current_grid.sub_shape; k += color_sub_step) {
-                    // tile_colors.push(1)
-
                     tile_colors.push((color_origins[origin_index]) +
                         ((Math.random() > .5) ? -1 : 1) * Math.random() *
                         this.vital_params.color_rand)
@@ -159,43 +158,12 @@ class MasterController {
                 origin_index++;
 
                 if(this.custom.active){
-                    if(j % 2 == 0)
-                        current_grid.color = 1
-                    else
-                        current_grid.color = 0
+                    if(this.custom.setting == 'A')
+                        current_grid.color = Custom.mask_A(i,j)
+                    if(this.custom.setting == 'B')
+                        current_grid.color = Custom.mask_B(i,j,city_heights)
                 }
 
-                // EXPERIMENTAL ZONE =============================
-
-                // if ((i + j) % 2 == 0 && (2*i + 3) % 2 == 0)
-                //     current_grid.color = 1
-                // else
-                //     current_grid.color = 0
-
-                // if (i < city_heights[j])
-                //     current_grid.color = 1
-                // else
-                //     current_grid.color = 0
-                // if(i % 2 == 0)
-                    // current_grid.color = 1
-                // else
-                    // current_grid.color = 0
-                // if ( 2 * i + 1) )
-                // if (i % 2 == 0){
-                //     if(j % 2 == 0)
-                //         current_grid.color = 1
-                //     else
-                //         current_grid.color = 0
-                // }
-                // else{
-                //     if(j % 2 == 0)
-                //         current_grid.color = 0
-                //     else
-                //         current_grid.color = 1
-                // }
-                
-                
-                // ===============================================
                 let grid_values = {
                     origin: origin,
                     width: this.paper_width / this.vital_params.grid_size.x,
