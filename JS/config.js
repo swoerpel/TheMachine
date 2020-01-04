@@ -62,8 +62,8 @@ module.exports = {
   },
   circle_C: {
     step_shape: 1,
-    step_path: 3, // overlap order path
-    color_path: 3, // color sequence path
+    step_path: 4, // overlap order path
+    color_path: 4, // color sequence path
     grid_scale: { x: 1, y: 1 },
     grid_size: 2,
     stroke_weights: [Math.sqrt(2)],//, 1 - 2 * ((Math.sqrt(2) / 2) - 0.5)],

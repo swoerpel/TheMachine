@@ -295,7 +295,7 @@ function DrawCircles(grid_values, colors, color_machine,custom) {
                 let color_val = colors[Math.floor(Math.random() * colors.length)]
                 if (custom.active)
                     color_val = grid_values.color
-                concentric_square.fillColor = color_machine(color_val).hex();
+                concentric_circle.fillColor = color_machine(color_val).hex();
                 concentric_circle.scale(sw, concentric_circle.bounds.center);
             });
         }
@@ -329,7 +329,7 @@ function DrawTriangles(grid_values, colors, color_machine,custom) {
                     let color_val = colors[Math.floor(Math.random() * colors.length)]
                     if (custom.active)
                         color_val = grid_values.color
-                    concentric_square.fillColor = color_machine(color_val).hex();
+                    triangle.fillColor = color_machine(color_val).hex();
                     triangle.rotate(rot, local_origin)
                 });
             });
@@ -352,7 +352,7 @@ function DrawCustomShape(grid_values, colors, color_machine,custom) {
                 let color_val = colors[Math.floor(Math.random() * colors.length)]
                 if (custom.active)
                     color_val = grid_values.color
-                concentric_square.fillColor = color_machine(color_val).hex();
+                // block.fillColor = color_machine(color_val).hex();
                 block.map((face) => {
                     let face_path = new paper.Path();
                     face.points.map((point) => {

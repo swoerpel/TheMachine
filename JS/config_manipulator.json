@@ -3,10 +3,10 @@
     "groups": {
       "top": "triangle_C",
       "bottom": "triangle_C",
-      "mask": "square_Custom"
+      "mask": "circle_Custom"
     },
     "mode": "group",
-    "group_mode": "A"
+    "group_mode": "B"
   },
   "composite_B": {
     "groups": {

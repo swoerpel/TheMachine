@@ -12,6 +12,6 @@ let custom = {
 }
 
 
-let total_batch_time = machine.Initialize('square_C',custom); 
+let total_batch_time = machine.Initialize('circle_C',custom); 
 console.log('total batch time', total_batch_time)
 machine.Generate();
