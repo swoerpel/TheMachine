@@ -18,9 +18,9 @@ class Path {
         else if (path_index == 3)
             this.path = this.crisscross();
         else if (path_index == 4)
-            this.path = this.divider();
+            this.path = this.default();         
         else
-            this.path = this.default();
+            console.log('PATH NOT SELECTED')
         this.linear_path = this.flatten(this.path);
         if (integers) {
             return this.linear_path
@@ -96,8 +96,6 @@ class Path {
         let grid = this.default();
         let new_grid = []
         for (let i = 0; i < grid.length; i++) {
-            // console.log('row', i, grid[i])
-            // console.log('rev', i, grid[i].reverse())
             if (i % 2 == 0) {
                 new_grid.push(grid[i].reverse())
             }
@@ -105,8 +103,14 @@ class Path {
                 new_grid.push(grid[i])
             }
         }
-        // grid = grid.map((row, index) => { return (index % 2 == 0 ? row.reverse() : row) })
-        // console.log('color path grid', new_grid)
+        // for (let i = 0; i < grid.length; i++) {
+        //     if (i % 2 == 0) {
+        //         new_grid.push(grid[i].reverse())
+        //     }
+        //     else {
+        //         new_grid.push(grid[i])
+        //     }
+        // }
         return new_grid;
     }
 

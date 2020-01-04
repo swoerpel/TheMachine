@@ -32,7 +32,7 @@ module.exports = {
     step_path: 3, // overlap order path
     color_path: 3, // color sequence path
     grid_scale: { x: 1, y: 1 },
-    grid_size: 2,
+    grid_size: 3,
     stroke_weights: [1],
     rotation: [0],
     sub_shapes: [1,2],

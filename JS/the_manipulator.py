@@ -76,7 +76,11 @@ class Manipulator:
 
         top_source =    '../images//' + top_param[0]    + '//' + 'group_' + top_param[1] + '/'
         bottom_source = '../images//' + bottom_param[0] + '//' + 'group_' + bottom_param[1] + '/'
-        mask_source =   '../images//' + mask_param[0]   + '//' + 'group_'  + mask_param[1] + '/'
+
+        if mask_param[1] == 'Custom':
+            mask_source =   '../images//' + mask_param[0]   + '//' + 'custom/'
+        else :
+            mask_source =   '../images//' + mask_param[0]   + '//' + 'group_'  + mask_param[1] + '/'
 
         # print(top_source,bottom_source,mask_source)
 

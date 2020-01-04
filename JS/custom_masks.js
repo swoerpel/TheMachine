@@ -8,7 +8,7 @@ const mask_A = (i,j) =>{
 }
 
 const mask_B = (i,j,city_heights) =>{
-    if (i < city_heights[j])
+    if (j < city_heights[i])
         return 1
     else
         return 0

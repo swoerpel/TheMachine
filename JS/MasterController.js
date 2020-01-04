@@ -139,7 +139,7 @@ class MasterController {
 
         // EXPERIMENTAL ZONE ====================================
         let city_heights = []
-        for (let i = 0; i < this.vital_params.grid_size.x; i++) {
+        for (let i = 0; i < this.vital_params.grid_size.y; i++) {
             city_heights.push(Math.floor(Math.random() * (this.vital_params.grid_size.y - 1)))
         }
         //=======================================================

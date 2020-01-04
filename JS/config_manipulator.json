@@ -1,11 +1,11 @@
 {
   "composite_A": {
     "groups": {
-      "top": "triangle_B",
-      "bottom": "square_C",
-      "mask": "circle_C"
+      "top": "triangle_C",
+      "bottom": "triangle_C",
+      "mask": "square_Custom"
     },
-    "mode": "single",
+    "mode": "group",
     "group_mode": "A"
   },
   "composite_B": {
