@@ -1,0 +1,12 @@
+{
+    "params":{
+        "def_path": "C:\\File\\Programming\\TheMachine\\images\\composite\\",
+        "image_folder":"group_B\\",
+        "output_folder": "chops\\",
+        "image_name":"group_619485_final.png",
+        "chop_count": 10,
+        "chop_dims": [0.1,0.1],
+        "rotations": [45,90]
+        
+    }
+}

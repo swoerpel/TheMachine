@@ -1,0 +1,12 @@
+goals
+-- start the discector
+    -- fixed screenshots, concentric to border (90 deg)
+    -- angled screeshots, 
+
+-- organize file system to allow new machines   
+    - move config files to dedicated folder
+    - move value generating files to folder
+    - keep drivers/machines out
+
+-- create dot machine
+    -- 
