@@ -20,6 +20,21 @@ goals
     - generation modes
         - traditional: no bound, linear
         - attractors:  bounded, trig
+        - dynamical system: time is indepentent
+
+Responsibilities
+-- the_repeater
+    request tile information from IFS generator
+        default or trig
+        multiple IFS on one canvas
+
+    generate tile svgs 
+    save into folder
+    decide coloring?
+
+-- how to start
+    get average values for NxM grids displayed in grayscale
+    change threshold of shading
 
 
 
