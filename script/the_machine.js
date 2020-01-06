@@ -4,7 +4,7 @@ var now = require("performance-now");
 var chromotome = require("chromotome");
 var MasterController = require("./MasterController.js");
 var fs = require("fs");
-var config = require("./config.js");
+var config = require("./config/config_machine.js");
 class Machine {
   constructor() {
     console.log("Building the MACHINE");

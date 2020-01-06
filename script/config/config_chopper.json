@@ -1,0 +1,12 @@
+{
+    "params":{
+        "def_path": "C:\\File\\Programming\\TheMachine\\images\\composite\\",
+        "image_folder":"chops\\",
+        "output_folder": "chops\\",
+        "image_name":"chopA.png",
+        "chop_count": 20,
+        "chop_dims": [0.25,0.25],
+        "rotations": [30,45,60]
+        
+    }
+}

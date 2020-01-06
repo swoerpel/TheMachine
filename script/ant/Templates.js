@@ -86,20 +86,6 @@ var png_dims = {
     y: 4800// * scale_sizes.y,
 }
 
-var stroke_weight_templates = [
-    // [2, 1.5, 1, .9, .8, .7, .6, .5], //square
-    [1], //square
-    [1],//, 0.9, 0.8, 0.7, 0.6, 0.5], //circle
-    // [1, .9, .8, .7, .6, .5, .4, .3],//, 0.9, 0.8, 0.7, 0.6, 0.5], //circle
-    [1], //triangle
-    // [1, .9, .8, .7, .6, .5,], //triangle
-    // [1, .95, .9, .85, .8, .75, .7, .65, .6, .55, .5, .45, .4, .35, .3], //triangle
-    [1], //cube
-]
-
-
-
-
 var color_attributes = {
     max_state: 100,
     max_color: 100,
@@ -144,7 +130,6 @@ var ant_attributes = { //square
 exports.rule_templates = rule_templates;
 exports.grid_sizes = grid_sizes;
 exports.step_shapes = step_shapes;
-exports.stroke_weight_templates = stroke_weight_templates;
 exports.ant_attributes = ant_attributes;
 exports.consts = consts;
 exports.png_dims = png_dims;

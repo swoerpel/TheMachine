@@ -1,0 +1,26 @@
+goals
+
+-- organize file system to allow new machines   
+    - move config files to dedicated folder
+    - move value generating files to folder
+    - keep drivers/machines higher up
+
+-- eliminate templates file
+
+-- the_machine -> blend save modes
+    - create multiple grid sizes of same color
+    - save in 'blend' folder
+
+-- create the repeater
+    - choose generation method
+    - "pixelate" fractals based on average values
+        - overlay different grid sizes
+        - each layer
+        
+    - generation modes
+        - traditional: no bound, linear
+        - attractors:  bounded, trig
+
+
+
+    

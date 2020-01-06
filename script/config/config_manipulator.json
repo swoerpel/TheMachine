@@ -3,10 +3,14 @@
     "groups": {
       "top": "triangle_C",
       "bottom": "triangle_C",
-      "mask": "circle_Custom"
+      "mask": "circle_C"
     },
     "mode": "group",
-    "group_mode": "B"
+    "group_mode": "B",
+    "blend":{
+      "group": "triangle_C",
+      "name": ""
+    }
   },
   "composite_B": {
     "groups": {
@@ -14,8 +18,12 @@
       "bottom": "triangle_C",
       "mask": "circle_B"
     },
-    "mode": "single",
-    "group_mode": "B"
+    "mode": "group",
+    "group_mode": "B",
+    "blend":{
+      "group": "triangle_C",
+      "name": ""
+    }
   },
   "composite_C": {
     "groups": {
@@ -23,7 +31,11 @@
       "bottom": "triangle_C",
       "mask": "triangle_A"
     },
-    "mode": "group",
-    "group_mode": "B"
+    "mode": "blend",
+    "group_mode": "B",
+    "blend":{
+      "group": "triangle_C",
+      "name": "Spectral.png"
+    }
   }
 }

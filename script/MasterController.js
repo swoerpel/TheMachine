@@ -1,12 +1,12 @@
 var fs = require('fs');
 var paper = require('paper-jsdom-canvas');
 var svg2img = require('svg2img');
-var Templates = require('./Templates.js');
-var Grid = require('./Grid.js');
-var ColorSequencer = require('./ColorSequencer.js');
-var Path = require('./Path.js');
-var Block = require('./Block.js');
-var Custom = require('./custom_masks.js')
+var Templates = require('./ant/Templates.js');
+var Grid = require('./ant/Grid.js');
+var ColorSequencer = require('./ant/ColorSequencer.js');
+var Path = require('./ant/Path.js');
+var Block = require('./ant/Block.js');
+var Custom = require('./ant/custom_masks.js')
 class MasterController {
     constructor() {
         this.grid_size_index = 0;
@@ -22,7 +22,7 @@ class MasterController {
             rule_template: Templates.rule_templates[this.step_shape],
             grid_size: Templates.grid_sizes[this.grid_size_index],
             color_rand: .4,
-            stroke_weights: Templates.stroke_weight_templates[this.step_shape],
+            stroke_weights: this.stroke_weights,
             step_path: Templates.step_paths.index,
             color_path: Templates.color_paths.index,
             ant_count: 20,
@@ -79,7 +79,8 @@ class MasterController {
     }
 
     SetStrokeWeights(weights) {
-        Templates.stroke_weight_templates[this.step_shape] = weights;
+        this.stroke_weights = weights;
+        // Templates.stroke_weight_templates[this.step_shape] = weights;
     }
     SetRotation(rotation) {
         Templates.ant_attributes.rotation.delta = rotation;

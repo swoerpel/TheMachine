@@ -12,7 +12,7 @@ class Chopper:
 
     def __init__(self):
         print('VROOM VROOM goes the chopper')
-        with open('config_chopper.json') as json_data_file:
+        with open('config/config_chopper.json') as json_data_file:
             self.config = json.load(json_data_file)
         print(self.config)
         self.params = self.config['params']
@@ -63,7 +63,7 @@ class Chopper:
         chop_box.append(origin_y + self.chop_height / 2)
         print('chop box', chop_box)
 
-        angle = random.randint(0,90)
+        angle = random.randint(0,360)
         chop = self.image.rotate((angle / 5) * angle, center=(origin_x,origin_y))
 
         #saving chop location

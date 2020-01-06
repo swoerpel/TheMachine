@@ -7,13 +7,13 @@ import json
 import copy
 import numpy as np
 
-composite_key = 'composite_A'
+composite_key = 'composite_C'
 
 class Manipulator:
 
     def __init__(self):
         print('BUILDING THE MANIPULATOR')
-        with open('config_manipulator.json') as json_data_file:
+        with open('config/config_manipulator.json') as json_data_file:
             self.config = json.load(json_data_file)
 
     def Initialize(self, key):
@@ -27,6 +27,8 @@ class Manipulator:
             self.GenerateSingle()
         elif self.params['mode'] == 'group':
             self.GenerateGroup()
+        elif self.params['mode'] == 'blend':
+            self.GenerateBlend()
 
     def GenerateSingle(self):
         composite_image_name = 'single_'
@@ -51,6 +53,8 @@ class Manipulator:
             top_right = base_image.transpose(Image.ROTATE_90)
             bottom_right = base_image.transpose(Image.ROTATE_180)
             bottom_left = base_image.transpose(Image.ROTATE_270)
+        # if self.params['group_mode'] == 'C':
+            
 
         self.im_width = base_image.size[0]
         self.im_height = base_image.size[1]
@@ -64,8 +68,26 @@ class Manipulator:
         composite_group.paste(bottom_right, (self.im_width,self.im_height))
         full_path = self.params['composite_group_path'] + image_name + '.png'
         print('Saving image at ',full_path)
-        composite_group = composite_group.resize((self.im_width,self.im_height))
+        # composite_group = composite_group.resize((self.im_width,self.im_height))
         composite_group.save(full_path)
+
+    def GenerateBlend(self):
+        group = self.params['blend']['group'].split('_')
+        group = group[0]
+        im_name = self.params['blend']['name']
+
+        source_A = '../images//' + group + '//' + 'group_A//' + im_name 
+        source_B = '../images//' + group + '//' + 'group_B//' + im_name 
+        source_C = '../images//' + group + '//' + 'group_C//' + im_name
+
+        print(source_A, source_B, source_C) 
+        im_A = Image.open(source_A)
+        im_B = Image.open(source_B)
+        im_C = Image.open(source_C)
+
+        im_A.putalpha(128)
+        im_B.paste(im_A, (0,0,im_A.size[0],im_A.size[1]))
+        im_B.save('../images//composite//blends//Spectral.png')
 
     def generate_composite(self, image_id):
         top_param = self.params['groups']['top'].split('_')
