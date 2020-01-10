@@ -40,19 +40,19 @@ class IFS {
 
 
     quantize(points, dims,scale){
-        let tiles = this.generate_tiles(dims,scale)
+        this.tiles = [];
+        this.generate_tiles(dims,scale)
         let scaled_points = this.scale_points(points, scale)
-        tiles = this.filter_points(points,tiles);
-
-        return tiles
+        this.filter_points(points);
+        this.average_tiles()
+        return this.tiles
     }
 
     generate_tiles(dims,scale){
-        let x_step = scale / dims[0]
-        let y_step = scale / dims[1]
+        this.x_step = scale / dims[0]
+        this.y_step = scale / dims[1]
         let max_tiles = dims[0] * dims[1];
         console.log('dims : max_tiles ->\t',dims,' : ',max_tiles)
-        let tiles = [];
         let row_count = -1;
         for(let i = 0; i < max_tiles; i++){
             let x = i % dims[0] //squares only for now
@@ -66,34 +66,54 @@ class IFS {
                 points:[],
                 point_count: 0,
                 bounds: [
-                    x_step * x, // x1
-                    x_step * (x + 1), //x2
-                    y_step * y, // y1
-                    y_step * (y + 1) //y2
+                    this.x_step * x, // x1
+                    this.x_step * (x + 1), //x2
+                    this.y_step * y, // y1
+                    this.y_step * (y + 1) //y2
                 ]
             }
-            tiles.push(tile)
+            this.tiles.push(tile)
         }
-        return tiles
     }
 
-    filter_points(points,tiles){
-        for(let i = 0; i <points.length; i++){
+    average_tiles(){
+        for(let i = 0; i < this.tiles.length; i++){
+            this.tiles[i].point_count = this.tiles[i].points.length
+            console.log('averaging tile values', this.tiles[i].point_count)
+            let x_sum = 0;
+            let y_sum = 0;
+            let point_count =  this.tiles[i].point_count
+            for(let j = 0; j < point_count; j++){
+                x_sum += this.tiles[i].points[j][0]
+                y_sum += this.tiles[i].points[j][1]
+            }
+            let ave_x = (x_sum / point_count) / this.x_step
+            let ave_y = (y_sum / point_count) / this.y_step
+            this.tiles[i].ave_x = ave_x
+            this.tiles[i].ave_y = ave_y
+            console.log('x_sum ->',x_sum, 'x_avg ->',this.tiles[i].ave_x)
+            console.log('y_sum ->',y_sum, 'y_avg ->',this.tiles[i].ave_y)
+        }
+    }
+
+
+    filter_points(points){
+        for(let i = 0; i < points.length; i++){
             let x = points[i][0]
             let y = points[i][1]
             console.log('point->', x,y)
 
-            for(let j = 0; j < tiles.length; j++){
-                let x_low = tiles[j].bounds.x1
-                let in_tile = (x >= tiles[j].bounds[0]) &&
-                               (x <=  tiles[j].bounds[1]) &&
-                                (y >= tiles[j].bounds[2]) &&
-                                (y <= tiles[j].bounds[3])
+            for(let j = 0; j < this.tiles.length; j++){
+                let in_tile = (x >= this.tiles[j].bounds[0]) &&
+                               (x <=  this.tiles[j].bounds[1]) &&
+                                (y >= this.tiles[j].bounds[2]) &&
+                                (y <= this.tiles[j].bounds[3])
                 if(in_tile){
                     // console.log('in_tile_xy point->',x,y,'\tbounds->',tiles[j].bounds)
-                    tiles[j].points.push([x,y])
+                    this.tiles[j].points.push([x,y])
                     // tiles[j].points.push({x:x,y:y})
-                    tiles[j].point_count++;
+                    this.tiles[j].point_count = this.tiles[j].points.length
+                    // console.log(this.tiles[j].point_count,'pc')
                     break;
                 }
             }
@@ -102,8 +122,8 @@ class IFS {
         // for(let j = 0; j < tiles.length; j++){
         //     console.log('bound->',tiles[j].bounds,'points->',tiles[j].points)
         // }
-        return tiles
     }
+
     scale_points(points, scale){
         for(let i = 0; i < points.length; i++){ 
             let x = points[i][0]
