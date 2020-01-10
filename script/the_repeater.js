@@ -9,33 +9,78 @@ var IFS = require("./ifs.js")
 class Repeater{
     constructor(){
         console.log('Lets Repeat Baby')
+        this.build_color_library()
         this.params = config['A']
         this.ifs = new IFS(this.params.constants);
         let points = this.ifs.generate_points()
-        this.ifs.quantize(points, this.params.quantize_dims)
+        let scale = 3200;
+        let tiles = this.ifs.quantize(points, this.params.dims, scale)
         // console.log(points)
-        // this.draw(points)
+        paper.setup(new paper.Size(scale,scale))
+
+        let tile_size = scale / this.params.dims[0]
+        this.draw_background()
+        this.draw_tiles(tiles,tile_size)
     }
 
-    draw(points){
-        
-        this.canvas_width = 3200
-        this.canvas_height = 3200  
-        let origin = new paper.Point(this.canvas_width/2,this.canvas_height/2);
-        paper.setup(new paper.Size(this.canvas_width, this.canvas_height))
-
-        this.draw_background()
-        // console.log('origin',origin)
-        for(let i = 0; i < points.length; i++){
-            let x = points[i][0] + 2
-            let y = points[i][1] + 2
-            let scaled_x = this.canvas_width * x / 4
-            let scaled_y = this.canvas_height * y / 4
-            let local_origin = new paper.Point(scaled_x,scaled_y)
-            // console.log(local_origin)
-            let cir = new paper.Path.Circle(local_origin, 5);
-            cir.fillColor = 'black'
+    build_color_library() {
+        let chromotome_palettes = chromotome.getAll();
+        this.palettes = {};
+        for (let i = 0; i < chromotome_palettes.length; i++) {
+          let key = chromotome_palettes[i].name;
+          this.palettes[key] = new Object(chromotome_palettes[i].colors);
         }
+        this.palettes = { ...this.palettes, ...chroma.brewer };
+        this.palette_names = Object.keys(this.palettes);
+        console.log(this.palettes)
+        this.color_machine = chroma.scale(this.palettes['Spectral']);
+      }
+
+    draw_tiles(tiles,tile_size){
+        
+        for(let i = 0; i < tiles.length; i++){
+            let point_count = tiles[i].points.length
+            let x = tiles[i].bounds[0]
+            let y = tiles[i].bounds[2]
+            console.log(tiles[i].bounds)
+            let size = new paper.Size(tile_size, tile_size);
+            let local_origin = new paper.Point(x,y)
+            let square = new paper.Path.Rectangle(local_origin, size);
+            let color_val = point_count / this.params.constants.iterations
+            square.fillColor = this.color_machine(color_val).hex();
+        }
+
+        for(let i = 0; i < tiles.length; i++){
+            let point_count = tiles[i].points.length
+            for(let j = 0; j < point_count; j++){
+                let x = tiles[i].points[j][0]
+                let y = tiles[i].points[j][1]
+                let dot = new paper.Path.Circle(x,y,tile_size/24)
+                let color_val = point_count / this.params.constants.iterations
+                dot.fillColor = this.color_machine(1-color_val).hex();
+            }
+        }
+
+        
+        // this.canvas_width = scale
+        // this.canvas_height = scale  
+        // // let origin = new paper.Point(this.canvas_width/2,this.canvas_height/2);
+        // let origin = new paper.Point(0,0);
+        
+
+        
+        // // console.log('origin',origin)
+        // for(let i = 0; i < points.length; i++){
+        //     let x = points[i][0] //* (this.canvas_width / 10)
+        //     let y = points[i][1] //* (this.canvas_height / 10)
+        //     console.log(x,y)
+        //     let scaled_x = this.canvas_width * x / 4
+        //     let scaled_y = this.canvas_height * y / 4
+        //     let local_origin = new paper.Point(x,y)
+        //     // console.log(local_origin)
+        //     let cir = new paper.Path.Circle(local_origin, 10);
+        //     cir.fillColor = 'black'
+        // }
         let svg = paper.project.exportSVG({
             asString: true,
             precision: 2,

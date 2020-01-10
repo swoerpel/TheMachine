@@ -5,8 +5,8 @@
             "B": "rand",
             "C": "rand",
             "D": "rand",
-            "iterations":12
+            "iterations":500
         },
-        "quantize_dims": [3,3]
+        "dims": [12,12]
     }
 }
