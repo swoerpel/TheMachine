@@ -1,12 +1,12 @@
 {
     "A": {
         "constants" :{
-            "A": 1.641,
-            "B": 1.902,
-            "C": 0.316,
-            "D": 1.525,
-            "iterations":10000
+            "A": "rand",
+            "B": "rand",
+            "C": "rand",
+            "D": "rand",
+            "iterations":12
         },
-        "quantize": 2
+        "quantize_dims": [3,3]
     }
 }

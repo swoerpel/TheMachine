@@ -12,8 +12,9 @@ class Repeater{
         this.params = config['A']
         this.ifs = new IFS(this.params.constants);
         let points = this.ifs.generate_points()
+        this.ifs.quantize(points, this.params.quantize_dims)
         // console.log(points)
-        this.draw(points)
+        // this.draw(points)
     }
 
     draw(points){
