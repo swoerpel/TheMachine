@@ -1,8 +1,8 @@
 {
   "composite_A": {
     "groups": {
-      "top": "triangle_C",
-      "bottom": "triangle_C",
+      "top": "square_A",
+      "bottom": "square_A",
       "mask": "circle_C"
     },
     "mode": "group",

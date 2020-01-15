@@ -10,9 +10,9 @@ module.exports = {
     color_path: 3, // color sequence path
     grid_scale: { x: 1, y: 1 },
     grid_size: 2,
-    stroke_weights: [1],
+    stroke_weights: [1,.5],
     rotation: [0],
-    sub_shapes: [1],
+    sub_shapes: [1,2],
     sub_stroke_weights: [1]
   },
 

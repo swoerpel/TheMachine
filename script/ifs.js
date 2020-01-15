@@ -1,5 +1,3 @@
-
-
 class IFS {
     constructor(params){
         this.params = params
@@ -45,8 +43,28 @@ class IFS {
         let scaled_points = this.scale_points(points, scale)
         this.filter_points(points);
         this.average_tiles()
+        this.format_tile_values();
         return this.tiles
     }
+
+    format_tile_values(){
+        let max_value = -10000;
+        for(let i = 0; i < this.tiles.length; i++){
+            let point_count_ratio = this.round(this.tiles[i].points.length / this.params.iterations)
+            if (point_count_ratio > max_value)
+                max_value = point_count_ratio
+            console.log(i, '->',point_count_ratio)
+
+        }
+        for(let i = 0; i < this.tiles.length; i++){
+            let scaled_max = (this.tiles[i].points.length / this.params.iterations) / max_value
+            console.log(i, '->',scaled_max)
+            this.tiles[i].point_count_ratio = scaled_max
+        }
+        console.log('max value', max_value)
+
+    }
+
 
     generate_tiles(dims,scale){
         this.x_step = scale / dims[0]
@@ -79,29 +97,29 @@ class IFS {
     average_tiles(){
         for(let i = 0; i < this.tiles.length; i++){
             this.tiles[i].point_count = this.tiles[i].points.length
-            console.log('averaging tile values', this.tiles[i].point_count)
-            let x_sum = 0;
-            let y_sum = 0;
+            let sum_x = 0;
+            let sum_y = 0;
             let point_count =  this.tiles[i].point_count
             for(let j = 0; j < point_count; j++){
-                x_sum += this.tiles[i].points[j][0]
-                y_sum += this.tiles[i].points[j][1]
+                sum_x += this.tiles[i].points[j][0]
+                sum_y += this.tiles[i].points[j][1]
             }
-            let ave_x = (x_sum / point_count) / this.x_step
-            let ave_y = (y_sum / point_count) / this.y_step
+            let ave_x = this.round(sum_x / point_count) 
+            let ave_y = this.round(sum_y / point_count)
+            if(!ave_x)
+                ave_x = -1
+            if(!ave_y)
+                ave_y = -1
             this.tiles[i].ave_x = ave_x
             this.tiles[i].ave_y = ave_y
-            console.log('x_sum ->',x_sum, 'x_avg ->',this.tiles[i].ave_x)
-            console.log('y_sum ->',y_sum, 'y_avg ->',this.tiles[i].ave_y)
         }
     }
-
 
     filter_points(points){
         for(let i = 0; i < points.length; i++){
             let x = points[i][0]
             let y = points[i][1]
-            console.log('point->', x,y)
+            // console.log('point->', x,y)
 
             for(let j = 0; j < this.tiles.length; j++){
                 let in_tile = (x >= this.tiles[j].bounds[0]) &&

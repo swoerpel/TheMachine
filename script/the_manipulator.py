@@ -7,7 +7,7 @@ import json
 import copy
 import numpy as np
 
-composite_key = 'composite_C'
+composite_key = 'composite_A'
 
 class Manipulator:
 
@@ -104,7 +104,7 @@ class Manipulator:
         else :
             mask_source =   '../images//' + mask_param[0]   + '//' + 'group_'  + mask_param[1] + '/'
 
-        # print(top_source,bottom_source,mask_source)
+        print(top_source,bottom_source,mask_source)
 
         top_group_names =     [f for f in listdir(top_source)    if isfile(join(top_source, f))]
         bottom_group_names =  [f for f in listdir(bottom_source) if isfile(join(bottom_source, f))]
@@ -122,12 +122,13 @@ class Manipulator:
         bottom_image =      Image.open(bottom_source + bottom_image_name)
         mask =              Image.open(mask_source + mask_image_name)
 
-        bottom_image = bottom_image.rotate(-90)
-        # print(top_image,bottom_image,mask)
+        # bottom_image = bottom_image.rotate(-90)
+        print(top_image,bottom_image,mask)
 
         mask = self.binary(mask)
-        final_img = Image.composite(bottom_image, top_image, mask)
+        final_img = Image.composite(top_image, bottom_image, mask)
         return final_img
+        # return mask
 
 
 
