@@ -1,11 +1,11 @@
 var params = {
     canvas: {
-      width: 3200,
-      height: 2400
+      width: 2400+ 3200,
+      height: 4800
     },
     main_graphic:{
-      width: 2400,
-      height: 2400
+      width: 4800,
+      height: 4800
     },
     info_graphic:{
       background: 'orange',
@@ -17,19 +17,20 @@ var params = {
       y: 'yellow'
     },
     grid: {
-      width: 2,
-      height: 2
+      width: 3,
+      height: 3
     },
     data:{
       type: 'trad_ifs',
+      filter: 2500
     }
   }
 
 var ifs = {
     trad_ifs:{
-        zoom:1,
-        // load: '', //rand if blank
-        load: 'califlower', //rand if blank
+        zoom:2,
+        load: '', //rand if blank
+        // load: 'floor_spikes', //rand if blank
         functs : [
             {
         vars:[
@@ -54,7 +55,7 @@ var ifs = {
             prob: 0.5
         }
         ],
-        iterations: 24000
+        iterations: 10000
     }
 
 }
@@ -90,6 +91,10 @@ function load_seed(seed_id) {
         [[0.9214517035925556, -0.20837734212381687, -0.8778739878894375, -0.7268201634085902, 0.3881429703646999, -0.0903587572158262],
         [0.18925913979345932, 0.36237031426907107, -0.2666231584559582, 0.5703776429844525, -0.808166850064028, -0.32778035894084745]],
   
+      'floor_spikes':
+      [[-0.38994, -0.6637, -0.6104, -0.09085, -0.16613, -0.24464],
+       [0.59601, -0.02116, -0.46346, 0.83797, -0.2646, 0.39447]],
+
     }
     return seeds[seed_id]
 }
