@@ -1,31 +1,10 @@
-var params = {
-  canvas: {
-    width: 2400,
-    height: 2400
-  },
-  colors: {
-    background: 'green',
-    x: 'blue',
-    y: 'red'
-  },
-  grid: {
-    width: 2,
-    height: 2
-  }
-}
-params.grid.tile_size = new Object(
-  {
-    x:params.canvas.width / params.grid.width,
-    y: params.canvas.height / params.grid.height
-  }
-);
+
 
 var graphic;
-// console.log(chroma.brewer)
-var color_machine = chroma.scale('Spectral')
-// var color_machine = chroma.scale([params.colors.x,params.colors.y])
+var info_graphic;
+var color_machine = chroma.scale([params.colors.x,params.colors.y])
 function setup() {
-    // pixelDensity(1) //prevents display issues when zooming on browser
+  frameRate(32)
   console.log(params.grid)
   let canvas = createCanvas(params.canvas.width,params.canvas.height);
   canvas.background(params.colors.background);
@@ -35,18 +14,32 @@ function setup() {
 function reset(){
   params.grid.tile_size = new Object(
     {
-      x:params.canvas.width / params.grid.width,
-      y: params.canvas.height / params.grid.height
+      x:params.main_graphic.width / params.grid.width,
+      y: params.main_graphic.height / params.grid.height
     }
   );
-  graphic = createGraphics(params.canvas.width,params.canvas.height);
+  params.info_graphic.width = params.canvas.width - params.main_graphic.width;
+  params.info_graphic.height = params.canvas.height
+
+  graphic = createGraphics(params.main_graphic.width,params.main_graphic.height);
+  info_graphic = createGraphics(params.info_graphic.width,params.info_graphic.height);
+  info_graphic.background(params.info_graphic.background)
   graphic.background('black');
-  console.log('tile size->', params.grid.tile_size)
+  draw_tiles();
+  draw_info();
+  image(graphic,0,0)
+  image(info_graphic,params.main_graphic.width,0)
 }
 
+function draw_info(){
+  info_graphic.textSize(60)
+  info_graphic.text('chet',
+        params.info_graphic.width * params.info_graphic.margin.x, 
+        params.info_graphic.height * params.info_graphic.margin.y)
+
+}
 
 function draw_tiles(){
-  // ((color_val * t) * Math.random() * (Math.random() > 0.5 ? -1 : 1))
   let gs = Math.sqrt(params.grid.width * params.grid.width + params.grid.height * params.grid.height)
   for(let i = 0; i < params.grid.width; i++){
     for(let j = 0; j < params.grid.height; j++){
@@ -54,13 +47,9 @@ function draw_tiles(){
       let y = j * params.grid.tile_size.y
       let s = Math.sqrt(i * i + j * j)
       let t = 0.1
-      graphic.strokeWeight(5)
       let color_val = s / gs
-      // color_val += 
-      // let color_val = i / params.grid.width;
-      
       graphic.fill(color_machine(color_val).hex())
-      graphic.strokeWeight(5)
+      graphic.strokeWeight(0)
       graphic.stroke('black')
       graphic.rect(x,y,params.grid.tile_size.x,params.grid.tile_size.y)
     }
@@ -70,9 +59,9 @@ function draw_tiles(){
 
 function keyPressed() {
   if (keyCode === 37) 
-    params.grid.width++;
-  if (keyCode === 39) 
     params.grid.width--;
+  if (keyCode === 39) 
+    params.grid.width++;
   if (keyCode === 38) 
     params.grid.height++;
   if (keyCode === 40) 
@@ -81,17 +70,8 @@ function keyPressed() {
   reset()
 }
 
-
 function draw() {
-  draw_tiles();
-  image(graphic,0,0)
-    // for (let i = 0; i < parameters.GP.draw_count; i++)
-    //     T.DrawTourGroup()
-    // image(T.GetGraphic(), 0, 0)
-    // draw_count++
 
-    // // if (draw_count > 100)
-    // noLoop()
 }
 
 
