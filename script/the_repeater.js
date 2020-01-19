@@ -5,7 +5,7 @@ var svg2img = require('svg2img');
 var chromotome = require("chromotome");
 var fs = require("fs");
 var config = require("./config/config_repeater.json");
-var IFS = require("./ifs.js")
+var IFS = require("./ifs/ifs.js")
 class Repeater{
     constructor(){
         console.log('Lets Repeat Baby')
@@ -22,8 +22,8 @@ class Repeater{
         let tile_color_machine = chroma.scale(this.palettes['Spectral']);
         let point_color_machine = chroma.scale(this.palettes['binary']);
 
-        // this.draw_tiles(tiles,tile_size, tile_color_machine)
-        this.draw_points(tiles,tile_size,point_color_machine)
+        this.draw_tiles(tiles,tile_size, tile_color_machine)
+        // this.draw_points(tiles,tile_size,point_color_machine)
         this.save_image()
     }
 
@@ -87,7 +87,7 @@ class Repeater{
             embedImages: false
         });
         this.image_id = 'chez'
-        this.ExportSVG(svg,this.image_id)
+        // this.ExportSVG(svg,this.image_id)
         this.ExportPNG(svg, this.image_id);
     }
 
@@ -105,7 +105,7 @@ class Repeater{
     }
 
     ExportPNG(svg, image_id) {
-        let path = "C:\\File\\Programming\\TheMachine\\script\\"
+        let path = "C:\\Files\\Programming\\TheMachine\\script\\images\\"
         path += (image_id + '.png');
         svg2img(svg, function (error, buffer) {
             fs.writeFileSync(path, buffer);
@@ -115,7 +115,7 @@ class Repeater{
     }
 
     ExportSVG(svg, image_id) {
-        let path = "C:\\File\\Programming\\TheMachine\\script\\"
+        let path = "C:\\Files\\Programming\\TheMachine\\script\\images\\"
         path += (image_id + '.svg');
         fs.writeFile(path, svg, function (err) {
             if (err) throw err;

@@ -5,9 +5,9 @@
             "B": -2.53,
             "C": 1.61,
             "D": -0.33,
-            "iterations":10000
+            "iterations":12000
         },
-        "dims": [4,4]
+        "dims": [12,12]
     },
     "B": {
         "constants" :{
