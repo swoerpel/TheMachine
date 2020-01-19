@@ -9,7 +9,44 @@ function setup() {
   let canvas = createCanvas(params.canvas.width,params.canvas.height);
   canvas.background(params.colors.background);
   reset();
+  generate_ifs_grid();
 }
+
+
+function generate_ifs_grid(){
+  let ifs_params = ifs[params.data.type];
+  console.log(ifs_params)
+  let load_params;
+  if(ifs_params.load != ''){
+    load_params = load_seed('califlower')
+    console.log(load_params)
+  }
+  else{
+    load_params = [];
+    
+    for(let i = 0; i < ifs_params.functs.length; i++){
+      let funct = [];
+      for(let j = 0; j < ifs_params.functs[i].vars.length; j++){
+        // console.log(ifs_params.functs[i].vars[j])
+        let constant = ifs_params.functs[i].vars[j]
+        let val = constant == 'rand' ? round_(Math.random()) : constant
+        funct.push(val)
+      }
+      load_params.push(funct);
+      
+    }
+  }
+  console.log(load_params)
+  let base_ifs = new TradIFS(load_params,ifs_params.iterations,50) 
+  base_ifs.generateValues()
+  console.log(base_ifs)
+  draw_ifs(base_ifs);
+}
+
+function round_(N,acc = 100000){
+  return Math.round(N * acc) / acc
+}
+
 
 function reset(){
   params.grid.tile_size = new Object(
@@ -18,15 +55,19 @@ function reset(){
       y: params.main_graphic.height / params.grid.height
     }
   );
+
   params.info_graphic.width = params.canvas.width - params.main_graphic.width;
   params.info_graphic.height = params.canvas.height
 
   graphic = createGraphics(params.main_graphic.width,params.main_graphic.height);
+  graphic.background('black');
+
   info_graphic = createGraphics(params.info_graphic.width,params.info_graphic.height);
   info_graphic.background(params.info_graphic.background)
-  graphic.background('black');
+  
   draw_tiles();
   draw_info();
+
   image(graphic,0,0)
   image(info_graphic,params.main_graphic.width,0)
 }
@@ -39,6 +80,44 @@ function draw_info(){
 
 }
 
+
+function draw_ifs(ifs_data){
+  let origin = {x:0,y:0}
+  graphic.translate(params.grid.tile_size.x/2,params.grid.tile_size.y/2);
+  graphic.stroke('black')
+
+  graphic.strokeWeight(50)
+  for(let i = 0; i < ifs_data.values.length; i++){
+    let ifs_width = ifs_data.extrema.x.max - ifs_data.extrema.x.min
+    let ifs_height = ifs_data.extrema.y.max - ifs_data.extrema.y.min
+    
+    // console.log('ifs width and height',ifs_width,' - ',ifs_height)
+    let x_min = ifs_data.extrema.x.min
+    let x_max = ifs_data.extrema.x.max
+    let y_min = ifs_data.extrema.y.min
+    let y_max = ifs_data.extrema.y.max
+    let x = ifs_data.values[i].x 
+    let y = ifs_data.values[i].y
+    let scaled_x;
+    let scaled_y;
+    // if(x < 0)
+      scaled_x = x / (ifs_width / 2)
+    // else
+      // scaled_x = x / x_max
+    // if(y < 0)
+      scaled_y = y / (ifs_height / 2)
+    // else
+      // scaled_y = y / y_max
+    // console.log(scaled_x,scaled_y)
+
+    // console.log(ifs_data.values[i])
+    graphic.strokeWeight(5)
+    graphic.point(scaled_x * params.grid.tile_size.x / 2,scaled_y * params.grid.tile_size.y / 2)
+  }
+  graphic.point(0,0)
+  image(graphic,0,0)
+}
+
 function draw_tiles(){
   let gs = Math.sqrt(params.grid.width * params.grid.width + params.grid.height * params.grid.height)
   for(let i = 0; i < params.grid.width; i++){
@@ -48,9 +127,10 @@ function draw_tiles(){
       let s = Math.sqrt(i * i + j * j)
       let t = 0.1
       let color_val = s / gs
-      graphic.fill(color_machine(color_val).hex())
-      graphic.strokeWeight(0)
-      graphic.stroke('black')
+      // graphic.fill(color_machine(color_val).hex())
+      graphic.strokeWeight(40)
+      graphic.stroke(color_machine(color_val).hex())
+      // graphic.stroke('black')
       graphic.rect(x,y,params.grid.tile_size.x,params.grid.tile_size.y)
     }
   }
@@ -67,7 +147,7 @@ function keyPressed() {
   if (keyCode === 40) 
     params.grid.height--;
   // console.log('key pressed:', keyCode)
-  reset()
+  // reset()
 }
 
 function draw() {

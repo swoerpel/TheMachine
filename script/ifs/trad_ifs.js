@@ -1,6 +1,6 @@
 
 
-class IFS {
+class TradIFS {
     constructor(params, init_steps, filter) {
         this.params = params
         this.x = 0
