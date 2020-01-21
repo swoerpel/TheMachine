@@ -1,19 +1,19 @@
 var params = {
     canvas: {
-      width: 6000,
-      height: 6000
+      width: 2400 + 1200,
+      height: 2400
     },
     main_graphic:{
-      width: 6000,
-      height: 6000
+      width: 2400,
+      height: 2400
     },
     info_graphic:{
-      open:false,
+      active:true,
       background: 'orange',
       margin:{x:0.125, y:0.0625} 
     },
     colors: {
-      background: 'black',
+      background: 'green',
       points:'white',
       x: 'black',
       y: 'blue',
@@ -22,11 +22,11 @@ var params = {
     grid: {
       width: 3,
       height: 3,
-      border_thickness: 0
+      border_thickness: 25
     },
     data:{
       type: 'trad_ifs',
-      filter: 2500
+      filter: 10000
     }
   }
 
@@ -35,8 +35,8 @@ var IFS_Params = {
         zoom:{x:4,y:4},
         stroke_weight:2,
         iterations_per_draw: 500,
-        load: '', //rand if blank
-        // load: 'floor_spikes', //rand if blank
+        // load: '', //rand if blank
+        load: 'floor_spikes', //rand if blank
         functs : [
             {
         vars:[
