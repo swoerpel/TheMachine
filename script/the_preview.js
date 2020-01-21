@@ -2,6 +2,8 @@
 
 var graphic;
 var info_graphic;
+var ifs_grid = [];
+var ifs_params;
 var color_machine = chroma.scale([params.colors.x,params.colors.y])
 function setup() {
   frameRate(32)
@@ -9,15 +11,15 @@ function setup() {
   let canvas = createCanvas(params.canvas.width,params.canvas.height);
   canvas.background(params.colors.background);
   reset();
-  let ifs_params = ifs[params.data.type];
-  let ifs_grid = generate_ifs_grid(ifs_params);
-  draw_ifs_grid(ifs_params,ifs_grid);
+  ifs_params = IFS_Params[params.data.type];
+  generate_ifs_grid(ifs_params);
+  // draw_ifs_origins(ifs_params);
 }
 
 function generate_load_params(ifs_params){
   let load_params;
   if(ifs_params.load != ''){
-    load_params = load_seed(ifs_params.load)
+    load_params = load_saved_seed(ifs_params.load)
     console.log(load_params)
   }
   else{
@@ -37,26 +39,6 @@ function generate_load_params(ifs_params){
 }
 
 function generate_ifs_grid(ifs_params){
-  
-  // let load_params = generate_load_params(ifs_params);
-  let ifs_grid = [];
-  for(let i = 0; i < params.grid.width; i++){
-    let row = [];
-    for(let j = 0; j < params.grid.height; j++){
-      let load_params = generate_load_params(ifs_params);
-      console.log('params',load_params)
-      let rand_ifs = new TradIFS(load_params,ifs_params.iterations,params.data.filter) 
-      rand_ifs.generateValues()
-      row.push(rand_ifs)
-      console.log(rand_ifs)
-    }
-    ifs_grid.push(row)
-  }
-  
-  return ifs_grid
-}
-
-function draw_ifs_grid(ifs_params,ifs_grid){
   for(let i = 0; i < params.grid.width; i++){
     for(let j = 0; j < params.grid.height; j++){
       let x = i * params.grid.tile_size.x
@@ -65,10 +47,23 @@ function draw_ifs_grid(ifs_params,ifs_grid){
         x:params.grid.tile_size.x/2 + x,
         y:params.grid.tile_size.y/2 + y
       }
-      base_ifs = ifs_grid[i][j];
-      draw_ifs(ifs_params,base_ifs,origin,i,j);
-
+      let load_params = generate_load_params(ifs_params)
+      let tile = {
+        params: new Object(load_params),
+        ifs: new TradIFS(load_params,params.data.filter),
+        origin: new Object(origin)
+      }
+      ifs_grid.push(tile)
     }
+  }
+}
+
+function draw_ifs_origins(ifs_params){
+  for(let i = 0; i < ifs_grid.length; i++){
+    let origin = ifs_grid[i].origin
+    console.log('origin->',origin)
+    graphic.strokeWeight(50)
+    graphic.point(origin.x,origin.y)
   }
 }
 
@@ -80,20 +75,19 @@ function reset(){
     }
   );
 
-  params.info_graphic.width = params.canvas.width - params.main_graphic.width;
-  params.info_graphic.height = params.canvas.height
-
   graphic = createGraphics(params.main_graphic.width,params.main_graphic.height);
   graphic.background('black');
-
-  info_graphic = createGraphics(params.info_graphic.width,params.info_graphic.height);
-  info_graphic.background(params.info_graphic.background)
-  
-  draw_tiles();
-  draw_info();
-
+  // draw_tiles();
   image(graphic,0,0)
-  image(info_graphic,params.main_graphic.width,0)
+
+  if(params.info_graphic.on){
+    params.info_graphic.width = params.canvas.width - params.main_graphic.width;
+    params.info_graphic.height = params.canvas.height
+    info_graphic = createGraphics(params.info_graphic.width,params.info_graphic.height);
+    info_graphic.background(params.info_graphic.background)
+    draw_info();
+    image(info_graphic,params.main_graphic.width,0)
+  }
 }
 
 function draw_info(){
@@ -104,39 +98,6 @@ function draw_info(){
 
 }
 
-
-function draw_ifs(ifs_params,ifs_data,origin, row,col){
-  // let points = []
-  for(let i = 0; i < ifs_data.values.length; i++){
-    let ifs_width = ifs_data.extrema.x.max - ifs_data.extrema.x.min
-    let ifs_height = ifs_data.extrema.y.max - ifs_data.extrema.y.min
-    let c = Math.floor(Math.random() * ifs_data.values.length)
-    let x = ifs_data.values[c].x 
-    let y = ifs_data.values[c].y
-    let scaled_x;
-    let scaled_y;
-    // if(x < 0)
-    scaled_x = (x / (ifs_width / 2)) * ifs_params.zoom * 2
-    // else
-      // scaled_x = x / x_max
-    // if(y < 0)
-    scaled_y = (y / (ifs_height / 2))* ifs_params.zoom * 3
-      // scaled_y = y / y_max
-
-    points.push({
-      x:scaled_x * params.grid.tile_size.x / 2,
-      y:scaled_y * params.grid.tile_size.y / 2
-    })
-    // graphic.point()
-  }
-
-  return points
-  
-
-}
-
-var points = [];
-
 function draw_tiles(){
   let gs = Math.sqrt(params.grid.width * params.grid.width + params.grid.height * params.grid.height)
   for(let i = 0; i < params.grid.width; i++){
@@ -146,10 +107,9 @@ function draw_tiles(){
       let s = Math.sqrt(i * i + j * j)
       let t = 0.1
       let color_val = s / gs
-      // graphic.fill(color_machine(color_val).hex())
-      graphic.strokeWeight(40)
-      graphic.stroke(color_machine(color_val).hex())
-      // graphic.stroke('black')
+      graphic.strokeWeight(params.grid.border_thickness)
+      graphic.stroke('black')
+      // graphic.stroke(color_machine(color_val).hex())
       graphic.rect(x,y,params.grid.tile_size.x,params.grid.tile_size.y)
     }
   }
@@ -169,26 +129,88 @@ function keyPressed() {
   // reset()
 }
 
+
+function scale_points(points,input_bounds,zoom){
+  // console.log(zoom)
+  for(let i = 0; i < points.length; i++){
+    let scaled_x;
+    let scaled_y;
+    if(points[i].x > 0)
+    points[i].x = Math.abs(points[i].x) / input_bounds.x.max * zoom.x
+    else
+    points[i].x = Math.abs(points[i].x) / input_bounds.x.min * zoom.x
+
+    if(points[i].y > 0)
+    points[i].y = Math.abs(points[i].y) / input_bounds.y.max * zoom.y
+    else
+    points[i].y = Math.abs(points[i].y) / input_bounds.y.min * zoom.y
+
+    // console.log('points ->',points[i].x,points[i].y)
+    // console.log('xbounds->',input_bounds.x.min,input_bounds.x.max)
+    // console.log('ybounds->',input_bounds.y.min,input_bounds.y.max)
+    // console.log('scaled ->',scaled_x,scaled_y)
+  }
+  return points
+}
+
 function draw() {
-  // console.log(points)
-  let gs = Math.sqrt(params.grid.width * params.grid.width + params.grid.height * params.grid.height)
-  for(let i = 0; i < 500; i++){
-    let point_index = Math.floor(Math.random() * points.length)
-    graphic.translate(params.grid.tile_size.x  / 2,params.grid.tile_size.y/2);
-    let s = Math.sqrt(points[point_index].x * points[point_index].x + points[point_index].y * points[point_index].y)
-    let color_val = s / gs
-    // console.log(color_val)
-    graphic.stroke(color_machine(0).hex())
-    graphic.strokeWeight(5)
-    graphic.point(points[point_index].x,points[point_index].y)
-    graphic.translate(-params.grid.tile_size.x  / 2,-params.grid.tile_size.y/2);
+  graphic.strokeWeight(ifs_params.stroke_weight)
+  
+  for(let i = 0; i < ifs_grid.length; i++){
+    // console.log(ifs_grid[i].ifs)
+    let origin = ifs_grid[i].origin
+    let points = ifs_grid[i].ifs.generatePoints(ifs_params.iterations_per_draw)
+    // console.log(points)
+    let input_bounds = ifs_grid[i].ifs.extrema;
+    
+    points = scale_points(points,input_bounds, ifs_params.zoom );
+    // console.log(origin)
+    graphic.translate(origin.x,origin.y);
+    graphic.stroke(params.colors.points)
+    for(let j = 0; j < points.length; j++){
+      let point_x = points[j].x * (params.grid.tile_size.x / 2)
+      let point_y = points[j].y * (params.grid.tile_size.y / 2)
+      // let point_y = origin.y + points[j].y
+      graphic.point(point_x,point_y)
+
+    }
+    graphic.translate(-origin.x,-origin.y);
 
   }
-
     image(graphic,0,0)
 }
 
+  // function draw_ifs(ifs_params,ifs_data,origin, row,col){
+  //   // let points = []
+  //   for(let i = 0; i < ifs_data.values.length; i++){
+  //     let ifs_width = ifs_data.extrema.x.max - ifs_data.extrema.x.min
+  //     let ifs_height = ifs_data.extrema.y.max - ifs_data.extrema.y.min
+  //     let c = Math.floor(Math.random() * ifs_data.values.length)
+  //     let x = ifs_data.values[c].x 
+  //     let y = ifs_data.values[c].y
+  //     let scaled_x;
+  //     let scaled_y;
+  //     // if(x < 0)
+  //     scaled_x = (x / (ifs_width / 2)) * ifs_params.zoom * 2
+  //     // else
+  //       // scaled_x = x / x_max
+  //     // if(y < 0)
+  //     scaled_y = (y / (ifs_height / 2))* ifs_params.zoom * 3
+  //       // scaled_y = y / y_max
+  
+  //     points.push({
+  //       x:scaled_x * params.grid.tile_size.x / 2,
+  //       y:scaled_y * params.grid.tile_size.y / 2
+  //     })
+  //     // graphic.point()
+  //   }
+  
+    // return points
+    
+  
+  // }
 
+  
 
 function round_(N,acc = 100000){
   return Math.round(N * acc) / acc

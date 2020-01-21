@@ -1,24 +1,28 @@
 var params = {
     canvas: {
-      width: 2400+ 3200,
-      height: 4800
+      width: 6000,
+      height: 6000
     },
     main_graphic:{
-      width: 4800,
-      height: 4800
+      width: 6000,
+      height: 6000
     },
     info_graphic:{
+      open:false,
       background: 'orange',
       margin:{x:0.125, y:0.0625} 
     },
     colors: {
       background: 'black',
-      x: 'blue',
-      y: 'yellow'
+      points:'white',
+      x: 'black',
+      y: 'blue',
+      
     },
     grid: {
       width: 3,
-      height: 3
+      height: 3,
+      border_thickness: 0
     },
     data:{
       type: 'trad_ifs',
@@ -26,9 +30,11 @@ var params = {
     }
   }
 
-var ifs = {
+var IFS_Params = {
     trad_ifs:{
-        zoom:2,
+        zoom:{x:4,y:4},
+        stroke_weight:2,
+        iterations_per_draw: 500,
         load: '', //rand if blank
         // load: 'floor_spikes', //rand if blank
         functs : [
@@ -55,13 +61,13 @@ var ifs = {
             prob: 0.5
         }
         ],
-        iterations: 10000
+        
     }
 
 }
 
 
-function load_seed(seed_id) {
+function load_saved_seed(seed_id) {
     let seeds = {
       'leaf_bois': [[-0.6466558, 0.12387177, -0.53947019, -0.69715325, 0.77943671, -0.79004337],
       [0.59591638, -0.0258686, -0.40476259, -0.62336581, -0.39510686, -0.13025707]],

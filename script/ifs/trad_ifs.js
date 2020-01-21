@@ -1,7 +1,7 @@
 
 
 class TradIFS {
-    constructor(params, init_steps, filter) {
+    constructor(params, filter) {
         this.params = params
         this.x = 0
         this.y = 0
@@ -10,16 +10,15 @@ class TradIFS {
         this.setupFunctions()
         this.encodeParams()
         this.filter = filter;
-        this.steps = init_steps;
         this.colors = []; // holds one or many colors for plotting
-        this.generateValues()
+        this.generatePoints(1000)
         this.extrema = this.calculateExtrema()
     }
 
     // generates raw values, no scaling
-    generateValues() {
+    generatePoints(iterations) {
         let values = []
-        for (let i = 0; i < this.steps; i++) {
+        for (let i = 0; i < iterations; i++) {
             let function_prob = 1 / this.transform_functions.length
             let nextPoint;
             let prob = random(1)
@@ -42,6 +41,7 @@ class TradIFS {
         let filtered_values = this.filterValues(values)
         // this.values = [...this.values, ...filtered_values]/// this.filterValues(values)
         this.values = filtered_values
+        return filtered_values
     }
 
 
