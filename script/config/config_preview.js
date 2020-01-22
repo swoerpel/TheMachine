@@ -9,20 +9,20 @@ var params = {
     },
     info_graphic:{
       active:true,
-      background: 'orange',
+      background: 'grey',
       margin:{x:0.125, y:0.0625} 
     },
     colors: {
       background: 'green',
       points:'white',
       x: 'black',
-      y: 'blue',
+      y: 'black',
       
     },
     grid: {
-      width: 3,
-      height: 3,
-      border_thickness: 25
+      width: 1,
+      height: 1,
+      border_thickness: 0
     },
     data:{
       type: 'trad_ifs',
@@ -32,11 +32,12 @@ var params = {
 
 var IFS_Params = {
     trad_ifs:{
-        zoom:{x:4,y:4},
-        stroke_weight:2,
-        iterations_per_draw: 500,
+        zoom:{x:4,y:2},
+        stroke_weight:1,
+        iterations_per_draw: 100,
         // load: '', //rand if blank
-        load: 'floor_spikes', //rand if blank
+        load: 'califlower', //rand if blank
+        // load: 'floor_spikes', //rand if blank
         functs : [
             {
         vars:[

@@ -4,17 +4,44 @@ var graphic;
 var info_graphic;
 var ifs_grid = [];
 var ifs_params;
+var pause = false;
+var first_draw = true;
 var color_machine = chroma.scale([params.colors.x,params.colors.y])
 function setup() {
   frameRate(32)
   console.log(params.grid)
   let canvas = createCanvas(params.canvas.width,params.canvas.height);
-  canvas.background('black');
-  reset();
+  // canvas.background('black');
   ifs_params = IFS_Params[params.data.type];
-  generate_ifs_grid(ifs_params);
+  reset();
+  
+  // generate_ifs_grid(ifs_params);
+ 
+  draw_ifs_origins(ifs_params);
+}
+
+function reset(){
+  params.grid.tile_size = new Object(
+    {
+      x:params.main_graphic.width / params.grid.width,
+      y: params.main_graphic.height / params.grid.height
+    }
+  );
+  if(params.info_graphic.active){
+    params.info_graphic.width = params.canvas.width - params.main_graphic.width;
+    params.info_graphic.height = params.canvas.height
+    info_graphic = createGraphics(params.info_graphic.width,params.info_graphic.height);
+    info_graphic.background(params.info_graphic.background)
+    draw_info();
+    image(info_graphic,params.main_graphic.width,0)
+  }
+  graphic = createGraphics(params.main_graphic.width,params.main_graphic.height);
+  console.log(params.colors.background)
+  graphic.background(params.colors.background)
   draw_tiles();
-  // draw_ifs_origins(ifs_params);
+  image(graphic,0,0)
+  generate_ifs_grid(ifs_params);
+    
 }
 
 function generate_load_params(ifs_params){
@@ -74,26 +101,7 @@ function draw_ifs_origins(ifs_params){
   }
 }
 
-function reset(){
-  params.grid.tile_size = new Object(
-    {
-      x:params.main_graphic.width / params.grid.width,
-      y: params.main_graphic.height / params.grid.height
-    }
-  );
-  if(params.info_graphic.active){
-    params.info_graphic.width = params.canvas.width - params.main_graphic.width;
-    params.info_graphic.height = params.canvas.height
-    info_graphic = createGraphics(params.info_graphic.width,params.info_graphic.height);
-    info_graphic.background(params.info_graphic.background)
-    draw_info();
-    image(info_graphic,params.main_graphic.width,0)
-  }
-  graphic = createGraphics(params.main_graphic.width,params.main_graphic.height);
-  console.log(params.colors.background)
-  graphic.background(params.colors.background)
-  image(graphic,0,0)
-}
+
 
 function draw_info(){
   info_graphic.textSize(60)
@@ -122,18 +130,54 @@ function draw_tiles(){
   }
 }
 
+function draw() {
+  if(!pause){
+    graphic.strokeWeight(ifs_params.stroke_weight)
+    for(let i = 0; i < ifs_grid.length; i++)
+      draw_tile(ifs_grid[i]); 
+    image(graphic,0,0)
+  }
+}  
 
-function keyPressed() {
-  if (keyCode === 37) 
-    params.grid.width--;
-  if (keyCode === 39) 
-    params.grid.width++;
-  if (keyCode === 38) 
-    params.grid.height++;
-  if (keyCode === 40) 
-    params.grid.height--;
-  // console.log('key pressed:', keyCode)
-  // reset()
+function draw_tile(tile){
+  let origin = tile.origin
+  let points = tile.ifs.generatePoints(ifs_params.iterations_per_draw)
+  // if(first_draw){
+    // console.log('first draw',first_draw)
+    input_bounds = tile.ifs.extrema;
+    // first_draw = false;
+  // }
+  // else{
+    // console.log(clear_rect_coords)
+    // input_bounds.x.min = 
+    //   (clear_rect_coords[0].x < clear_rect_coords[1].x) ?
+    //     clear_rect_coords[0].x:
+    //     clear_rect_coords[1].x
+    // input_bounds.x.max =
+    //   (clear_rect_coords[0].x < clear_rect_coords[1].x) ?
+    //     clear_rect_coords[1].x:
+    //     clear_rect_coords[0].x
+    // input_bounds.y.min =
+    //   (clear_rect_coords[0].y < clear_rect_coords[1].y) ?
+    //     clear_rect_coords[0].y:
+    //     clear_rect_coords[1].y
+    // input_bounds.y.max =
+    //   (clear_rect_coords[0].y < clear_rect_coords[1].y) ?
+    //     clear_rect_coords[1].y:
+    //     clear_rect_coords[0].y
+    
+  // }
+  console.log('points->',points)
+  points = scale_points(points,input_bounds, ifs_params.zoom);
+  console.log('points_scaled->',points)
+  graphic.translate(origin.x,origin.y);
+  graphic.stroke(params.colors.points)
+  for(let j = 0; j < points.length; j++){
+    let point_x = points[j].x * (params.grid.tile_size.x / 2)
+    let point_y = points[j].y * (params.grid.tile_size.y / 2)
+    graphic.point(point_x,point_y)
+  }
+  graphic.translate(-origin.x,-origin.y);
 }
 
 
@@ -143,14 +187,14 @@ function scale_points(points,input_bounds,zoom){
     let scaled_x;
     let scaled_y;
     if(points[i].x > 0)
-    points[i].x = Math.abs(points[i].x) / input_bounds.x.max * zoom.x
+      points[i].x = Math.abs(points[i].x) / input_bounds.x.max * zoom.x
     else
-    points[i].x = Math.abs(points[i].x) / input_bounds.x.min * zoom.x
+      points[i].x = Math.abs(points[i].x) / input_bounds.x.min * zoom.x
 
     if(points[i].y > 0)
-    points[i].y = Math.abs(points[i].y) / input_bounds.y.max * zoom.y
+      points[i].y = Math.abs(points[i].y) / input_bounds.y.max * zoom.y
     else
-    points[i].y = Math.abs(points[i].y) / input_bounds.y.min * zoom.y
+      points[i].y = Math.abs(points[i].y) / input_bounds.y.min * zoom.y
 
     // console.log('points ->',points[i].x,points[i].y)
     // console.log('xbounds->',input_bounds.x.min,input_bounds.x.max)
@@ -160,37 +204,69 @@ function scale_points(points,input_bounds,zoom){
   return points
 }
 
-function draw() {
-  graphic.strokeWeight(ifs_params.stroke_weight)
-  
-  for(let i = 0; i < ifs_grid.length; i++){
-    // console.log(ifs_grid[i].ifs)
-    let origin = ifs_grid[i].origin
-    let points = ifs_grid[i].ifs.generatePoints(ifs_params.iterations_per_draw)
-    // console.log(points)
-    let input_bounds = ifs_grid[i].ifs.extrema;
-    
-    points = scale_points(points,input_bounds, ifs_params.zoom );
-    // console.log(origin)
-    graphic.translate(origin.x,origin.y);
-    graphic.stroke(params.colors.points)
-    for(let j = 0; j < points.length; j++){
-      let point_x = points[j].x * (params.grid.tile_size.x / 2)
-      let point_y = points[j].y * (params.grid.tile_size.y / 2)
-      // let point_y = origin.y + points[j].y
-      graphic.point(point_x,point_y)
 
-    }
-    graphic.translate(-origin.x,-origin.y);
-
-  }
-    image(graphic,0,0)
-}  
 
 function round_(N,acc = 100000){
   return Math.round(N * acc) / acc
 }
 
+
+function keyPressed() {
+  if(keyCode === 32){
+    pause = !pause;
+  }else if(keyCode === 37){
+    params.grid.width--;
+    reset();
+  }else if(keyCode === 39){
+    params.grid.width++;
+    reset();
+  }else if(keyCode === 38){
+    params.grid.height++;
+    reset();
+  }else if(keyCode === 40){
+    params.grid.height--;
+    reset();
+  }
+  console.log('key pressed:', keyCode)
+}
+
+var clear_rect_index = 0;
+var clear_rect_coords = [];
+function mousePressed() {
+  console.log(mouseButton, mouseX, mouseY)
+  if (mouseButton === LEFT) {
+    let mouse_in_range =
+      (mouseX <= params.main_graphic.width && mouseX > 0) &&
+      (mouseY <= params.main_graphic.height && mouseY > 0)
+    if (mouse_in_range) {
+      clear_rect_index++;
+      let mouse = { x: mouseX, y: mouseY }
+      graphic.stroke('white')
+      graphic.strokeWeight(3)
+      if(mouse.y < params.main_graphic.height / 2)
+        graphic.line(mouse.x,mouse.y,mouse.x,params.main_graphic.height)
+      else
+        graphic.line(mouse.x,0,mouse.x,mouse.y)
+
+      if(mouse.x < params.main_graphic.width / 2)
+        graphic.line(mouse.x,mouse.y,params.main_graphic.width,mouse.y)
+      else
+        graphic.line(0,mouse.y,mouse.x,mouse.y)
+      clear_rect_coords.push(mouse)
+      if (clear_rect_index == 2) {
+        console.log('clicked rect ->', clear_rect_coords)
+        clear_rect_coords.map((p,index)=>{
+          graphic.strokeWeight(24)
+          graphic.point(p.x,p.y)
+          graphic.point(p.x,clear_rect_coords[(index + 1) % clear_rect_coords.length].y)
+        })
+        clear_rect_index = 0;
+        clear_rect_coords = []
+        // reset();
+      }
+    }
+  }
+}
 
 // var saveImage = () => {
 //     console.log('saving image')
