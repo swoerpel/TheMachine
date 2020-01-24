@@ -36,6 +36,7 @@ class MasterController {
     SetupPaper() {
         let tile_width = Templates.png_dims.x / this.vital_params.grid_size.x
         let tile_height = Templates.png_dims.y / this.vital_params.grid_size.y
+        console.log(tile_width,tile_height)
         this.paper_width = tile_width * this.vital_params.grid_size.x
         this.paper_height = tile_height * this.vital_params.grid_size.y
         paper.setup(new paper.Size(this.paper_width, this.paper_height))

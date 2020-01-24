@@ -13,16 +13,16 @@ var params = {
       margin:{x:0.125, y:0.0625} 
     },
     colors: {
-      background: 'green',
+      background: 'black',
       points:'white',
       x: 'black',
       y: 'black',
       
     },
     grid: {
-      width: 1,
-      height: 1,
-      border_thickness: 0
+      width: 2,
+      height: 2,
+      border_thickness: 10
     },
     data:{
       type: 'trad_ifs',
@@ -32,7 +32,7 @@ var params = {
 
 var IFS_Params = {
     trad_ifs:{
-        zoom:{x:4,y:2},
+        zoom:{x:1,y:1},
         stroke_weight:1,
         iterations_per_draw: 100,
         // load: '', //rand if blank

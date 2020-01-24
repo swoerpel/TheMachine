@@ -1,41 +1,18 @@
 goals
+-- display params left click option
+-- 'move to base' right click option
+-- randomize base params
 
--- organize file system to allow new machines   
-    - move config files to dedicated folder
-    - move value generating files to folder
-    - keep drivers/machines higher up
-
--- eliminate templates file
-
--- the_machine -> blend save modes
-    - create multiple grid sizes of same color
-    - save in 'blend' folder
-
--- create the repeater
-    - choose generation method
-    - "pixelate" fractals based on average values
-        - overlay different grid sizes
-        - each layer
-        
-    - generation modes
-        - traditional: no bound, linear
-        - attractors:  bounded, trig
-        - dynamical system: time is indepentent
-
-Responsibilities
--- the_repeater
-    request tile information from IFS generator
-        default or trig
-        multiple IFS on one canvas
-
-    generate tile svgs 
-    save into folder
-    decide coloring?
-
--- how to start
-    get average values for NxM grids displayed in grayscale
-    change threshold of shading
+-- randomize offset matrices (keep base params)
+    offset matrices -> 2
+    horizontal and vertical diretions only
 
 
+-- create grid of IFS
+    - base params (top left corner)
+    - each row is new offset matrix
 
-    
+
+order of operations
+- create grid of random params
+- display params which are clicked

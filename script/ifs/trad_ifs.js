@@ -1,7 +1,7 @@
 
 
 class TradIFS {
-    constructor(params, filter) {
+    constructor(params) {
         this.params = params
         this.x = 0
         this.y = 0
@@ -9,7 +9,7 @@ class TradIFS {
         this.filtered_values = []
         this.setupFunctions()
         this.encodeParams()
-        this.filter = filter;
+        this.filter = 10000;
         this.colors = []; // holds one or many colors for plotting
         this.generatePoints(1000)
         this.extrema = this.calculateExtrema()

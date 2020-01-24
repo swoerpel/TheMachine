@@ -1,5 +1,145 @@
+var graphic;
+var grid = {
+  tiles:[]
+
+};
+
+function setup() {
+  frameRate(32)
+  let canvas = createCanvas(params.canvas.width,params.canvas.height);
+  ifs_params = IFS_Params[params.data.type];
+  graphic = createGraphics(params.main_graphic.width,params.main_graphic.height);
+  graphic.background(params.colors.background)
+
+  // initialize base function system
+  // initialize offset function systems
+  initialize_grid();
+  initialize_ifs();
+  console.log(grid)
+}
+
+function initialize_ifs(){
+  let default_params = load_default_params();
+  let offset_A = generate_random_offset_params(default_params);
+  let offset_B = generate_random_offset_params(default_params);
+  for(let i = 0; i < params.grid.width; i++){
+    for(let j = 0; j < params.grid.height; j++){
+      grid.tiles[i][j].ifs = new TradIFS(default_params)
+    }
+  }
+}
+
+function generate_random_offset_params(default_params, max){
+  let offset_matrix = [];
+  for(let i = 0; i < default_params.length; i++){
+    let funct = [];
+    for(let j = 0; j < default_params[i].length; j++){
+      let val = round_(Math.random()* max) * (Math.random() > 0.5 ? 1 : -1)
+      funct.push(val)
+    }
+    offset_matrix.push(funct)
+  }
+  return offset_matrix
+}
+
+function initialize_grid(){
+  grid.tile_size = new Object(
+    {
+      x:params.main_graphic.width / params.grid.width,
+      y: params.main_graphic.height / params.grid.height
+    }
+  );
+  params.grid.tile_size = new Object(grid.tile_size)
+  for(let i = 0; i < params.grid.width; i++){
+    let row = [];
+    for(let j = 0; j < params.grid.height; j++){
+      let x = i * params.grid.tile_size.x
+      let y = j * params.grid.tile_size.y
+      let origin = {
+        x:params.grid.tile_size.x/2 + x,
+        y:params.grid.tile_size.y/2 + y
+      }
+      let xc = (i / params.grid.width) * (i / params.grid.width)
+      let yc = (j / params.grid.height) * (j / params.grid.height)
+      let bcv = Math.sqrt(xc + yc)
+      let tile = {
+        origin: new Object(origin),
+        colors:{
+          background_val: bcv
+        }
+      }
+      row.push(tile)
+    }
+    grid.tiles.push(row)
+  }
+}
+
+function load_default_params(){
+  let load_params;
+  let ifs_params = IFS_Params[params.data.type];
+  if(ifs_params.load != ''){
+    load_params = load_saved_seed(ifs_params.load)
+    console.log(load_params)
+  }
+  else{
+    load_params = [];
+    for(let i = 0; i < ifs_params.functs.length; i++){
+      let funct = [];
+      for(let j = 0; j < ifs_params.functs[i].vars.length; j++){
+        // console.log(ifs_params.functs[i].vars[j])
+        let constant = ifs_params.functs[i].vars[j]
+        let val = (constant == 'rand') ? round_(1 - 2 * Math.random())  : constant
+        funct.push(val)
+      }
+      load_params.push(funct);
+    }
+  }
+  return load_params;
+}
+
+function draw() {
+    graphic.strokeWeight(ifs_params.stroke_weight)
+    for(let i = 0; i < params.grid.width; i++){
+      for(let j = 0; j < params.grid.height; j++){
+        draw_tile(grid.tiles[i][j]); 
+      }
+    }
+     
+    image(graphic,0,0)
+}  
+
+function draw_tile(tile){
+  let origin = tile.origin
+  let points = tile.ifs.generatePoints(ifs_params.iterations_per_draw)
+  input_bounds = tile.ifs.extrema;
+  points = scale_points(points,input_bounds, ifs_params.zoom);
+  graphic.translate(origin.x,origin.y);
+  graphic.stroke(params.colors.points)
+  for(let j = 0; j < points.length; j++){
+    let point_x = points[j].x * (params.grid.tile_size.x / 2)
+    let point_y = points[j].y * (params.grid.tile_size.y / 2)
+    graphic.point(point_x,point_y)
+  }
+  graphic.translate(-origin.x,-origin.y);
+}
+
+function scale_points(points,input_bounds,zoom){
+  for(let i = 0; i < points.length; i++){
+    if(points[i].x > 0)
+      points[i].x = Math.abs(points[i].x) / input_bounds.x.max * zoom.x
+    else
+      points[i].x = Math.abs(points[i].x) / input_bounds.x.min * zoom.x
+
+    if(points[i].y > 0)
+      points[i].y = Math.abs(points[i].y) / input_bounds.y.max * zoom.y
+    else
+      points[i].y = Math.abs(points[i].y) / input_bounds.y.min * zoom.y
+  }
+  return points
+}
 
 
+/*
 var graphic;
 var info_graphic;
 var ifs_grid = [];
@@ -66,7 +206,41 @@ function generate_load_params(ifs_params){
   return load_params;
 }
 
+function generate_random_offsets(param_count, radius){
+  let rand_params = [];
+  for(let i = 0; i < param_count; i ++){
+    let val = Math.random() * radius;
+    val *= val * ((Math.random() > 0.5) ? -1 : 1)
+    val = round_(val)
+    rand_params.push(val)
+  }
+  return rand_params
+}
+
+function apply_offset_params(base, offset, count){
+  console.log('COUNT', count)
+  base_copy = base.map(function(arr) {
+    return arr.slice();
+});
+  for(let i = 0; i < count; i++){
+    for(let j = 0; j < base.length; j++){
+      for(let k = 0; k < base[j].length; k ++){
+        console.log(base[j][k])
+        base_copy[j][k] += offset[k]
+      }
+      
+    }
+  }
+  return base_copy
+}
+
 function generate_ifs_grid(ifs_params){
+  let base_params = generate_load_params(ifs_params);
+  console.log('base params', base_params)
+  let column_offset_params = generate_random_offsets(6, .5);
+  let row_offset_params = generate_random_offsets(6,.5);
+  console.log('column offset ->',column_offset_params)
+  console.log('row    offset ->',row_offset_params)
   for(let i = 0; i < params.grid.width; i++){
     for(let j = 0; j < params.grid.height; j++){
       let x = i * params.grid.tile_size.x
@@ -75,13 +249,19 @@ function generate_ifs_grid(ifs_params){
         x:params.grid.tile_size.x/2 + x,
         y:params.grid.tile_size.y/2 + y
       }
-      let load_params = generate_load_params(ifs_params)
+
+
+      let current_params = apply_offset_params(base_params,column_offset_params,i)
+      // current_params = apply_offset_params(current_params,row_offset_params,j)
+
+      console.log('current_params (i,j) ->',i,j, current_params)
+      // let load_params = generate_load_params(ifs_params)
       let xc = (i / params.grid.width) * (i / params.grid.width)
       let yc = (j / params.grid.height) * (j / params.grid.height)
       let bcv = Math.sqrt(xc + yc)
       let tile = {
-        params: new Object(load_params),
-        ifs: new TradIFS(load_params,params.data.filter),
+        params: new Object(current_params),
+        ifs: new TradIFS(base_params,params.data.filter),
         origin: new Object(origin),
         colors:{
           background_val: bcv
@@ -167,9 +347,9 @@ function draw_tile(tile){
     //     clear_rect_coords[0].y
     
   // }
-  console.log('points->',points)
+  // console.log('points->',points)
   points = scale_points(points,input_bounds, ifs_params.zoom);
-  console.log('points_scaled->',points)
+  // console.log('points_scaled->',points)
   graphic.translate(origin.x,origin.y);
   graphic.stroke(params.colors.points)
   for(let j = 0; j < points.length; j++){
@@ -243,23 +423,23 @@ function mousePressed() {
       let mouse = { x: mouseX, y: mouseY }
       graphic.stroke('white')
       graphic.strokeWeight(3)
-      if(mouse.y < params.main_graphic.height / 2)
-        graphic.line(mouse.x,mouse.y,mouse.x,params.main_graphic.height)
-      else
-        graphic.line(mouse.x,0,mouse.x,mouse.y)
+      // if(mouse.y < params.main_graphic.height / 2)
+      //   graphic.line(mouse.x,mouse.y,mouse.x,params.main_graphic.height)
+      // else
+      //   graphic.line(mouse.x,0,mouse.x,mouse.y)
 
-      if(mouse.x < params.main_graphic.width / 2)
-        graphic.line(mouse.x,mouse.y,params.main_graphic.width,mouse.y)
-      else
-        graphic.line(0,mouse.y,mouse.x,mouse.y)
+      // if(mouse.x < params.main_graphic.width / 2)
+      //   graphic.line(mouse.x,mouse.y,params.main_graphic.width,mouse.y)
+      // else
+      //   graphic.line(0,mouse.y,mouse.x,mouse.y)
       clear_rect_coords.push(mouse)
       if (clear_rect_index == 2) {
         console.log('clicked rect ->', clear_rect_coords)
-        clear_rect_coords.map((p,index)=>{
-          graphic.strokeWeight(24)
-          graphic.point(p.x,p.y)
-          graphic.point(p.x,clear_rect_coords[(index + 1) % clear_rect_coords.length].y)
-        })
+        // clear_rect_coords.map((p,index)=>{
+        //   graphic.strokeWeight(24)
+        //   graphic.point(p.x,p.y)
+        //   graphic.point(p.x,clear_rect_coords[(index + 1) % clear_rect_coords.length].y)
+        // })
         clear_rect_index = 0;
         clear_rect_coords = []
         // reset();
@@ -315,3 +495,4 @@ function mousePressed() {
 
 
 
+*/

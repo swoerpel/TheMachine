@@ -96,8 +96,8 @@ class Manipulator:
 
         # print(top_param,bottom_param,mask_param)
 
-        top_source =    '../images//' + top_param[0]    + '//' + 'group_' + top_param[1] + '/'
-        bottom_source = '../images//' + bottom_param[0] + '//' + 'group_' + bottom_param[1] + '/'
+        top_source =    '../images//' + top_param[0]    + '//' + 'group_' + top_param[1] + '//'
+        bottom_source = '../images//' + bottom_param[0] + '//' + 'group_' + bottom_param[1] + '//'
 
         if mask_param[1] == 'Custom':
             mask_source =   '../images//' + mask_param[0]   + '//' + 'custom/'
@@ -122,8 +122,8 @@ class Manipulator:
         bottom_image =      Image.open(bottom_source + bottom_image_name)
         mask =              Image.open(mask_source + mask_image_name)
 
-        # bottom_image = bottom_image.rotate(-90)
-        print(top_image,bottom_image,mask)
+        bottom_image = bottom_image.rotate(-90)
+        # print(top_image,bottom_image,mask)
 
         mask = self.binary(mask)
         final_img = Image.composite(top_image, bottom_image, mask)

@@ -1,6 +1,6 @@
 module.exports = {
   canvas: {
-    paper_width: 2400,
+    paper_width: 2400 * 4,
     paper_height: 2400
   },
 
@@ -62,7 +62,7 @@ module.exports = {
   },
   circle_C: {
     step_shape: 1,
-    step_path: 4, // overlap order path
+    step_path: 2, // overlap order path
     color_path: 4, // color sequence path
     grid_scale: { x: 1, y: 1 },
     grid_size: 2,
@@ -76,10 +76,10 @@ module.exports = {
     step_path: 3, // overlap order path
     color_path: 3, // color sequence path
     grid_scale: { x: 1, y: 1 },
-    grid_size: 0,
+    grid_size: 1,
     stroke_weights: [1,],
     rotation: [0, 180],
-    sub_shapes: [1,2,4],
+    sub_shapes: [1,2],
     sub_stroke_weights: [1]
   },
   triangle_B: {

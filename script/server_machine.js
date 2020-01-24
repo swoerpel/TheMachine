@@ -10,6 +10,6 @@ let custom = {
     active: false,
     setting: 'B',
 }
-let total_batch_time = machine.Initialize('square_A',custom); 
+let total_batch_time = machine.Initialize('triangle_A',custom); 
 console.log('total batch time', total_batch_time)
 machine.Generate();
