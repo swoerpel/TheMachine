@@ -4,7 +4,6 @@
 class GridMaster {
     constructor(params){
         console.log('Grid Master Initialized')
-        // console.log(config)
         this.params = params;
     }
 
@@ -13,7 +12,6 @@ class GridMaster {
         this.grid = [];
         this.tile_width = this.params.canvas.width / this.params.grid.width
         this.tile_height = this.params.canvas.height / this.params.grid.height
-
         console.log('[tile width, tile height]-> [', this.tile_width,',' ,this.tile_height, ']')
         for(let i = 0; i < this.params.grid.width; i++){
             let row = [];
@@ -46,7 +44,20 @@ class GridMaster {
             }
             this.grid.push(row)
         }
-        
+    }
+
+    ApplyTileParameters(){
+        console.log(this.params.generator.type)
+        this.grid.map((row)=>{
+            row.map((tile)=>{
+                tile.points = []
+                if(this.params.generator.type == 'A'){
+                    
+                }
+                // tile.chet = new Object({dachet: 'dave dave'})
+            });
+        });
+        console.log(this.grid[0][0])
     }
 
     GetGrid(){

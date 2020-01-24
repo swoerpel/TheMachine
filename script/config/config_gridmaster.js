@@ -4,7 +4,7 @@ var config = {
       height: 2400
     },
     grid: {
-      width: 3,
+      width: 2,
       height: 2,
     },
     generator: {

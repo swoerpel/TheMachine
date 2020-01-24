@@ -17,7 +17,8 @@ function Refresh(){
   let grid_master = new GridMaster(params);
   grid_master.InitializeGrid();
   grid_master.PrintGrid();
-  grid = grid_master.GetGrid();
+  grid_master.ApplyTileParameters();
+  grid = grid_master.GetGrid();// must be last
   console.log('new grid', grid)
   let canvas = createCanvas(params.canvas.width,params.canvas.height);
   graphic = createGraphics(params.canvas.width,params.canvas.height);
@@ -31,7 +32,6 @@ function draw() {
       draw_tile(grid[i][j]); 
     }
   }
-   
   image(graphic,0,0)
 }  
 
