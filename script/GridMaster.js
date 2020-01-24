@@ -1,11 +1,11 @@
-var config = require("./config/config_gridmaster.js");
+// var config = require("./config/config_gridmaster.js");
 
 
 class GridMaster {
-    constructor(){
+    constructor(params){
         console.log('Grid Master Initialized')
         // console.log(config)
-        this.params = config;
+        this.params = params;
     }
 
     InitializeGrid(){
@@ -19,25 +19,40 @@ class GridMaster {
             let row = [];
             for(let j = 0; j < this.params.grid.height; j++){
                 let origin = {
-                    x: i * this.params.canvas.width,
-                    y: j * this.params.canvas.height
+                    x: i * this.tile_width,
+                    y: j * this.tile_height
                 }
                 let center = {
-                    x: origin.x + this.params.canvas.width / 2,
-                    y: origin.y + this.params.canvas.height / 2
+                    x: origin.x + this.tile_width / 2,
+                    y: origin.y + this.tile_height / 2
+                }
+
+                let color = {
+                    background_val:Math.random()
                 }
                 let tile = {
                     id: index,
                     x:i,
                     y:j,
+                    width: this.tile_width,
+                    height: this.tile_height,
                     origin: origin,
                     center: center,
+                    color: color
                 }
+                
+                index++;
                 row.push(tile);
             }
             this.grid.push(row)
         }
+        
     }
+
+    GetGrid(){
+        return this.grid
+    }
+
 
     PrintGrid(){
         console.log('===============GRID===============')
@@ -47,12 +62,10 @@ class GridMaster {
             })
         })
     }
+
 }
 
 
-let grid_master = new GridMaster();
-grid_master.InitializeGrid();
-grid_master.PrintGrid();
     // grid.tile_size = new Object(
     //     {
     //     x:params.main_graphic.width / params.grid.width,

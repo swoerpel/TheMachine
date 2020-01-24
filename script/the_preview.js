@@ -1,21 +1,75 @@
 var graphic;
-var grid = {
-  tiles:[]
-
-};
-
+var grid;
+var params = new Object(config)
+var color_machine = chroma.scale('Spectral')
 function setup() {
-  frameRate(32)
-  let canvas = createCanvas(params.canvas.width,params.canvas.height);
-  ifs_params = IFS_Params[params.data.type];
-  graphic = createGraphics(params.main_graphic.width,params.main_graphic.height);
-  graphic.background(params.colors.background)
-
+  console.log('config_params',params)
+  
+  frameRate(10)
+  Refresh();
   // initialize base function system
   // initialize offset function systems
-  initialize_grid();
-  initialize_ifs();
-  console.log(grid)
+  // initialize_grid();
+  // initialize_ifs();
+}
+
+function Refresh(){
+  let grid_master = new GridMaster(params);
+  grid_master.InitializeGrid();
+  grid_master.PrintGrid();
+  grid = grid_master.GetGrid();
+  console.log('new grid', grid)
+  let canvas = createCanvas(params.canvas.width,params.canvas.height);
+  graphic = createGraphics(params.canvas.width,params.canvas.height);
+  graphic.background('black')
+}
+
+function draw() {
+  // console.log('grid',grid)
+  for(let i = 0; i < grid.length; i++){
+    for(let j = 0; j < grid[i].length; j++){
+      draw_tile(grid[i][j]); 
+    }
+  }
+   
+  image(graphic,0,0)
+}  
+
+function draw_tile(tile){
+  // console.log(tile)
+  // console.log('drawing tile->',tile)
+  graphic.strokeWeight(0);
+  graphic.fill(color_machine(tile.color.background_val).hex());
+  graphic.rect(tile.origin.x,tile.origin.y,tile.width,tile.height)
+// let origin = tile.origin
+// let points = tile.ifs.generatePoints(ifs_params.iterations_per_draw)
+// input_bounds = tile.ifs.extrema;
+// points = scale_points(points,input_bounds, ifs_params.zoom);
+// graphic.translate(origin.x,origin.y);
+// graphic.stroke(params.colors.points)
+// for(let j = 0; j < points.length; j++){
+//   let point_x = points[j].x * (params.grid.tile_size.x / 2)
+//   let point_y = points[j].y * (params.grid.tile_size.y / 2)
+//   graphic.point(point_x,point_y)
+// }
+// graphic.translate(-origin.x,-origin.y);
+}
+
+function keyPressed() {
+  if(keyCode === 37){
+    params.grid.width--;
+    Refresh();
+  }else if(keyCode === 39){
+    params.grid.width++;
+    Refresh();
+  }else if(keyCode === 38){
+    params.grid.height++;
+    Refresh();
+  }else if(keyCode === 40){
+    params.grid.height--;
+    Refresh();
+  }
+  console.log('key pressed:', keyCode)
 }
 
 function initialize_ifs(){
@@ -97,31 +151,7 @@ function load_default_params(){
   return load_params;
 }
 
-function draw() {
-    graphic.strokeWeight(ifs_params.stroke_weight)
-    for(let i = 0; i < params.grid.width; i++){
-      for(let j = 0; j < params.grid.height; j++){
-        draw_tile(grid.tiles[i][j]); 
-      }
-    }
-     
-    image(graphic,0,0)
-}  
 
-function draw_tile(tile){
-  let origin = tile.origin
-  let points = tile.ifs.generatePoints(ifs_params.iterations_per_draw)
-  input_bounds = tile.ifs.extrema;
-  points = scale_points(points,input_bounds, ifs_params.zoom);
-  graphic.translate(origin.x,origin.y);
-  graphic.stroke(params.colors.points)
-  for(let j = 0; j < points.length; j++){
-    let point_x = points[j].x * (params.grid.tile_size.x / 2)
-    let point_y = points[j].y * (params.grid.tile_size.y / 2)
-    graphic.point(point_x,point_y)
-  }
-  graphic.translate(-origin.x,-origin.y);
-}
 
 function scale_points(points,input_bounds,zoom){
   for(let i = 0; i < points.length; i++){
@@ -146,7 +176,7 @@ var ifs_grid = [];
 var ifs_params;
 var pause = false;
 var first_draw = true;
-var color_machine = chroma.scale([params.colors.x,params.colors.y])
+
 function setup() {
   frameRate(32)
   console.log(params.grid)
@@ -391,24 +421,7 @@ function round_(N,acc = 100000){
 }
 
 
-function keyPressed() {
-  if(keyCode === 32){
-    pause = !pause;
-  }else if(keyCode === 37){
-    params.grid.width--;
-    reset();
-  }else if(keyCode === 39){
-    params.grid.width++;
-    reset();
-  }else if(keyCode === 38){
-    params.grid.height++;
-    reset();
-  }else if(keyCode === 40){
-    params.grid.height--;
-    reset();
-  }
-  console.log('key pressed:', keyCode)
-}
+
 
 var clear_rect_index = 0;
 var clear_rect_coords = [];

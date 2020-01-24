@@ -1,14 +1,19 @@
-module.exports = {
+var config = {
     canvas: {
       width: 2400,
       height: 2400
     },
     grid: {
-      width: 2,
+      width: 3,
       height: 2,
     },
-
+    generator: {
+      type: 'A'
+    }  
 }
+
+// uncomment for server running
+// module.exports = config
 
 
 // var params = {
