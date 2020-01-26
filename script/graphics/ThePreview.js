@@ -21,17 +21,31 @@ function Refresh(){
   let canvas = createCanvas(params.canvas.width,params.canvas.height);
   graphic = createGraphics(params.canvas.width,params.canvas.height);
   graphic.background('black')
+  drawTiles();
 }
 
 function draw() {
-  drawTiles();
+  
   if(params.data.generator_type == 'trad_ifs')
     drawTradIFS();
   image(graphic,0,0)
 }  
 
 function drawTradIFS(){
+  graphic.strokeWeight(5)
+  for(let i = 0; i < grid.length; i++){
+    for(let j = 0; j < grid[i].length; j++){
+      let points = grid[i][j].generator.generatePoints(100);
+      // console.log(points)
+      points = grid[i][j].generator.scaleValues(points)
+      // console.log(points)
+      // console.log(grid[i][j].generator)
 
+      points.map((p)=>{
+        graphic.point(p.x * grid[i][j].width,p.y * grid[i][j].height)
+      })
+    }
+  }
 }
 
 function drawTiles(){

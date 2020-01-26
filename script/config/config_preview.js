@@ -20,8 +20,8 @@ var config_preview = {
       
     },
     grid: {
-      width: 2,
-      height:2,
+      width: 1,
+      height:1,
       border_thickness: 20
     },
     data:{

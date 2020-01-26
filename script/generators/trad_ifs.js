@@ -14,7 +14,7 @@ class TradIFS {
         this.params = params;
         this.setupFunctions()
         this.generatePoints(1000)
-        this.extrema = this.calculateExtrema()
+        this.calculateExtrema()
     }
 
     // generates raw values, no scaling
@@ -39,18 +39,32 @@ class TradIFS {
                 }
             }
         }
-        // console.log('value batch', values)
         let filtered_values = this.filterValues(values)
-        // this.values = [...this.values, ...filtered_values]/// this.filterValues(values)
         this.values = filtered_values
+        // this.values = this.scaleValues(filtered_values)
         return filtered_values
     }
 
+    round(N,acc = 10000){
+        return Math.round(N * acc) / acc
+    }
 
     // for zooming and displaying IFSs 
     // off screen boundaries
-    scaleValues(scale) {
+    scaleValues(values) {
+        // console.log('VALUES',values)
+        for(let i = 0; i < values.length; i++){
+            values[i].x += (Math.abs(this.extrema.x.min))
+            values[i].y += (Math.abs(this.extrema.y.min))
 
+        }
+        for(let i = 0; i < values.length; i++){
+            values[i].x = values[i].x / (this.extrema.x.max + Math.abs(this.extrema.x.min)) 
+            values[i].y = values[i].y / (this.extrema.y.max + Math.abs(this.extrema.y.min))
+            values[i].x = this.round(values[i].x)
+            values[i].y = this.round(values[i].y)
+        }
+        return values
     }
 
     // filters out a percentage of the values
@@ -107,7 +121,6 @@ class TradIFS {
                 max: maxy
             }
         }
-        return this.extrema
     }
 
 
