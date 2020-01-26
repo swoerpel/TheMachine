@@ -1,16 +1,18 @@
-
-
 class TradIFS {
-    constructor(params) {
-        this.params = params
+    constructor() {
         this.x = 0
         this.y = 0
         this.values = []
         this.filtered_values = []
-        this.setupFunctions()
-        this.encodeParams()
+        // this.encodeParams()
         this.filter = 10000;
         this.colors = []; // holds one or many colors for plotting
+    }
+
+
+    setParams(params){
+        this.params = params;
+        this.setupFunctions()
         this.generatePoints(1000)
         this.extrema = this.calculateExtrema()
     }
@@ -141,7 +143,5 @@ class TradIFS {
     getEncodedParams() {
         return this.encoded_params
     }
-
-
 
 }

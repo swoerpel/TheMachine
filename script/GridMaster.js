@@ -36,7 +36,8 @@ class GridMaster {
                     height: this.tile_height,
                     origin: origin,
                     center: center,
-                    color: color
+                    color: color,
+                    points: [],
                 }
                 
                 index++;
@@ -46,19 +47,47 @@ class GridMaster {
         }
     }
 
-    ApplyTileParameters(){
-        console.log(this.params.generator.type)
+    InitializeParameters(){
+        this.param_machine = new ParameterGenerator()
+        if(this.params.data.generator_type == 'trad_ifs')
+            this.init_trad_ifs_params();
+    }
+
+
+    init_trad_ifs_params(){
+        let base_params = this.generate_trad_ifs_base_params();
+        console.log('Base Parameters ->',base_params)
         this.grid.map((row)=>{
             row.map((tile)=>{
-                tile.points = []
-                if(this.params.generator.type == 'A'){
-                    
-                }
-                // tile.chet = new Object({dachet: 'dave dave'})
+                tile.generator.setParams(new Object(base_params))  
             });
         });
-        console.log(this.grid[0][0])
     }
+
+    generate_trad_ifs_base_params(){
+        let base_params = [];
+        if(trad_ifs_params.load == ''){
+            for(let i = 0; i < trad_ifs_params.function_count; i++){
+                let param_array = this.param_machine.rand_param_list(trad_ifs_params.constant_count,trad_ifs_params.variance)
+                base_params.push(param_array)
+            }
+        }
+        else {
+            base_params = load_saved_seed(trad_ifs_params.load)
+        }
+        return base_params
+    }
+
+    InitializeGenerator(){
+        this.grid.map((row)=>{
+            row.map((tile)=>{
+                console.log('tile ->',tile)
+                if(this.params.data.generator_type == 'trad_ifs')
+                    tile.generator = new TradIFS();
+            });
+        });
+    }
+
 
     GetGrid(){
         return this.grid
