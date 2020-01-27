@@ -3,7 +3,7 @@ var grid;
 var params;
 // console.log(config_preview)
 // var params = 
-var color_machine = chroma.scale('Spectral')
+var color_machine = chroma.scale(['white','black'])
 function setup() {
   params = new Object(config_preview)
   frameRate(10)
@@ -35,15 +35,16 @@ function drawTradIFS(){
   graphic.strokeWeight(5)
   for(let i = 0; i < grid.length; i++){
     for(let j = 0; j < grid[i].length; j++){
-      let points = grid[i][j].generator.generatePoints(100);
-      // console.log(points)
+      graphic.translate(grid[i][j].width / 2, grid[i][j].height / 2)
+      let points = grid[i][j].generator.generatePoints(10);
       points = grid[i][j].generator.scaleValues(points)
       // console.log(points)
-      // console.log(grid[i][j].generator)
 
       points.map((p)=>{
-        graphic.point(p.x * grid[i][j].width,p.y * grid[i][j].height)
+        graphic.stroke(color_machine(p.function_index).hex())
+        graphic.point(p.x * grid[i][j].width / 2,p.y * grid[i][j].height / 2)
       })
+      graphic.translate(-grid[i][j].width / 2, -grid[i][j].height / 2)
     }
   }
 }
@@ -53,7 +54,7 @@ function drawTiles(){
     for(let j = 0; j < grid[i].length; j++){
       let tile = grid[i][j];
       graphic.strokeWeight(this.params.grid.border_thickness);
-      graphic.fill(color_machine(tile.color.background_val).hex());
+      graphic.fill('tan');
       graphic.rect(tile.origin.x,tile.origin.y,tile.width,tile.height)
     }
   }

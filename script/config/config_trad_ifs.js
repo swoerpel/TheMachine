@@ -4,7 +4,8 @@ var trad_ifs_params = {
     stroke_weight:1,
     iterations_per_draw: 100,
     // load: '', //rand if blank
-    load: 'califlower', //rand if blank
+    load: 'helix', //rand if blank
+    // load: 'califlower', //rand if blank
     variance: 1, // +- params can be from zero
     function_count: 2,
     constant_count: 6
@@ -45,6 +46,10 @@ function load_saved_seed(seed_id) {
       'floor_spikes':
       [[-0.38994, -0.6637, -0.6104, -0.09085, -0.16613, -0.24464],
        [0.59601, -0.02116, -0.46346, 0.83797, -0.2646, 0.39447]],
+
+       'helix':
+       [[0.8665, -0.0095, 0.3579, 0.7326, 0.2283, 0.3088],
+       [-0.8968, 0.5793, 0.5454, -0.6753, -0.1575, -0.7916]],
 
     }
     return seeds[seed_id]

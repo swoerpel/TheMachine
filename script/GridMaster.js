@@ -26,7 +26,7 @@ class GridMaster {
                 }
 
                 let color = {
-                    background_val:Math.random()
+                    background_val:1,//Math.random()
                 }
                 let tile = {
                     id: index,

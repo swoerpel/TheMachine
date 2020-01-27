@@ -4,6 +4,7 @@ class TradIFS {
         this.y = 0
         this.values = []
         this.filtered_values = []
+        this.last_function_index = 0;
         // this.encodeParams()
         this.filter = 10000;
         this.colors = []; // holds one or many colors for plotting
@@ -28,24 +29,28 @@ class TradIFS {
             for (let j = 0; j < this.transform_functions.length; j++) {
                 sum += function_prob
                 if (sum > prob) {
-                    values.push({
+                    values.push(new Object({
                         x: this.x,
-                        y: this.y
-                    })
+                        y: this.y,
+                        function_index: this.last_function_index,
+                    }));
                     nextPoint = this.transform_functions[j](this.x, this.y)
                     this.x = nextPoint.x
                     this.y = nextPoint.y
+                    // console.log(this.x,this.y)
+                    this.last_function_index = j
                     break;
                 }
             }
         }
+        // console.log(values)
         let filtered_values = this.filterValues(values)
         this.values = filtered_values
         // this.values = this.scaleValues(filtered_values)
         return filtered_values
     }
 
-    round(N,acc = 10000){
+    round(N,acc = 1000000){
         return Math.round(N * acc) / acc
     }
 
@@ -54,16 +59,28 @@ class TradIFS {
     scaleValues(values) {
         // console.log('VALUES',values)
         for(let i = 0; i < values.length; i++){
-            values[i].x += (Math.abs(this.extrema.x.min))
-            values[i].y += (Math.abs(this.extrema.y.min))
+            values[i].x = this.round(values[i].x / (this.extrema.width / 2))
+            values[i].y = this.round(values[i].y / (this.extrema.height / 2))
+            // if(values[i].x < 0)
+                
+            // else
+            //     values[i].x = this.round(values[i].x / this.extrema.x.max)
+
+            // if(values[i].y < 0)
+            //     values[i].y = this.round(values[i].y / Math.abs(this.extrema.y.min))
+            // else
+            //     values[i].y = this.round(values[i].y / this.extrema.y.max)
+            // values[i].y += (Math.abs(this.extrema.y.min))
+            // values[i].x += (Math.abs(this.extrema.x.min))
+            // values[i].y += (Math.abs(this.extrema.y.min))
 
         }
-        for(let i = 0; i < values.length; i++){
-            values[i].x = values[i].x / (this.extrema.x.max + Math.abs(this.extrema.x.min)) 
-            values[i].y = values[i].y / (this.extrema.y.max + Math.abs(this.extrema.y.min))
-            values[i].x = this.round(values[i].x)
-            values[i].y = this.round(values[i].y)
-        }
+        // for(let i = 0; i < values.length; i++){
+        //     values[i].x = values[i].x / (this.extrema.x.max + Math.abs(this.extrema.x.min)) 
+        //     values[i].y = values[i].y / (this.extrema.y.max + Math.abs(this.extrema.y.min)) 
+        //     values[i].x = this.round(values[i].x)
+        //     values[i].y = this.round(values[i].y)
+        // }
         return values
     }
 
@@ -74,7 +91,7 @@ class TradIFS {
         values.map((p) => {
             let fx = Math.round(p.x * this.filter) / this.filter
             let fy = Math.round(p.y * this.filter) / this.filter
-            filtered_values.push({ x: fx, y: fy })
+            filtered_values.push({ x: fx, y: fy, function_index: p.function_index })
         })
 
         //remove duplicates
@@ -101,6 +118,14 @@ class TradIFS {
         let miny = 10000
         let maxx = -10000
         let maxy = -10000
+        let sumx = 0;
+        let sumy = 0;
+
+        let sumx_sqrd = 0;
+        let sumy_sqrd = 0;
+
+
+
         values.map((p) => {
             if (p.x > maxx)
                 maxx = p.x
@@ -110,7 +135,20 @@ class TradIFS {
                 maxy = p.y
             if (p.y < miny)
                 miny = p.y
+            sumx += p.x
+            sumy += p.y
+            sumx_sqrd += (p.x * p.x)
+            sumy_sqrd += (p.y * p.y)
         })
+
+        let avex = this.round(sumx / values.length)
+        let avey = this.round(sumy / values.length)
+        sumx = this.round(sumx)
+        sumy = this.round(sumy)
+
+        console.log('sum x y', sumx, sumy)
+        console.log('avg x y', avex, avey)
+
         this.extrema = {
             x: {
                 min: minx,
@@ -119,7 +157,9 @@ class TradIFS {
             y: {
                 min: miny,
                 max: maxy
-            }
+            },
+            width: maxx - minx,
+            height: maxy - miny,
         }
     }
 
