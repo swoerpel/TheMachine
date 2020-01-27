@@ -18,7 +18,7 @@ class TradIFS {
     setParams(params){
         this.params = params;
         this.setupFunctions()
-        this.generatePoints(10000)
+        this.generatePoints(10000,2)
         this.calculateExtrema()
     }
 
@@ -45,7 +45,7 @@ class TradIFS {
     }
 
     // generates raw values, no scaling
-    generatePoints(iterations) {
+    generatePoints(iterations, sigma) {
         this.values = []
         for (let i = 0; i < iterations; i++) {
             let function_prob = 1 / this.transform_functions.length
@@ -70,7 +70,9 @@ class TradIFS {
         
         }
         this.stdev = this.calculateSTDEV()
-        this.values = this.filterOutliers(this.values,this.stdev)
+        this.values = this.filterOutliers(this.values,this.stdev, sigma)
+        
+
         return this.values
     }
 
@@ -84,6 +86,7 @@ class TradIFS {
                 }
             }
         }
+        
         return new_ary
     }
 

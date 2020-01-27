@@ -1,11 +1,19 @@
 var config_preview = {
+    // canvas: {
+    //   width: 5000,
+    //   height: 5000
+    // },
+    // main_graphic:{
+    //   width: 5000,
+    //   height: 5000
+    // },
     canvas: {
-      width: 9600,
-      height: 4800
+      width: 2400,
+      height: 2400
     },
     main_graphic:{
-      width: 9600,
-      height: 4800
+      width: 2400,
+      height: 2400
     },
     info_graphic:{
       active:true,
@@ -13,16 +21,17 @@ var config_preview = {
       margin:{x:0.125, y:0.0625} 
     },
     colors: {
-      background: 'green',
-      background_palette: ['white','gold'],
-      points:'white',
+      background: 'black',
+      background_palette: 'Spectral',//['white','gold'],
+      points_palette:'Pastel1',
+      points:'',
       x: 'black',
       y: 'black',
       
     },
     grid: {
-      width: 3,
-      height:3,
+      width: 2,
+      height:2,
       border_thickness: 0,
     },
     offset:{

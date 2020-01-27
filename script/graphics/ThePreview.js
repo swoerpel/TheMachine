@@ -1,41 +1,70 @@
 var graphic;
 var grid;
 var params;
-// console.log(config_preview)
-// var params = 
+var mouse;
+var color_palette;
+var color_palette_name;
+var color_low_index;
+var color_high_index;
 var color_machine;
+var palettes;
+var palette_names;
+var params;
+var draw_index = 0;
+var sigma = 3;
+
 function setup() {
-  params = new Object(config_preview)
-  let p = params.colors.background_palette
-  console.log(p)
-  if(Array.isArray(p))
-    color_machine = chroma.scale(p)
-  else
-    color_machine = chroma.scale(chroma.brewer[p])
-  console.log('COLOR MACHINE',color_machine)
+  params = new Object(config_preview);
+  build_color_library();
+  setup_colors();
   frameRate(32)
   Refresh();
 }
 
-function Refresh(){
+function build_color_library() {
+  palettes = {};
+  for (let i = 0; i < chromotome_palettes.length; i++) {
+    let key = chromotome_palettes[i].name;
+    this.palettes[key] = new Object(chromotome_palettes[i].colors);
+  }
+  palettes = { ...palettes, ...chroma.brewer };
+  palette_names = Object.keys(palettes);
+  console.log(palettes)
+}
+
+function setup_colors(){
+  color_palette_name = params.colors.points_palette
+  color_palette = palettes[color_palette_name]
+  color_machine = chroma.scale(color_palette)
+  console.log('color palette',color_palette_name,color_palette)
+}
+
+function Refresh(loaded_base_params = []){
   let grid_master = new GridMaster(params);
   grid_master.InitializeGrid();
   grid_master.InitializeGenerator();
-  grid_master.InitializeParameters();
+  grid_master.InitializeParameters(loaded_base_params);
+
   // grid_master.PrintGrid();
   // grid_master.ApplyTileParameters();
   grid = grid_master.GetGrid();// must be last
   let canvas = createCanvas(params.canvas.width,params.canvas.height);
   graphic = createGraphics(params.canvas.width,params.canvas.height);
-  graphic.background('black')
+  graphic.background(params.colors.background)
   drawTiles();
+  color_low_index =  Math.floor(Math.random() * .5 * color_palette.length) 
+  color_high_index =  Math.floor(Math.random() * (color_palette.length / 2) + .5) 
+
 }
+
+
 
 function draw() {
   
   if(params.data.generator_type == 'trad_ifs')
     drawTradIFS();
   image(graphic,0,0)
+  draw_index++;
 }  
 
 function drawTradIFS(){
@@ -45,12 +74,15 @@ function drawTradIFS(){
       let trans_x = (grid[i][j].width * i) + (grid[i][j].width / 2)
       let trans_y = (grid[i][j].height * j) + (grid[i][j].height / 2)
       graphic.translate(trans_x,trans_y)
-      let points = grid[i][j].generator.generatePoints(500);
+      let points = grid[i][j].generator.generatePoints(500,sigma);
       points = grid[i][j].generator.scaleValues(points)
-      points.map((p)=>{
-        // graphic.stroke(color_machine(0).hex())
-        // console.log(p.function_index)
-        graphic.stroke(color_machine(p.function_index).hex())
+      points.map((p,index)=>{
+        // let color_val = grid[i][j].color.function_color_vals[p.function_index]
+        // let color_val = 1 / Math.sqrt((grid[i][j].color.x * grid[i][j].color.x) + (grid[i][j].color.y * grid[i][j].color.y)) 
+        // color_val += grid[i][j].color.function_color_vals[p.function_index]
+        color_val = grid[i][j].color.vals[p.function_index]
+        
+        graphic.stroke(color_machine(color_val).hex())
         graphic.point(p.x * grid[i][j].width / 2,p.y * grid[i][j].height / 2)
       })
       graphic.translate(-trans_x,-trans_y)
@@ -64,13 +96,40 @@ function drawTiles(){
       let tile = grid[i][j];
       graphic.strokeWeight(this.params.grid.border_thickness);
       graphic.stroke('white')
-      graphic.fill('black');
+      graphic.fill(params.colors.background);
       graphic.rect(tile.origin.x,tile.origin.y,tile.width,tile.height)
     }
   }
 }
 
 function keyPressed() {
+
+  if(keyCode === 17){ //ctrl
+    if(mouseIsPressed){
+      console.log('ctrl + click!')
+    }
+    //ctrl + click -> move to base
+    // let p = this.grid[i][j].generator.params
+    // console.log(p)
+    // Refresh(p);
+  }
+
+  if(keyCode === 187){ //'+' zoom in
+    sigma += 0.25
+    Refresh();
+    console.log('zoom', sigma)
+  }
+  if(keyCode === 189){ // '-' zoom out
+    if(sigma > 0){
+      sigma -= 0.25
+      Refresh();
+    }
+    console.log('zoom', sigma)
+  }
+
+  if(keyCode == 82) // 'r'
+    Refresh();
+
   if(keyCode === 37){
     params.grid.width--;
     Refresh();
@@ -85,7 +144,28 @@ function keyPressed() {
     Refresh();
   }
   console.log('key pressed:', keyCode)
+  console.log(mouse)
 }
+
+
+var clear_rect_index = 0;
+var clear_rect_coords = [];
+function mousePressed() {
+  // console.log(mouseButton, mouseX, mouseY)
+  if (mouseButton === LEFT) {
+    let mouse_in_range =
+      (mouseX <= params.main_graphic.width && mouseX > 0) &&
+      (mouseY <= params.main_graphic.height && mouseY > 0)
+    if (mouse_in_range) {
+      clear_rect_index++;
+      mouse = { x: mouseX, y: mouseY }
+      
+      }
+    }
+  }
+
+
+
 
 // function initialize_ifs(){
 //   let default_params = load_default_params();
@@ -435,44 +515,6 @@ function scale_points(points,input_bounds,zoom){
 
 
 
-
-var clear_rect_index = 0;
-var clear_rect_coords = [];
-function mousePressed() {
-  console.log(mouseButton, mouseX, mouseY)
-  if (mouseButton === LEFT) {
-    let mouse_in_range =
-      (mouseX <= params.main_graphic.width && mouseX > 0) &&
-      (mouseY <= params.main_graphic.height && mouseY > 0)
-    if (mouse_in_range) {
-      clear_rect_index++;
-      let mouse = { x: mouseX, y: mouseY }
-      graphic.stroke('white')
-      graphic.strokeWeight(3)
-      // if(mouse.y < params.main_graphic.height / 2)
-      //   graphic.line(mouse.x,mouse.y,mouse.x,params.main_graphic.height)
-      // else
-      //   graphic.line(mouse.x,0,mouse.x,mouse.y)
-
-      // if(mouse.x < params.main_graphic.width / 2)
-      //   graphic.line(mouse.x,mouse.y,params.main_graphic.width,mouse.y)
-      // else
-      //   graphic.line(0,mouse.y,mouse.x,mouse.y)
-      clear_rect_coords.push(mouse)
-      if (clear_rect_index == 2) {
-        console.log('clicked rect ->', clear_rect_coords)
-        // clear_rect_coords.map((p,index)=>{
-        //   graphic.strokeWeight(24)
-        //   graphic.point(p.x,p.y)
-        //   graphic.point(p.x,clear_rect_coords[(index + 1) % clear_rect_coords.length].y)
-        // })
-        clear_rect_index = 0;
-        clear_rect_coords = []
-        // reset();
-      }
-    }
-  }
-}
 
 // var saveImage = () => {
 //     console.log('saving image')

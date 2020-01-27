@@ -26,7 +26,14 @@ class GridMaster {
                 }
 
                 let color = {
-                    background_val:1,//Math.random()
+                    function_color_vals: Array.from({
+                        length: trad_ifs_params.function_count
+                    }, () => Math.random()),
+                    background_val:1,
+                    vals : [
+                        1 / Math.sqrt(i*i + j*j),
+                        1 - (1 / Math.sqrt(i*i + j*j))
+                    ]
                 }
                 let tile = {
                     id: index,
@@ -47,15 +54,20 @@ class GridMaster {
         }
     }
 
-    InitializeParameters(){
+    InitializeParameters(loaded_base_params){
         this.param_machine = new ParameterGenerator()
         if(this.params.data.generator_type == 'trad_ifs')
-            this.init_trad_ifs_params();
+            this.init_trad_ifs_params(loaded_base_params);
     }
 
 
-    init_trad_ifs_params(){
-        let base_params = this.generate_trad_ifs_base_params();
+    init_trad_ifs_params(loaded_base_params){
+        let base_params;
+        if(!loaded_base_params)
+            base_params = loaded_base_params
+        else
+            base_params = this.generate_trad_ifs_base_params();
+        // console.log('base params ->',base_params,loaded_base_params)
         let offset_matrix_x = [];
         let offset_matrix_y = [];
         for(let i = 0; i < trad_ifs_params.function_count; i++){
@@ -67,9 +79,7 @@ class GridMaster {
                 let base_params_copy = base_params.map(funct => funct.slice())
                 let current_params = this.param_machine.apply_offset_matrix(base_params_copy,offset_matrix_x, i)
                 current_params = this.param_machine.apply_offset_matrix(current_params,offset_matrix_y, j)
-                console.log('current_params',current_params)
                 this.grid[i][j].generator.setParams(new Object(current_params))  
-
             }
         }
     }
@@ -78,10 +88,9 @@ class GridMaster {
         let base_params = [];
         if(trad_ifs_params.load == ''){
             for(let i = 0; i < trad_ifs_params.function_count; i++){
-                // let funct = [];
-                // for(let j = 0; j < trad_ifs_params.constant_count; j++)
-                // console.log(trad_ifs_params.constant_count,trad_ifs_params.variance)
-                let param_array = this.param_machine.rand_param_list(trad_ifs_params.constant_count,trad_ifs_params.variance)
+                let v = trad_ifs_params.variance;
+                let cc = trad_ifs_params.constant_count;
+                let param_array = this.param_machine.rand_param_list(cc,v)
                 base_params.push(param_array)
             }
         }
@@ -118,35 +127,3 @@ class GridMaster {
     }
 
 }
-
-
-    // grid.tile_size = new Object(
-    //     {
-    //     x:params.main_graphic.width / params.grid.width,
-    //     y: params.main_graphic.height / params.grid.height
-    //     }
-    // );
-    // params.grid.tile_size = new Object(grid.tile_size)
-    // for(let i = 0; i < params.grid.width; i++){
-    //     let row = [];
-    //     for(let j = 0; j < params.grid.height; j++){
-    //     let x = i * params.grid.tile_size.x
-    //     let y = j * params.grid.tile_size.y
-    //     let origin = {
-    //         x:params.grid.tile_size.x/2 + x,
-    //         y:params.grid.tile_size.y/2 + y
-    //     }
-    //     let xc = (i / params.grid.width) * (i / params.grid.width)
-    //     let yc = (j / params.grid.height) * (j / params.grid.height)
-    //     let bcv = Math.sqrt(xc + yc)
-    //     let tile = {
-    //         origin: new Object(origin),
-    //         colors:{
-    //         background_val: bcv
-    //         }
-    //     }
-    //     row.push(tile)
-    //     }
-    //     grid.tiles.push(row)
-    // }
-
