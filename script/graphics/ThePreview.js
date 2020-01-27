@@ -3,10 +3,17 @@ var grid;
 var params;
 // console.log(config_preview)
 // var params = 
-var color_machine = chroma.scale(['white','black'])
+var color_machine;
 function setup() {
   params = new Object(config_preview)
-  frameRate(10)
+  let p = params.colors.background_palette
+  console.log(p)
+  if(Array.isArray(p))
+    color_machine = chroma.scale(p)
+  else
+    color_machine = chroma.scale(chroma.brewer[p])
+  console.log('COLOR MACHINE',color_machine)
+  frameRate(32)
   Refresh();
 }
 
@@ -32,19 +39,21 @@ function draw() {
 }  
 
 function drawTradIFS(){
-  graphic.strokeWeight(5)
+  graphic.strokeWeight(trad_ifs_params.stroke_weight)
   for(let i = 0; i < grid.length; i++){
     for(let j = 0; j < grid[i].length; j++){
-      graphic.translate(grid[i][j].width / 2, grid[i][j].height / 2)
-      let points = grid[i][j].generator.generatePoints(10);
+      let trans_x = (grid[i][j].width * i) + (grid[i][j].width / 2)
+      let trans_y = (grid[i][j].height * j) + (grid[i][j].height / 2)
+      graphic.translate(trans_x,trans_y)
+      let points = grid[i][j].generator.generatePoints(500);
       points = grid[i][j].generator.scaleValues(points)
-      // console.log(points)
-
       points.map((p)=>{
+        // graphic.stroke(color_machine(0).hex())
+        // console.log(p.function_index)
         graphic.stroke(color_machine(p.function_index).hex())
         graphic.point(p.x * grid[i][j].width / 2,p.y * grid[i][j].height / 2)
       })
-      graphic.translate(-grid[i][j].width / 2, -grid[i][j].height / 2)
+      graphic.translate(-trans_x,-trans_y)
     }
   }
 }
@@ -54,7 +63,8 @@ function drawTiles(){
     for(let j = 0; j < grid[i].length; j++){
       let tile = grid[i][j];
       graphic.strokeWeight(this.params.grid.border_thickness);
-      graphic.fill('tan');
+      graphic.stroke('white')
+      graphic.fill('black');
       graphic.rect(tile.origin.x,tile.origin.y,tile.width,tile.height)
     }
   }

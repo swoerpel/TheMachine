@@ -6,21 +6,47 @@ class TradIFS {
         this.filtered_values = []
         this.last_function_index = 0;
         // this.encodeParams()
-        this.filter = 10000;
+        this.filter = 100000;
         this.colors = []; // holds one or many colors for plotting
+        this.stdev = {
+            x:0,
+            y:0
+        };
     }
 
 
     setParams(params){
         this.params = params;
         this.setupFunctions()
-        this.generatePoints(1000)
+        this.generatePoints(10000)
         this.calculateExtrema()
+    }
+
+
+    calculateSTDEV(){
+        let sumx = 0;
+        let sumy = 0;
+        let sumx_sqrd = 0;
+        let sumy_sqrd = 0;
+        this.values.map((point)=>{
+            sumx += point.x
+            sumy += point.y
+            sumx_sqrd += (point.x * point.x)
+            sumy_sqrd += (point.y * point.y)
+        })
+        let avgx = sumx / this.values.length
+        let avgy = sumy / this.values.length
+        let avgx_sqrd = sumx_sqrd / this.values.length
+        let avgy_sqrd = sumy_sqrd / this.values.length
+        let stdev = {}
+        stdev.x = Math.sqrt(avgx_sqrd + (avgx * avgx))
+        stdev.y = Math.sqrt(avgy_sqrd + (avgy * avgy))
+        return stdev
     }
 
     // generates raw values, no scaling
     generatePoints(iterations) {
-        let values = []
+        this.values = []
         for (let i = 0; i < iterations; i++) {
             let function_prob = 1 / this.transform_functions.length
             let nextPoint;
@@ -29,7 +55,7 @@ class TradIFS {
             for (let j = 0; j < this.transform_functions.length; j++) {
                 sum += function_prob
                 if (sum > prob) {
-                    values.push(new Object({
+                    this.values.push(new Object({
                         x: this.x,
                         y: this.y,
                         function_index: this.last_function_index,
@@ -37,18 +63,31 @@ class TradIFS {
                     nextPoint = this.transform_functions[j](this.x, this.y)
                     this.x = nextPoint.x
                     this.y = nextPoint.y
-                    // console.log(this.x,this.y)
                     this.last_function_index = j
                     break;
                 }
             }
+        
         }
-        // console.log(values)
-        let filtered_values = this.filterValues(values)
-        this.values = filtered_values
-        // this.values = this.scaleValues(filtered_values)
-        return filtered_values
+        this.stdev = this.calculateSTDEV()
+        this.values = this.filterOutliers(this.values,this.stdev)
+        return this.values
     }
+
+    
+    filterOutliers(values,stdev,sigma=2){
+        let new_ary = [];
+        for(let i = 0; i < values.length; i++){
+            if(values[i].x > -(stdev.x * sigma) && values[i].x < (stdev.x * sigma)){
+                if(values[i].y > -(stdev.y * sigma) && values[i].y < (stdev.y * sigma)){
+                    new_ary.push(new Object(values[i]))
+                }
+            }
+        }
+        return new_ary
+    }
+
+
 
     round(N,acc = 1000000){
         return Math.round(N * acc) / acc
@@ -83,6 +122,9 @@ class TradIFS {
         // }
         return values
     }
+
+
+
 
     // filters out a percentage of the values
     // to make drawing quicker
@@ -123,9 +165,6 @@ class TradIFS {
 
         let sumx_sqrd = 0;
         let sumy_sqrd = 0;
-
-
-
         values.map((p) => {
             if (p.x > maxx)
                 maxx = p.x
@@ -146,8 +185,8 @@ class TradIFS {
         sumx = this.round(sumx)
         sumy = this.round(sumy)
 
-        console.log('sum x y', sumx, sumy)
-        console.log('avg x y', avex, avey)
+        // console.log('sum x y', sumx, sumy)
+        // console.log('avg x y', avex, avey)
 
         this.extrema = {
             x: {

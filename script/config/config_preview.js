@@ -1,11 +1,11 @@
 var config_preview = {
     canvas: {
-      width: 2400,
-      height: 2400
+      width: 9600,
+      height: 4800
     },
     main_graphic:{
-      width: 2400,
-      height: 2400
+      width: 9600,
+      height: 4800
     },
     info_graphic:{
       active:true,
@@ -14,15 +14,19 @@ var config_preview = {
     },
     colors: {
       background: 'green',
+      background_palette: ['white','gold'],
       points:'white',
       x: 'black',
       y: 'black',
       
     },
     grid: {
-      width: 1,
-      height:1,
-      border_thickness: 20
+      width: 3,
+      height:3,
+      border_thickness: 0,
+    },
+    offset:{
+      stdev:0.1
     },
     data:{
       generator_type: 'trad_ifs',

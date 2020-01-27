@@ -56,18 +56,31 @@ class GridMaster {
 
     init_trad_ifs_params(){
         let base_params = this.generate_trad_ifs_base_params();
-        console.log('Base Parameters ->',base_params)
-        this.grid.map((row)=>{
-            row.map((tile)=>{
-                tile.generator.setParams(new Object(base_params))  
-            });
-        });
+        let offset_matrix_x = [];
+        let offset_matrix_y = [];
+        for(let i = 0; i < trad_ifs_params.function_count; i++){
+            offset_matrix_x.push(this.param_machine.rand_param_list(trad_ifs_params.constant_count,config_preview.offset.stdev))
+            offset_matrix_y.push(this.param_machine.rand_param_list(trad_ifs_params.constant_count,config_preview.offset.stdev))
+        }
+        for(let i = 0; i < this.grid.length; i++){
+            for(let j = 0; j < this.grid[i].length; j++){
+                let base_params_copy = base_params.map(funct => funct.slice())
+                let current_params = this.param_machine.apply_offset_matrix(base_params_copy,offset_matrix_x, i)
+                current_params = this.param_machine.apply_offset_matrix(current_params,offset_matrix_y, j)
+                console.log('current_params',current_params)
+                this.grid[i][j].generator.setParams(new Object(current_params))  
+
+            }
+        }
     }
 
     generate_trad_ifs_base_params(){
         let base_params = [];
         if(trad_ifs_params.load == ''){
             for(let i = 0; i < trad_ifs_params.function_count; i++){
+                // let funct = [];
+                // for(let j = 0; j < trad_ifs_params.constant_count; j++)
+                // console.log(trad_ifs_params.constant_count,trad_ifs_params.variance)
                 let param_array = this.param_machine.rand_param_list(trad_ifs_params.constant_count,trad_ifs_params.variance)
                 base_params.push(param_array)
             }
@@ -75,6 +88,7 @@ class GridMaster {
         else {
             base_params = load_saved_seed(trad_ifs_params.load)
         }
+        // console.log('base_params ASD:LFKJNASD:OLFKN',base_params)
         return base_params
     }
 

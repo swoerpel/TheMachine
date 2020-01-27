@@ -4,7 +4,9 @@ var trad_ifs_params = {
     stroke_weight:1,
     iterations_per_draw: 100,
     // load: '', //rand if blank
-    load: 'helix', //rand if blank
+    // load: 'roofing', //rand if blank
+    load: 'flowerBois', //rand if blank
+    // load: 'helix', //rand if blank
     // load: 'califlower', //rand if blank
     variance: 1, // +- params can be from zero
     function_count: 2,
@@ -50,6 +52,14 @@ function load_saved_seed(seed_id) {
        'helix':
        [[0.8665, -0.0095, 0.3579, 0.7326, 0.2283, 0.3088],
        [-0.8968, 0.5793, 0.5454, -0.6753, -0.1575, -0.7916]],
+
+       'flowerBois':
+       [[-0.1715, -0.6509, -0.4434, -0.0154, -0.4762, -0.78],
+       [-0.8277, 0.5572, -0.263, -0.7199, 0.4776, 0.387]],
+
+        'roofing': 
+        [[0.97195, 0.64809, -0.02474, 0.57822, 0.68884, -0.39228],
+        [-0.48576, 0.17361, 0.31782, 0.61979, -0.57585, 0.41506]]
 
     }
     return seeds[seed_id]

@@ -1921,7 +1921,7 @@ def split_arrays(ary):
     # print([x,y])
     return [x,y]
 
-def filter_values(ary,std,fixed_len = 0,sigma = .25):
+def filter_values(ary,std,fixed_len = 0,sigma = 1):
     new_ary = []
     for i in range(len(ary)):
         if ary[i] <  -(std * sigma) or ary[i] > (std * sigma):
@@ -1948,15 +1948,18 @@ fp.append(filter_values(p[1], np.std(p[1]),1800))
 
 # print(len(p[0]))
 # print(len(p[1]))
-fig, (ax0, ax1, ax2) = plt.subplots(ncols=3, figsize=(12, 6))
-ax0.hist(fp[0], 20, density=1, histtype='stepfilled', facecolor='g', alpha=0.75)
+fig, (ax0, ax1, ax2) = plt.subplots(ncols=3, figsize=(18, 6))
+ax0.hist(fp[0], 64, density=1, histtype='stepfilled', facecolor='g', alpha=0.75)
 ax0.set_title('x values')
+ax0.axvline(np.mean(fp[0]), color='k', linestyle='dashed', linewidth=1)
 # ax0.set_xlim((fp[0].min(),fp[0].max()))
-ax1.hist(fp[1], 20, density=1, histtype='stepfilled', facecolor='b', alpha=0.75)
+ax1.hist(fp[1], 64, density=1, histtype='stepfilled', facecolor='b', alpha=0.75)
 ax1.set_title('y values')
 # ax1.set_ylim((fp[1].min(),fp[1].max()))
+ax1.axvline(np.mean(fp[1]), color='k', linestyle='dashed', linewidth=1)
 
-ax2.hist2d(p[0],p[1], bins=(1600,1600),cmap=plt.cm.jet)
+
+ax2.hist2d(p[0],p[1], bins=(3200,3200),cmap=plt.cm.jet)
 ax2.set_xlim((np.min(fp[0]),np.max(fp[0])))
 ax2.set_ylim((np.min(fp[1]),np.max(fp[1])))
 ax2.set_title('x vs y hist')

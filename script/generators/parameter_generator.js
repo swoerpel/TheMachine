@@ -18,5 +18,28 @@ class ParameterGenerator{
         return Math.round(N * acc) / acc
     }
       
+    // base and offset need to be same length
+    apply_offset_matrix(base,offset,iterations){
+        // let new_params = [];
+        console.log('base','offset',base,offset)
+        for (let i = 0; i < iterations;i++){
+            for (let j = 0; j < base.length;j++){
+                for (let k = 0; k < base[j].length;k++){
+                    base[j][k] += offset[j][k]
+                }
+            }
+        }
+        console.log('base after a few',iterations,base)
+        return base
 
+    //             console.log('base[j]',base[j])
+    //             // base[j] += float(base[j])
+    //             base = base.map((funct,index)=>{
+    //                 funct += offset[index]
+    //             })
+    //             // base[j] += float(offset[j]) * i
+    //         }
+    //     }
+    //     return base
+    }
 }
