@@ -71,9 +71,10 @@ function drawTradIFS(){
   graphic.strokeWeight(trad_ifs_params.stroke_weight)
   for(let i = 0; i < grid.length; i++){
     for(let j = 0; j < grid[i].length; j++){
+      let offset = 0//-grid[i][j].width/2
       let trans_x = (grid[i][j].width * i) + (grid[i][j].width / 2)
       let trans_y = (grid[i][j].height * j) + (grid[i][j].height / 2)
-      graphic.translate(trans_x,trans_y)
+      graphic.translate(trans_x + offset,trans_y)
       let points = grid[i][j].generator.generatePoints(500,sigma);
       points = grid[i][j].generator.scaleValues(points)
       points.map((p,index)=>{
@@ -85,7 +86,7 @@ function drawTradIFS(){
         graphic.stroke(color_machine(color_val).hex())
         graphic.point(p.x * grid[i][j].width / 2,p.y * grid[i][j].height / 2)
       })
-      graphic.translate(-trans_x,-trans_y)
+      graphic.translate(-(trans_x + offset),-trans_y)
     }
   }
 }

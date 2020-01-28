@@ -76,9 +76,10 @@ class GridMaster {
         }
         for(let i = 0; i < this.grid.length; i++){
             for(let j = 0; j < this.grid[i].length; j++){
-                let base_params_copy = base_params.map(funct => funct.slice())
-                let current_params = this.param_machine.apply_offset_matrix(base_params_copy,offset_matrix_x, i)
-                current_params = this.param_machine.apply_offset_matrix(current_params,offset_matrix_y, j)
+                // let base_params_copy = base_params.map(funct => funct.slice())
+                // let current_params = this.param_machine.apply_offset_matrix(base_params_copy,offset_matrix_x, i)
+                // current_params = this.param_machine.apply_offset_matrix(current_params,offset_matrix_y, j)
+                let current_params = this.generate_trad_ifs_base_params();
                 this.grid[i][j].generator.setParams(new Object(current_params))  
             }
         }

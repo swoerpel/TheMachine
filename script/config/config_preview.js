@@ -8,12 +8,12 @@ var config_preview = {
     //   height: 5000
     // },
     canvas: {
-      width: 2400,
-      height: 2400
+      width: 4800 * 2,
+      height: 4800
     },
     main_graphic:{
-      width: 2400,
-      height: 2400
+      width: 4800 * 2,
+      height: 4800
     },
     info_graphic:{
       active:true,

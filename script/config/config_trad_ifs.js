@@ -3,7 +3,7 @@ var trad_ifs_params = {
     zoom:{x:1,y:1},
     stroke_weight:2,
     iterations_per_draw: 100,
-    load: 'truss_01', //rand if blank
+    load: '', //rand if blank
     // load: 'spiral_02', //rand if blank
     // load: 'forest_03', //rand if blank
     // load: 'hooks_and_spirals', //rand if blank
@@ -96,6 +96,11 @@ function load_saved_seed(seed_id) {
         'truss_01':
         [[0.17471000000000003, -0.60972, 0.8580300000000001, -0.26062, -0.022610000000000005, -0.37754],
         [-0.5193399999999999, -0.42176, 0.7828600000000001, -0.24722, -1.1024699999999998, -0.17445999999999995]],
+
+        'triangle_02':
+        [[-0.9493900000000001, 0.22449999999999998, 0.46236, 0.22774, -0.35861, -0.84548],
+        [0.82341, 0.66955, 0.04496, -1.1142100000000001, 0.30202, 0.26819000000000004]],
+
 
     }
     return seeds[seed_id]
