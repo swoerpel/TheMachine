@@ -1,20 +1,30 @@
+let small = {
+  width: 2400,
+  height: 2400
+}
+let large = {
+  width: 8000,
+  height: 8000
+}
+
+
 var config_preview = {
-    // canvas: {
-    //   width: 5000,
-    //   height: 5000
-    // },
-    // main_graphic:{
-    //   width: 5000,
-    //   height: 5000
-    // },
     canvas: {
-      width: 4800 * 2,
-      height: 4800
+      width: large.width,
+      height: large.height
     },
     main_graphic:{
-      width: 4800 * 2,
-      height: 4800
+      width: large.width,
+      height: large.height
     },
+    // canvas: {
+    //   width: small.width,
+    //   height: small.height
+    // },
+    // main_graphic:{
+    //   width: small.width,
+    //   height: small.height
+    // },
     info_graphic:{
       active:true,
       background: 'grey',
@@ -23,15 +33,15 @@ var config_preview = {
     colors: {
       background: 'black',
       background_palette: 'Spectral',//['white','gold'],
-      points_palette:'Pastel1',
+      points_palette:'spectral',
       points:'',
       x: 'black',
       y: 'black',
       
     },
     grid: {
-      width: 2,
-      height:2,
+      width: 1,
+      height:1,
       border_thickness: 0,
     },
     offset:{

@@ -11,7 +11,7 @@ var palettes;
 var palette_names;
 var params;
 var draw_index = 0;
-var sigma = 3;
+// var zoom = 1;
 
 function setup() {
   params = new Object(config_preview);
@@ -33,9 +33,15 @@ function build_color_library() {
 }
 
 function setup_colors(){
-  color_palette_name = params.colors.points_palette
-  color_palette = palettes[color_palette_name]
-  color_machine = chroma.scale(color_palette)
+  // if(Array.isArray(params.colors.points_palette)){
+    // params.colors.points_palette.map((c)=> return chroma)
+    // color_machine = chroma.scale(color_palette_name)
+  // }
+  // else{
+    color_palette_name = params.colors.points_palette
+    color_palette = palettes[color_palette_name]
+    color_machine = chroma.scale(color_palette)
+  // }
   console.log('color palette',color_palette_name,color_palette)
 }
 
@@ -60,33 +66,54 @@ function Refresh(loaded_base_params = []){
 
 
 function draw() {
-  
   if(params.data.generator_type == 'trad_ifs')
     drawTradIFS();
   image(graphic,0,0)
   draw_index++;
 }  
 
+function drawAveragePoint(tile){
+  let line_width = 18
+  let avg_point = tile.generator.getAvgPoint();
+  let x1 = avg_point.x * tile.width / 2
+  let y1 = avg_point.y * tile.height / 2
+  let x2 = 0
+  let y2 = 0
+  graphic.strokeWeight(line_width)
+  graphic.stroke('red')
+  graphic.line(x1,y1,x2,y2)
+  graphic.strokeWeight(line_width * 1.5)
+  graphic.point(x1,y1)
+  graphic.strokeWeight(line_width * 1.5)
+  graphic.point(x2,y2)
+  return {x:x1,y:y1}
+}
+
 function drawTradIFS(){
-  graphic.strokeWeight(trad_ifs_params.stroke_weight)
   for(let i = 0; i < grid.length; i++){
     for(let j = 0; j < grid[i].length; j++){
-      let offset = 0//-grid[i][j].width/2
-      let trans_x = (grid[i][j].width * i) + (grid[i][j].width / 2)
-      let trans_y = (grid[i][j].height * j) + (grid[i][j].height / 2)
-      graphic.translate(trans_x + offset,trans_y)
-      let points = grid[i][j].generator.generatePoints(500,sigma);
-      points = grid[i][j].generator.scaleValues(points)
+      let tile = grid[i][j];
+      let avg_point = tile.generator.getAvgPoint();
+
+      //scaled
+      let sx = avg_point.x * tile.width / 2 * trad_ifs_params.zoom.x
+      let sy = avg_point.y * tile.height / 2 * trad_ifs_params.zoom.y
+      let offset_x = -sx
+      let offset_y = -sy
+      let trans_x = (tile.width * i) + (tile.width / 2)
+      let trans_y = (tile.height * j) + (tile.height / 2)
+      graphic.translate(trans_x + offset_x,trans_y + offset_y)
+      let points = tile.generator.generatePoints(1200);
+      graphic.strokeWeight(trad_ifs_params.stroke_weight)
+      let max_color_val = tile.width * Math.sqrt(2)
       points.map((p,index)=>{
-        // let color_val = grid[i][j].color.function_color_vals[p.function_index]
-        // let color_val = 1 / Math.sqrt((grid[i][j].color.x * grid[i][j].color.x) + (grid[i][j].color.y * grid[i][j].color.y)) 
-        // color_val += grid[i][j].color.function_color_vals[p.function_index]
-        color_val = grid[i][j].color.vals[p.function_index]
-        
-        graphic.stroke(color_machine(color_val).hex())
-        graphic.point(p.x * grid[i][j].width / 2,p.y * grid[i][j].height / 2)
+        let px = p.x * tile.width / 2
+        let py = p.y * tile.height / 2
+        color_val = Math.sqrt((px - sx)*(px - sx) + (py - sy)*(py - sy)) / max_color_val
+        graphic.stroke(color_machine(p.function_index % 2 == 0? color_val : 1 - color_val).hex())
+        graphic.point(px,py)
       })
-      graphic.translate(-(trans_x + offset),-trans_y)
+      graphic.translate(-(trans_x + offset_x),-(trans_y + offset_y))
     }
   }
 }
@@ -116,16 +143,19 @@ function keyPressed() {
   }
 
   if(keyCode === 187){ //'+' zoom in
-    sigma += 0.25
+    trad_ifs_params.zoom.x += 0.5
+    trad_ifs_params.zoom.y += 0.5
     Refresh();
-    console.log('zoom', sigma)
+    console.log('zoom', trad_ifs_params.zoom)
   }
   if(keyCode === 189){ // '-' zoom out
-    if(sigma > 0){
-      sigma -= 0.25
+    if(trad_ifs_params.zoom.x > 0){
+      trad_ifs_params.zoom.x -= 0.5
+      trad_ifs_params.zoom.y -= 0.5
       Refresh();
+      console.log('zoom', trad_ifs_params.zoom)
+
     }
-    console.log('zoom', sigma)
   }
 
   if(keyCode == 82) // 'r'

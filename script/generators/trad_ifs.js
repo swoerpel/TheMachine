@@ -18,8 +18,8 @@ class TradIFS {
     setParams(params){
         this.params = params;
         this.setupFunctions()
-        this.generatePoints(10000,2)
-        this.calculateExtrema()
+        this.generatePoints(10000)
+        this.calculateExtrema();
     }
 
 
@@ -45,7 +45,7 @@ class TradIFS {
     }
 
     // generates raw values, no scaling
-    generatePoints(iterations, sigma) {
+    generatePoints(iterations) {
         this.values = []
         for (let i = 0; i < iterations; i++) {
             let function_prob = 1 / this.transform_functions.length
@@ -70,7 +70,7 @@ class TradIFS {
         
         }
         this.stdev = this.calculateSTDEV()
-        this.values = this.filterOutliers(this.values,this.stdev, sigma)
+        this.values = this.filterOutliers(this.values,this.stdev)
         
 
         return this.values
@@ -99,35 +99,12 @@ class TradIFS {
     // for zooming and displaying IFSs 
     // off screen boundaries
     scaleValues(values) {
-        // console.log('VALUES',values)
         for(let i = 0; i < values.length; i++){
             values[i].x = this.round(values[i].x / (this.extrema.width / 2))
             values[i].y = this.round(values[i].y / (this.extrema.height / 2))
-            // if(values[i].x < 0)
-                
-            // else
-            //     values[i].x = this.round(values[i].x / this.extrema.x.max)
-
-            // if(values[i].y < 0)
-            //     values[i].y = this.round(values[i].y / Math.abs(this.extrema.y.min))
-            // else
-            //     values[i].y = this.round(values[i].y / this.extrema.y.max)
-            // values[i].y += (Math.abs(this.extrema.y.min))
-            // values[i].x += (Math.abs(this.extrema.x.min))
-            // values[i].y += (Math.abs(this.extrema.y.min))
-
         }
-        // for(let i = 0; i < values.length; i++){
-        //     values[i].x = values[i].x / (this.extrema.x.max + Math.abs(this.extrema.x.min)) 
-        //     values[i].y = values[i].y / (this.extrema.y.max + Math.abs(this.extrema.y.min)) 
-        //     values[i].x = this.round(values[i].x)
-        //     values[i].y = this.round(values[i].y)
-        // }
         return values
     }
-
-
-
 
     // filters out a percentage of the values
     // to make drawing quicker
@@ -153,6 +130,10 @@ class TradIFS {
 
     getExtrema() {
         return this.extrema
+    }
+
+    getAvgPoint(){
+        return {x:this.avgx, y:this.avgy}
     }
 
     calculateExtrema() {
@@ -183,8 +164,8 @@ class TradIFS {
             sumy_sqrd += (p.y * p.y)
         })
 
-        let avex = this.round(sumx / values.length)
-        let avey = this.round(sumy / values.length)
+        this.avgx = this.round(sumx / values.length)
+        this.avgy = this.round(sumy / values.length)
         sumx = this.round(sumx)
         sumy = this.round(sumy)
 
