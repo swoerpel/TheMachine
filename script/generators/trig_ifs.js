@@ -2,8 +2,9 @@
 
 class TrigIFS {
     constructor() {
-        this.x = 0
-        this.y = 0
+        this.vectors = []
+        this.t = 0;
+        this.t_inc = 0.001;
         this.values = []
         this.filtered_values = []
         this.last_function_index = 0;
@@ -18,18 +19,49 @@ class TrigIFS {
     setParams(params){
         this.params = params;
         console.log('if params->',this.params)
+        this.setupInitialPoints()
         this.setupFunctions()
         this.generatePoints(10000)
         this.calculateExtrema();
     }
 
 
-    setupFunctions(){
-        this.Fx = (x,y) =>{
-            return Math.sin(this.params[0] * y) - Math.cos(this.params[1] * x)
+    setupInitialPoints(){
+        for(let i = 0; i < trig_ifs_params.init_point_count; i++){
+            this.vectors.push({
+                x: 2 * (1 - Math.random()), 
+                y: 2 * (1 - Math.random()), 
+            })
         }
-        this.Fy = (x,y) =>{
-            return Math.sin(this.params[2] * x) - Math.cos(this.params[3] * y)
+        // console.log('initial vectors', this.vectors)
+    }
+
+    setupFunctions(){
+        let ax = -10
+        console.log('functions being setup..',this.params)
+        let logistic = (x) => (1 / (1 + Math.exp(-x))) * (x * Math.abs(x))
+        this.Fx = (x,y,t) =>{
+            // let a = this.params[0] * x + y * t
+            // let b = this.params[1] * x + y * t
+
+            // return Math.sin(a + b)// * (a / Math.abs(a))
+            // let a = Math.cos(ax) * x
+            // let b = Math.sin(ax) * (y - (x * x))
+            let a = Math.sin(this.params[0] * y)
+            let b = Math.cos(this.params[1] * x)
+            return a - b
+
+        }
+        this.Fy = (x,y,t) =>{
+            // let a = this.params[2] * x + y * t
+            // let b = this.params[3] * x + y * t
+
+            // return Math.cos(a + b)  //* (a / Math.abs(a))
+            let a = Math.sin(this.params[2] * x)
+            let b = Math.cos(this.params[3] * y)
+            // let a = Math.sin(ax) * x
+            // let b = Math.cos(ax) * (y - (x * x))
+            return a + b
         }
     }
 
@@ -58,13 +90,16 @@ class TrigIFS {
     generatePoints(iterations) {
         this.values = []
         for (let i = 0; i < iterations; i++) {
-            this.values.push(new Object({
-                x: this.x,
-                y: this.y,
-            }));
-            this.x = this.Fx(this.x,this.y)
-            this.y = this.Fy(this.x,this.y)
-            // console.log('x,y ->',this.x,',',this.y)
+            this.vectors.map((v)=>{
+                this.values.push(new Object({
+                    x: v.x,
+                    y: v.y,
+                }));
+                v.x = this.Fx(v.x,v.y,this.t)
+                v.y = this.Fy(v.x,v.y,this.t)
+                console.log(v)
+            })
+            this.t += this.t_inc
         }
 
         this.scaleValues();

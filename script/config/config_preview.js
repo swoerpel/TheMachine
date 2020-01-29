@@ -33,19 +33,19 @@ var config_preview = {
     colors: {
       background: 'black',
       background_palette: 'Spectral',//['white','gold'],
-      points_palette:'spectral',
+      points_palette:'white',
       points:'',
       x: 'black',
       y: 'black',
       
     },
     grid: {
-      width: 2,
-      height:2,
+      width: 1,
+      height:1,
       border_thickness: 0,
     },
     offset:{
-      stdev:0.1
+      stdev:0.05
     },
     data:{
       generator_type: 'trig_ifs',

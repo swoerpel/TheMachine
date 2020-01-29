@@ -107,8 +107,8 @@ class GridMaster {
         else
             base_params = this.generate_trig_ifs_base_params();
         console.log('base params ->',base_params,loaded_base_params)
-        let offset_matrix_x = this.param_machine.rand_param_list(trad_ifs_params.constant_count,config_preview.offset.stdev)
-        let offset_matrix_y = this.param_machine.rand_param_list(trad_ifs_params.constant_count,config_preview.offset.stdev)
+        let offset_matrix_x = this.param_machine.rand_param_list(trig_ifs_params.constant_count,config_preview.offset.stdev)
+        let offset_matrix_y = this.param_machine.rand_param_list(trig_ifs_params.constant_count,config_preview.offset.stdev)
         
         // console.log('offset x,y',offset_matrix_x,',',offset_matrix_y)
         for(let i = 0; i < this.grid.length; i++){

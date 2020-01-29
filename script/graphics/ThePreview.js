@@ -9,6 +9,7 @@ var palettes;
 var palette_names;
 var params;
 var draw_index = 0;
+var color_offset = Math.random()
 // var zoom = 1;
 
 function setup() {
@@ -110,16 +111,18 @@ function drawTrigIFS(){
       let trans_x = (tile.width * i) + (tile.width / 2)
       let trans_y = (tile.height * j) + (tile.height / 2)
       graphic.translate(trans_x + offset_x,trans_y + offset_y)
-      let points = tile.generator.generatePoints(400);
+      let points = tile.generator.generatePoints(100);
       // console.log(points)
       graphic.strokeWeight(trig_ifs_params.stroke_weight)
       let max_color_val = tile.width * Math.sqrt(2)
       points.map((p,index)=>{
         let px = p.x * tile.width / 2
         let py = p.y * tile.height / 2
-        // console.log(p)
-
         color_val = Math.sqrt((px - sx)*(px - sx) + (py - sy)*(py - sy)) / max_color_val
+        // color_val = (color_val + color_offset > 1) ? 
+                      // (1 - (color_val + color_offset)) : 
+                      // (color_val + color_offset)
+        graphic.strokeWeight(trig_ifs_params.stroke_weight)
         graphic.stroke(color_machine(p.function_index % 2 == 0 ? color_val : 1 - color_val).hex())
         graphic.point(px,py)
       })
