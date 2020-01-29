@@ -3,10 +3,7 @@ class TradIFS {
         this.x = 0
         this.y = 0
         this.values = []
-        this.filtered_values = []
         this.last_function_index = 0;
-        // this.encodeParams()
-        this.filter = 100000;
         this.colors = []; // holds one or many colors for plotting
         this.stdev = {
             x:0,
@@ -14,14 +11,12 @@ class TradIFS {
         };
     }
 
-
     setParams(params){
         this.params = params;
         this.setupFunctions()
         this.generatePoints(10000)
         this.calculateExtrema();
     }
-
 
     calculateSTDEV(){
         let sumx = 0;
@@ -71,8 +66,6 @@ class TradIFS {
         }
         this.stdev = this.calculateSTDEV()
         this.values = this.filterOutliers(this.values,this.stdev)
-        
-
         return this.values
     }
 
@@ -90,8 +83,6 @@ class TradIFS {
         return new_ary
     }
 
-
-
     round(N,acc = 1000000){
         return Math.round(N * acc) / acc
     }
@@ -105,24 +96,6 @@ class TradIFS {
         }
         return values
     }
-
-    // filters out a percentage of the values
-    // to make drawing quicker
-    filterValues(values) {
-        let filtered_values = []
-        values.map((p) => {
-            let fx = Math.round(p.x * this.filter) / this.filter
-            let fy = Math.round(p.y * this.filter) / this.filter
-            filtered_values.push({ x: fx, y: fy, function_index: p.function_index })
-        })
-
-        //remove duplicates
-        filtered_values = filtered_values.filter((p, index, self) =>
-            self.findIndex(t => t.x === p.x && t.y === p.y) === index)
-        // console.log('filtered values', filtered_values)
-        return filtered_values
-    }
-
     // returns filtered values
     getValues() {
         return this.values
@@ -200,24 +173,4 @@ class TradIFS {
             });
         }
     }
-
-    encodeParams() {
-        let hash_str = ''
-        this.params.map((funct) => {
-            funct.map((val) => {
-                val = Math.round(10000 * val)
-                val > 0 ?
-                    hash_str += '+' + val.toString() :
-                    hash_str += val.toString()
-            });
-        });
-        this.encoded_params = window.btoa(hash_str);
-        // var decoded_hash = window.atob(this.encoded_params);
-        // console.log('Encoded Params:', this.encoded_params)
-    }
-
-    getEncodedParams() {
-        return this.encoded_params
-    }
-
 }

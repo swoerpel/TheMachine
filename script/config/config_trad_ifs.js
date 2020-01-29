@@ -18,7 +18,7 @@ var trad_ifs_params = {
 }
 
 
-function load_saved_seed(seed_id) {
+function load_trad_ifs_saved_seed(seed_id) {
     let seeds = {
       'leaf_bois': [[-0.6466558, 0.12387177, -0.53947019, -0.69715325, 0.77943671, -0.79004337],
       [0.59591638, -0.0258686, -0.40476259, -0.62336581, -0.39510686, -0.13025707]],

@@ -4,8 +4,6 @@ var params;
 var mouse;
 var color_palette;
 var color_palette_name;
-var color_low_index;
-var color_high_index;
 var color_machine;
 var palettes;
 var palette_names;
@@ -33,24 +31,15 @@ function build_color_library() {
 }
 
 function setup_colors(){
-  // if(Array.isArray(params.colors.points_palette)){
-    // params.colors.points_palette.map((c)=> return chroma)
-    // color_machine = chroma.scale(color_palette_name)
-  // }
-  // else{
-
-  console.log(params.colors.points_palette)
-    
-    if(params.colors.points_palette == 'random'){
-      let keys = Object.keys(palettes)
-      let rand_index = Math.floor(Math.random() * keys.length)
-      color_palette_name = keys[rand_index]
-    }else{
-      color_palette_name = params.colors.points_palette
-    }
-    color_palette = palettes[color_palette_name]
-    color_machine = chroma.scale(color_palette)
-  // }
+  if(params.colors.points_palette == 'random'){
+    let keys = Object.keys(palettes)
+    let rand_index = Math.floor(Math.random() * keys.length)
+    color_palette_name = keys[rand_index]
+  }else{
+    color_palette_name = params.colors.points_palette
+  }
+  color_palette = palettes[color_palette_name]
+  color_machine = chroma.scale(color_palette)
   console.log('color palette',color_palette_name,color_palette)
 }
 
@@ -59,17 +48,12 @@ function Refresh(loaded_base_params = []){
   grid_master.InitializeGrid();
   grid_master.InitializeGenerator();
   grid_master.InitializeParameters(loaded_base_params);
-
-  // grid_master.PrintGrid();
-  // grid_master.ApplyTileParameters();
+  grid_master.PrintGrid();
   grid = grid_master.GetGrid();// must be last
   let canvas = createCanvas(params.canvas.width,params.canvas.height);
   graphic = createGraphics(params.canvas.width,params.canvas.height);
   graphic.background(params.colors.background)
   drawTiles();
-  color_low_index =  Math.floor(Math.random() * .5 * color_palette.length) 
-  color_high_index =  Math.floor(Math.random() * (color_palette.length / 2) + .5) 
-
 }
 
 
@@ -77,26 +61,12 @@ function Refresh(loaded_base_params = []){
 function draw() {
   if(params.data.generator_type == 'trad_ifs')
     drawTradIFS();
+  if(params.data.generator_type == 'trig_ifs')
+    drawTrigIFS();
   image(graphic,0,0)
   draw_index++;
 }  
 
-function drawAveragePoint(tile){
-  let line_width = 18
-  let avg_point = tile.generator.getAvgPoint();
-  let x1 = avg_point.x * tile.width / 2
-  let y1 = avg_point.y * tile.height / 2
-  let x2 = 0
-  let y2 = 0
-  graphic.strokeWeight(line_width)
-  graphic.stroke('red')
-  graphic.line(x1,y1,x2,y2)
-  graphic.strokeWeight(line_width * 1.5)
-  graphic.point(x1,y1)
-  graphic.strokeWeight(line_width * 1.5)
-  graphic.point(x2,y2)
-  return {x:x1,y:y1}
-}
 
 function drawTradIFS(){
   for(let i = 0; i < grid.length; i++){
@@ -120,6 +90,37 @@ function drawTradIFS(){
         let py = p.y * tile.height / 2
         color_val = Math.sqrt((px - sx)*(px - sx) + (py - sy)*(py - sy)) / max_color_val
         graphic.stroke(color_machine(p.function_index % 2 == 0? color_val : 1 - color_val).hex())
+        graphic.point(px,py)
+      })
+      graphic.translate(-(trans_x + offset_x),-(trans_y + offset_y))
+    }
+  }
+}
+
+function drawTrigIFS(){
+  for(let i = 0; i < grid.length; i++){
+    for(let j = 0; j < grid[i].length; j++){
+      let tile = grid[i][j];
+      // console.log(i,j,tile)
+      let avg_point = tile.generator.getAvgPoint();
+      let sx = avg_point.x * tile.width / 2 * trad_ifs_params.zoom.x
+      let sy = avg_point.y * tile.height / 2 * trad_ifs_params.zoom.y
+      let offset_x = 0//-sx
+      let offset_y = 0//-sy
+      let trans_x = (tile.width * i) + (tile.width / 2)
+      let trans_y = (tile.height * j) + (tile.height / 2)
+      graphic.translate(trans_x + offset_x,trans_y + offset_y)
+      let points = tile.generator.generatePoints(400);
+      // console.log(points)
+      graphic.strokeWeight(trig_ifs_params.stroke_weight)
+      let max_color_val = tile.width * Math.sqrt(2)
+      points.map((p,index)=>{
+        let px = p.x * tile.width / 2
+        let py = p.y * tile.height / 2
+        // console.log(p)
+
+        color_val = Math.sqrt((px - sx)*(px - sx) + (py - sy)*(py - sy)) / max_color_val
+        graphic.stroke(color_machine(p.function_index % 2 == 0 ? color_val : 1 - color_val).hex())
         graphic.point(px,py)
       })
       graphic.translate(-(trans_x + offset_x),-(trans_y + offset_y))

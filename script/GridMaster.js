@@ -7,6 +7,19 @@ class GridMaster {
         this.params = params;
     }
 
+
+    InitializeGenerator(){
+        this.grid.map((row)=>{
+            row.map((tile)=>{
+                console.log('tile ->',tile)
+                if(this.params.data.generator_type == 'trad_ifs')
+                    tile.generator = new TradIFS();
+                if(this.params.data.generator_type == 'trig_ifs')
+                    tile.generator = new TrigIFS();
+            });
+        });
+    }
+
     InitializeGrid(){
         let index = 0;
         this.grid = [];
@@ -58,8 +71,9 @@ class GridMaster {
         this.param_machine = new ParameterGenerator()
         if(this.params.data.generator_type == 'trad_ifs')
             this.init_trad_ifs_params(loaded_base_params);
+        if(this.params.data.generator_type == 'trig_ifs')
+            this.init_trig_ifs_params(loaded_base_params);
     }
-
 
     init_trad_ifs_params(loaded_base_params){
         let base_params;
@@ -77,11 +91,34 @@ class GridMaster {
         for(let i = 0; i < this.grid.length; i++){
             for(let j = 0; j < this.grid[i].length; j++){
                 let base_params_copy = base_params.map(funct => funct.slice())
-                let current_params = this.param_machine.apply_offset_matrix(base_params_copy,offset_matrix_x, i)
-                current_params = this.param_machine.apply_offset_matrix(current_params,offset_matrix_y, j)
+                let current_params = this.param_machine.apply_offset_matrix_2d(base_params_copy,offset_matrix_x, i)
+                current_params = this.param_machine.apply_offset_matrix_2d(current_params,offset_matrix_y, j)
                 console.log('current_params',i,j,current_params)
                 // let current_params = this.generate_trad_ifs_base_params();
                 this.grid[i][j].generator.setParams(new Object(current_params))  
+            }
+        }
+    }
+
+    init_trig_ifs_params(loaded_base_params){
+        let base_params;
+        if(!loaded_base_params)
+            base_params = loaded_base_params
+        else
+            base_params = this.generate_trig_ifs_base_params();
+        console.log('base params ->',base_params,loaded_base_params)
+        let offset_matrix_x = this.param_machine.rand_param_list(trad_ifs_params.constant_count,config_preview.offset.stdev)
+        let offset_matrix_y = this.param_machine.rand_param_list(trad_ifs_params.constant_count,config_preview.offset.stdev)
+        
+        // console.log('offset x,y',offset_matrix_x,',',offset_matrix_y)
+        for(let i = 0; i < this.grid.length; i++){
+            for(let j = 0; j < this.grid[i].length; j++){
+                let base_params_copy = new Object(base_params)
+                let current_params = this.param_machine.apply_offset_matrix_1d(base_params_copy,offset_matrix_x, i)
+                current_params = this.param_machine.apply_offset_matrix_1d(current_params,offset_matrix_y, j)
+                // console.log('CHET->',i,j,current_params)
+                this.grid[i][j].generator.setParams([...current_params])  
+
             }
         }
     }
@@ -97,21 +134,24 @@ class GridMaster {
             }
         }
         else {
-            base_params = load_saved_seed(trad_ifs_params.load)
+            base_params = load_trad_ifs_saved_seed(trad_ifs_params.load)
         }
-        // console.log('base_params ASD:LFKJNASD:OLFKN',base_params)
         return base_params
     }
 
-    InitializeGenerator(){
-        this.grid.map((row)=>{
-            row.map((tile)=>{
-                console.log('tile ->',tile)
-                if(this.params.data.generator_type == 'trad_ifs')
-                    tile.generator = new TradIFS();
-            });
-        });
+    generate_trig_ifs_base_params(){
+        if(trig_ifs_params.load == ''){
+            let v = trig_ifs_params.variance;
+            let cc = trig_ifs_params.constant_count;
+            return this.param_machine.rand_param_list(cc,v)
+        }
+        else {
+            let chet = load_trig_ifs_saved_seed(trig_ifs_params.load)
+            // console.log('loaded trig ifs params ->',chet, trad_)
+            return chet
+        }
     }
+
 
 
     GetGrid(){

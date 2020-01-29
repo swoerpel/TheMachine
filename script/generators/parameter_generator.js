@@ -19,12 +19,22 @@ class ParameterGenerator{
     }
       
     // base and offset need to be same length
-    apply_offset_matrix(base,offset,iterations){
+    apply_offset_matrix_2d(base,offset,iterations){
         for (let i = 0; i < iterations;i++){
             for (let j = 0; j < base.length;j++){
                 for (let k = 0; k < base[j].length;k++){
                     base[j][k] += offset[j][k]
                 }
+            }
+        }
+        return base
+    }
+    // base and offset need to be same length
+    apply_offset_matrix_1d(base,offset,iterations){
+        for (let i = 0; i < iterations;i++){
+            for (let j = 0; j < base.length;j++){
+                base[j] += offset[j]
+                // console.log(base[j],offset[j])
             }
         }
         return base

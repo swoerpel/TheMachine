@@ -1,10 +1,15 @@
 var trig_ifs_params = {
-    zoom:{x:1,y:1},
     stroke_weight:2,
-    iterations_per_draw: 100,
+    variance: Math.PI, // +- params can be from zero
+    constant_count: 4,
     load: '', //rand if blank
-    variance: 1, // +- params can be from zero
-    function_count: 2,
-    constant_count: 6
-    // load: 'floor_spikes', //rand if blank
+}
+
+
+function load_trig_ifs_saved_seed(seed_id) {
+    let seeds = {
+
+        'pend':[-2.87121, 1.64786, -0.13852, -2.09002]
+    }
+    return seeds[seed_id]
 }
