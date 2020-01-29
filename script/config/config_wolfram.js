@@ -3,17 +3,17 @@ var wolfram_params = {
         width: 64,
         height: 64
     },
-    load:'30',
-    base:2,
+    load:'',
+    base:3,
     kernel:3,
-    init_row: '', //'random'
+    init_row: 'random', //'random'
 }
 
 
 function load_wolfram_saved_seed(seed_id){
     let seeds = {
         '110':{
-            value: '01101110',
+            value: '00111110',
             // value: '01110110',
             base:2,
             kernel:3,

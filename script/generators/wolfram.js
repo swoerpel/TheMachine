@@ -6,16 +6,21 @@ class Wolfram{
         console.log('wolfram params',wolfram_params)
 
         this.row_index = 0;
-        this.combine = (b1, b2, b3) => (b1 << 2) + (b2 << 1) + (b3 << 0);
 
     }
 
     generateRow(){
+        
         for(let i = 0; i < wolfram_params.grid.width; i++){
-            let a = this.current_row[i - 1]
-            let b = this.current_row[i]
-            let c = this.current_row[(i + 1) % wolfram_params.grid.width]
-            this.next_row[i] = this.seed[this.combine(a,b,c)]
+            let kernel_slice = '';
+            for(let j = 0; j < wolfram_params.kernel; j++){
+                kernel_slice += this.current_row[(i + j) % wolfram_params.grid.width]
+            }
+            for(let j = 0; j < this.neighborhoods.length; j++){
+                if(this.neighborhoods[j] == kernel_slice)
+                    this.next_row[i] = this.seed[j]
+                    console.log(this.neighborhoods[j],kernel_slice,j)
+            }
         }
         this.current_row = this.next_row
         this.row_index = (this.row_index + 1) % wolfram_params.grid.height
@@ -28,8 +33,19 @@ class Wolfram{
         this.seed = seed
         this.initStartRow();
         console.log('current_row ->',this.current_row)
-        // this.initGrid();
+        this.initNeighborhoods();
         // this.initRules();
+    }
+
+    initNeighborhoods(){
+        this.neighborhoods = [];
+        let pad = (num, places) => String(num).padStart(places, '0')
+        let seed_length = Math.pow(wolfram_params.base,wolfram_params.kernel)
+        for(let i = 0; i < seed_length; i++){
+            let num = i.toString(wolfram_params.base)
+            this.neighborhoods.push(pad(num,wolfram_params.kernel))
+        }
+        console.log(this.neighborhoods)
     }
 
     initStartRow(){

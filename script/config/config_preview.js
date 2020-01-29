@@ -33,7 +33,7 @@ var config_preview = {
     colors: {
       background: 'black',
       background_palette: 'Spectral',//['white','gold'],
-      points_palette:'white',
+      points_palette:'spectral',
       points:'',
       x: 'black',
       y: 'black',
