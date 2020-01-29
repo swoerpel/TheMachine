@@ -1,5 +1,5 @@
 let small = {
-  width: 2400,
+  width: 2400 * 2,
   height: 2400
 }
 let large = {
@@ -9,22 +9,22 @@ let large = {
 
 
 var config_preview = {
-    canvas: {
-      width: large.width,
-      height: large.height
-    },
-    main_graphic:{
-      width: large.width,
-      height: large.height
-    },
     // canvas: {
-    //   width: small.width,
-    //   height: small.height
+    //   width: large.width,
+    //   height: large.height
     // },
     // main_graphic:{
-    //   width: small.width,
-    //   height: small.height
+    //   width: large.width,
+    //   height: large.height
     // },
+    canvas: {
+      width: small.width,
+      height: small.height
+    },
+    main_graphic:{
+      width: small.width,
+      height: small.height
+    },
     info_graphic:{
       active:true,
       background: 'grey',
@@ -33,15 +33,15 @@ var config_preview = {
     colors: {
       background: 'black',
       background_palette: 'Spectral',//['white','gold'],
-      points_palette:'spectral',
+      points_palette:'random',
       points:'',
       x: 'black',
       y: 'black',
       
     },
     grid: {
-      width: 1,
-      height:1,
+      width: 2,
+      height:2,
       border_thickness: 0,
     },
     offset:{

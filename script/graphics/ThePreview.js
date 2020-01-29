@@ -38,7 +38,16 @@ function setup_colors(){
     // color_machine = chroma.scale(color_palette_name)
   // }
   // else{
-    color_palette_name = params.colors.points_palette
+
+  console.log(params.colors.points_palette)
+    
+    if(params.colors.points_palette == 'random'){
+      let keys = Object.keys(palettes)
+      let rand_index = Math.floor(Math.random() * keys.length)
+      color_palette_name = keys[rand_index]
+    }else{
+      color_palette_name = params.colors.points_palette
+    }
     color_palette = palettes[color_palette_name]
     color_machine = chroma.scale(color_palette)
   // }
