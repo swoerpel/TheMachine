@@ -1,5 +1,5 @@
 let small = {
-  width: 2400,
+  width: 2400 * 2,
   height: 2400
 }
 let large = {
@@ -33,7 +33,7 @@ var config_preview = {
     colors: {
       background: 'black',
       background_palette: 'Spectral',//['white','gold'],
-      points_palette:'spectral',
+      points_palette:'random',
       points:'',
       x: 'black',
       y: 'black',

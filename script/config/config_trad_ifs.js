@@ -8,8 +8,8 @@ var trad_ifs_params = {
     // load: 'forest_03', //rand if blank
     // load: 'hooks_and_spirals', //rand if blank
     // load: 'roofing', //rand if blank
-    load: 'flowerBois', //rand if blank
-    // load: 'helix', //rand if blank
+    // load: 'flowerBois', //rand if blank
+    load: 'helix', //rand if blank
     // load: 'califlower', //rand if blank
     variance: 1, // +- params can be from zero
     function_count: 2,
