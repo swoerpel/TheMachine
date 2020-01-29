@@ -9,22 +9,22 @@ let large = {
 
 
 var config_preview = {
-    canvas: {
-      width: large.width,
-      height: large.height
-    },
-    main_graphic:{
-      width: large.width,
-      height: large.height
-    },
     // canvas: {
-    //   width: small.width,
-    //   height: small.height
+    //   width: large.width,
+    //   height: large.height
     // },
     // main_graphic:{
-    //   width: small.width,
-    //   height: small.height
+    //   width: large.width,
+    //   height: large.height
     // },
+    canvas: {
+      width: small.width,
+      height: small.height
+    },
+    main_graphic:{
+      width: small.width,
+      height: small.height
+    },
     info_graphic:{
       active:true,
       background: 'grey',
@@ -48,7 +48,7 @@ var config_preview = {
       stdev:0.05
     },
     data:{
-      generator_type: 'trig_ifs',
+      generator_type: 'wolfram',
       filter: 10000000
     }
   }

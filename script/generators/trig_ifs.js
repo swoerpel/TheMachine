@@ -16,12 +16,12 @@ class TrigIFS {
         };
     }
 
-    setParams(params){
+    Initialize(params){
         this.params = params;
         console.log('if params->',this.params)
         this.setupInitialPoints()
         this.setupFunctions()
-        this.generatePoints(10000)
+        this.generatePoints(1000)
         this.calculateExtrema();
     }
 
@@ -39,29 +39,15 @@ class TrigIFS {
     setupFunctions(){
         let ax = -10
         console.log('functions being setup..',this.params)
-        let logistic = (x) => (1 / (1 + Math.exp(-x))) * (x * Math.abs(x))
         this.Fx = (x,y,t) =>{
-            // let a = this.params[0] * x + y * t
-            // let b = this.params[1] * x + y * t
-
-            // return Math.sin(a + b)// * (a / Math.abs(a))
-            // let a = Math.cos(ax) * x
-            // let b = Math.sin(ax) * (y - (x * x))
             let a = Math.sin(this.params[0] * y)
             let b = Math.cos(this.params[1] * x)
             return a - b
-
         }
         this.Fy = (x,y,t) =>{
-            // let a = this.params[2] * x + y * t
-            // let b = this.params[3] * x + y * t
-
-            // return Math.cos(a + b)  //* (a / Math.abs(a))
             let a = Math.sin(this.params[2] * x)
             let b = Math.cos(this.params[3] * y)
-            // let a = Math.sin(ax) * x
-            // let b = Math.cos(ax) * (y - (x * x))
-            return a + b
+            return a - b
         }
     }
 
@@ -97,7 +83,6 @@ class TrigIFS {
                 }));
                 v.x = this.Fx(v.x,v.y,this.t)
                 v.y = this.Fy(v.x,v.y,this.t)
-                console.log(v)
             })
             this.t += this.t_inc
         }

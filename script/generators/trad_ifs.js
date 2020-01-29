@@ -11,7 +11,7 @@ class TradIFS {
         };
     }
 
-    setParams(params){
+    Initialize(params){
         this.params = params;
         this.setupFunctions()
         this.generatePoints(10000)

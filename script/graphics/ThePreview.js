@@ -64,17 +64,38 @@ function draw() {
     drawTradIFS();
   if(params.data.generator_type == 'trig_ifs')
     drawTrigIFS();
+  if(params.data.generator_type == 'wolfram')
+    drawWolfram();
   image(graphic,0,0)
   draw_index++;
 }  
 
+
+function drawWolfram(){
+  for(let i = 0; i < grid.length; i++){
+    for(let j = 0; j < grid[i].length; j++){
+      let tile = grid[i][j];
+      let data = tile.generator.generateRow();
+      let row = data.row
+      let row_index = data.index
+      let sub_step_x = tile.width / wolfram_params.grid.width
+      let sub_step_y = tile.height / wolfram_params.grid.height
+      graphic.translate(tile.width * i,tile.height * j)
+      for(let k = 0; k < row.length; k++){
+        let val = int(row[k])
+        graphic.fill(val ? 'black' : 'white')
+        graphic.rect(k * sub_step_x,row_index * sub_step_y,sub_step_x,sub_step_y)
+      }
+      graphic.translate(-tile.width * i,-tile.height * j)
+    }
+  }
+}
 
 function drawTradIFS(){
   for(let i = 0; i < grid.length; i++){
     for(let j = 0; j < grid[i].length; j++){
       let tile = grid[i][j];
       let avg_point = tile.generator.getAvgPoint();
-
       //scaled
       let sx = avg_point.x * tile.width / 2 * trad_ifs_params.zoom.x
       let sy = avg_point.y * tile.height / 2 * trad_ifs_params.zoom.y
@@ -83,7 +104,7 @@ function drawTradIFS(){
       let trans_x = (tile.width * i) + (tile.width / 2)
       let trans_y = (tile.height * j) + (tile.height / 2)
       graphic.translate(trans_x + offset_x,trans_y + offset_y)
-      let points = tile.generator.generatePoints(1200);
+      let points = tile.generator.generatePoints(100);
       graphic.strokeWeight(trad_ifs_params.stroke_weight)
       let max_color_val = tile.width * Math.sqrt(2)
       points.map((p,index)=>{

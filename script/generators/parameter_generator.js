@@ -14,6 +14,13 @@ class ParameterGenerator{
         return params;
     }
 
+    rand_int(base,length){
+        let num = ''
+        for(let i = 0; i < length; i++)
+            num += Math.floor(Math.random() * base).toString()
+        return num
+    }
+    
     round(N,acc){
         return Math.round(N * acc) / acc
     }
