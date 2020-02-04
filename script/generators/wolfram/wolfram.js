@@ -16,19 +16,12 @@ class Wolfram{
 
 
     generateRow(){
-        // console.log(JSON.stringify(this.current_rows))
         let row;
         if(wolfram_modes[wolfram_params.mode] ==  wolfram_modes[0])
             row = this.generateTraditionalRow()
         // else if(wolfram_modes[wolfram_params.mode] ==  wolfram_modes[1])
-        //     row = this.generateTotalisticRow(i);
-        // console.log('current_rows', JSON.stringify(this.current_rows))
-        // console.log(row)
-        // let row = [0,0,0,0,1,1,1,1,1]
         this.current_rows.pop()
         this.current_rows.push(row)
-        
-        // this.row_index = this.rgenerateRowsow_index + 1//) % wolfram_params.grid.height
         return row
     }
 

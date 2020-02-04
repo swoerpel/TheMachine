@@ -124,9 +124,9 @@ class GridMaster {
                 seed_length = this.grid[i][j].generator.Initialize()
             }
         }
-        console.log(seed_length)
+        // console.log(seed_length)
         let base_seed = this.generate_wolfram_base_seed(seed_length);
-        console.log('wolfram base params ->',base_seed)
+        console.log('wolfram base params ->',base_seed, base_seed.length)
 
         for(let i = 0; i < this.grid.length; i++){
             for(let j = 0; j < this.grid[i].length; j++){
@@ -139,8 +139,8 @@ class GridMaster {
         if(wolfram_params.load == '')
             return this.param_machine.rand_int(wolfram_params.base,seed_length)
         else{
-            let seed = load_wolfram_saved_seed(wolfram_params.load)
-            return seed.value
+            let seed = load_wolfram_saved_seed(wolfram_params.load).value
+            return seed
         }
     }
 

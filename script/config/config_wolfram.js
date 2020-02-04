@@ -1,17 +1,17 @@
 var wolfram_params = {
     grid:{
-        width: 80,
-        height: 80
+        width: 551 * 2,
+        height: 551
     },
-    load:'',
+    load:'large_triangles',
     mode:0, //traditional,totalistic
-    base:3,
+    base:2,
     init_row: {
         type:0, 
-        group_size: 2
+        group_size: 1
     },
     kernel:{
-        type: 'B',
+        type: 'A',
     }
 }
 
@@ -30,7 +30,7 @@ var wolfram_init_row_modes = [
 
 var wolfram_kernels = {
     'A':[
-        [1,1,1]
+        [1,1,1,1,1]
     ],
 
     'B':[
@@ -49,6 +49,10 @@ var wolfram_kernels = {
 
 function load_wolfram_saved_seed(seed_id){
     let seeds = {
+        'large_triangles':{
+            value: '00111100010000110011011001001111',
+            // value: '‭11110010011011001100001000111100',
+        },
         '110':{
             value: '00111110',
             // value: '01110110',

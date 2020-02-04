@@ -3,28 +3,28 @@ let small = {
   height: 2400
 }
 let large = {
-  width: 2400,
-  height: 6000
+  width: 4800 * 2,
+  height: 4800
 }
 
 
 var config_preview = {
-    // canvas: {
-    //   width: large.width,
-    //   height: large.height
-    // },
-    // main_graphic:{
-    //   width: large.width,
-    //   height: large.height
-    // },
     canvas: {
-      width: small.width,
-      height: small.height
+      width: large.width,
+      height: large.height
     },
     main_graphic:{
-      width: small.width,
-      height: small.height
+      width: large.width,
+      height: large.height
     },
+    // canvas: {
+    //   width: small.width,
+    //   height: small.height
+    // },
+    // main_graphic:{
+    //   width: small.width,
+    //   height: small.height
+    // },
     info_graphic:{
       active:true,
       background: 'grey',
@@ -33,7 +33,7 @@ var config_preview = {
     colors: {
       background: 'black',
       background_palette: 'binary',//['white','gold'],
-      points_palette:'vibrant',
+      points_palette:'',
       points:'',
       x: 'black',
       y: 'black',

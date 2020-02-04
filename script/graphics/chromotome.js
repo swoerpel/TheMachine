@@ -7,7 +7,7 @@
     },
     {
       name: 'vibrant',
-      colors: ['white','black','red'],
+      colors: ['tan','blue','white'],
       background: 'black'
     },
     {

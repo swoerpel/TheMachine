@@ -91,7 +91,7 @@ function drawWolfram(){
       graphic.translate(tile.width * i,tile.height * j)
       for(let k = 0; k < row.length; k++){
         let val = int(row[k])
-        let color_val = val / wolfram_params.base
+        let color_val = val / (wolfram_params.base - 1)
         graphic.fill(this.color_machine(color_val).hex())
         graphic.rect(k * sub_step_x,draw_index * sub_step_y,sub_step_x,sub_step_y)
       }
