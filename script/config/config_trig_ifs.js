@@ -2,7 +2,7 @@ var trig_ifs_params = {
     stroke_weight:2,
     variance: 2.2, // +- params can be from zero
     constant_count: 8,
-    init_point_count: 60,
+    init_point_count: 10,
     load: '', //rand if blank
 }
 

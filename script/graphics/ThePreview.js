@@ -2,6 +2,7 @@ var graphic;
 var grid;
 var params;
 var mouse;
+var pause = false;
 var color_palette;
 var color_palette_name;
 var color_machine;
@@ -49,7 +50,7 @@ function Refresh(loaded_base_params = []){
   grid_master.InitializeGrid();
   grid_master.InitializeGenerator();
   grid_master.InitializeParameters(loaded_base_params);
-  grid_master.PrintGrid();
+  // grid_master.PrintGrid();
   grid = grid_master.GetGrid();// must be last
   let canvas = createCanvas(params.canvas.width,params.canvas.height);
   graphic = createGraphics(params.canvas.width,params.canvas.height);
@@ -60,14 +61,16 @@ function Refresh(loaded_base_params = []){
 
 
 function draw() {
-  if(params.data.generator_type == 'trad_ifs')
-    drawTradIFS();
-  if(params.data.generator_type == 'trig_ifs')
-    drawTrigIFS();
-  if(params.data.generator_type == 'wolfram')
-    drawWolfram();
-  image(graphic,0,0)
-  draw_index++;
+  if(!pause){
+    if(params.data.generator_type == 'trad_ifs')
+      drawTradIFS();
+    if(params.data.generator_type == 'trig_ifs')
+      drawTrigIFS();
+    if(params.data.generator_type == 'wolfram')
+      drawWolfram();
+    image(graphic,0,0)
+    draw_index++;
+  }
 }  
 
 
@@ -105,12 +108,13 @@ function drawTradIFS(){
       let trans_x = (tile.width * i) + (tile.width / 2)
       let trans_y = (tile.height * j) + (tile.height / 2)
       graphic.translate(trans_x + offset_x,trans_y + offset_y)
-      let points = tile.generator.generatePoints(100);
+      let points = tile.generator.generatePoints(400);
       graphic.strokeWeight(trad_ifs_params.stroke_weight)
       let max_color_val = tile.width * Math.sqrt(2)
       points.map((p,index)=>{
         let px = p.x * tile.width / 2
         let py = p.y * tile.height / 2
+        
         color_val = Math.sqrt((px - sx)*(px - sx) + (py - sy)*(py - sy)) / max_color_val
         graphic.stroke(color_machine(p.function_index % 2 == 0? color_val : 1 - color_val).hex())
         graphic.point(px,py)
@@ -176,6 +180,10 @@ function keyPressed() {
     // console.log(p)
     // Refresh(p);
   }
+
+  if(keyCode === 32) //'space' pause/play
+    pause = !pause
+
 
   if(keyCode === 187){ //'+' zoom in
     trad_ifs_params.zoom.x += 0.5

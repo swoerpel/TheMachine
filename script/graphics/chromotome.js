@@ -6,8 +6,8 @@
       background: '#f2e8e4'
     },
     {
-      name: 'white',
-      colors: ['white','white'],
+      name: 'vibrant',
+      colors: ['white','black','red'],
       background: 'black'
     },
     {

@@ -37,7 +37,6 @@ class TrigIFS {
     }
 
     setupFunctions(){
-        let ax = -10
         console.log('functions being setup..',this.params)
         this.Fx = (x,y,t) =>{
             let a = Math.sin(this.params[0] * y)
@@ -76,10 +75,11 @@ class TrigIFS {
     generatePoints(iterations) {
         this.values = []
         for (let i = 0; i < iterations; i++) {
-            this.vectors.map((v)=>{
+            this.vectors.map((v, index)=>{
                 this.values.push(new Object({
                     x: v.x,
                     y: v.y,
+                    i: index
                 }));
                 v.x = this.Fx(v.x,v.y,this.t)
                 v.y = this.Fy(v.x,v.y,this.t)
