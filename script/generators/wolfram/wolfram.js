@@ -5,35 +5,62 @@ class Wolfram{
         console.log('new wolfram generator')
         console.log('wolfram params',wolfram_params)
 
-        this.row_index = -1;
+        this.row_index = 0;
         
         this.init_row_machine = new InitRowGenerator();
     }
 
+    SetSeed(seed){
+        this.seed = seed
+    }
+
+
     generateRow(){
-        let row = {}
-        if(this.row_index == 0){
-            row = new Object({
-                row: this.init_row,
-                index: this.row_index
-            });
-        }
-        else{
-            for(let i = 0; i < wolfram_params.grid.width; i++){
-                if(wolfram_modes[wolfram_params.mode] ==  wolfram_modes[0])
-                    row = this.generateTraditionalRow(i)
-                else if(wolfram_modes[wolfram_params.mode] ==  wolfram_modes[1])
-                    row = this.generateTotalisticRow(i);
-            }
-        }
-        this.current_row = this.next_row
-        this.row_index = this.row_index + 1//) % wolfram_params.grid.height
+        // console.log(JSON.stringify(this.current_rows))
+        let row;
+        if(wolfram_modes[wolfram_params.mode] ==  wolfram_modes[0])
+            row = this.generateTraditionalRow()
+        // else if(wolfram_modes[wolfram_params.mode] ==  wolfram_modes[1])
+        //     row = this.generateTotalisticRow(i);
+        // console.log('current_rows', JSON.stringify(this.current_rows))
+        // console.log(row)
+        // let row = [0,0,0,0,1,1,1,1,1]
+        this.current_rows.pop()
+        this.current_rows.push(row)
+        
+        // this.row_index = this.rgenerateRowsow_index + 1//) % wolfram_params.grid.height
         return row
     }
 
 
     generateTraditionalRow(){
-        
+        let next_row = []
+        let kernel_slices = [];
+        // console.log('current rows->',JSON.stringify(this.current_rows))
+        for(let i = 0; i < wolfram_params.grid.width; i++){
+            let kernel_slice = '';
+            for(let j = this.kernel.length - 1; j >= 0; j--){
+                let x_index = (i + this.kernel.offsets[j].x) % (wolfram_params.grid.width)
+                let y_index = this.kernel.offsets[j].y
+                if(x_index < 0)
+                    x_index = wolfram_params.grid.width + x_index
+                kernel_slice += this.current_rows[y_index][x_index].toString()
+                // console.log(this.current_rows[y_index][x_index])
+            }
+            kernel_slices.push(kernel_slice)
+            // console.log('kernel_slice',kernel_slice,i)
+        }
+        // console.log(kernel_slices)
+        for(let j = 0; j < kernel_slices.length; j++){
+            this.neighborhoods.map((n,index)=>{
+                if(kernel_slices[j] == n){
+                    // console.log(this.seed[index])
+                    next_row.push(int(this.seed[index]))
+                }
+            });
+        }
+        // console.log(next_row)
+        return next_row
     }
 
     generateTotalisticRow(i){
@@ -49,77 +76,80 @@ class Wolfram{
             if(this.neighborhoods[j] == avg_val)
                 this.next_row[(i + Math.floor(wolfram_params.kernel / 2)) % wolfram_params.grid.width] = this.seed[j]
         }
-        return new Object({row:this.next_row,index:this.row_index})
+        return new Object(this.next_row)
 
     }
 
-
-    Initialize(seed){
-        this.seed = seed
+    Initialize(){
         this.next_row = new Array(wolfram_params.grid.width).fill(0);
-        this.current_row = [];
-        this.initStartRow();
         this.initKernel();
+        this.initStartRows();
         this.initNeighborhoods();
+        return this.seed_length
     }
 
     initKernel(){
         this.kernel_machine = new KernelGenerator();
+        this.kernel = this.kernel_machine.GenerateKernel();
+        console.log('kernel offsets', this.kernel)
     }
 
-    initStartRow(){
-        this.init_row = [];
-        //random
-        if(wolfram_init_row_modes[wolfram_params.init_row.type] ==  wolfram_init_row_modes[0])
-            this.init_row = this.init_row_machine.rand_row(
+    initStartRows(){
+        this.init_rows = [];
+        this.current_rows = [];
+        for(let i = 0; i < this.kernel.dims.y; i++){
+            let row = this.init_row_machine.generate_row(
+                wolfram_params.init_row.type,
                 wolfram_params.base,
                 wolfram_params.grid.width,
-                wolfram_params.init_row.gap_size);
+                wolfram_params.init_row.group_size + i
+            )
+            // console.log('init_row',i,row)
+            this.init_rows.push(row)
+            this.current_rows.push(row)
+        }
+        console.log(this.current_rows)
+    }
 
-        //steps
-        if(wolfram_init_row_modes[wolfram_params.init_row.type] ==  wolfram_init_row_modes[1])
-            this.init_row = this.init_row_machine.step_row(
-                wolfram_params.base,
-                wolfram_params.grid.width,
-                wolfram_params.init_row.gap_size);
-
-
-        //alt_steps
-        if(wolfram_init_row_modes[wolfram_params.init_row.type] ==  wolfram_init_row_modes[2])
-            this.init_row = this.init_row_machine.alt_step_row(
-                wolfram_params.base,
-                wolfram_params.grid.width,
-                wolfram_params.init_row.gap_size);
+    getInitRow(index){
+        return this.init_rows[index];
     }
 
     initNeighborhoods(){
         this.neighborhoods = [];
         let pad = (num, places) => String(num).padStart(places, '0')
-        let trad_seed_length = Math.pow(wolfram_params.base,wolfram_params.kernel)
 
         //traditional
         if(wolfram_modes[wolfram_params.mode] ==  wolfram_modes[0]){
-            for(let i = 0; i < trad_seed_length; i++){
+            let seed_length = Math.pow(wolfram_params.base,this.kernel.length)
+            for(let i = 0; i < seed_length; i++){
                 let num = i.toString(wolfram_params.base)
-                this.neighborhoods.push(pad(num,wolfram_params.kernel))
+                this.neighborhoods.push(pad(num,this.kernel.length))
             }
+            
         }
 
         //totalistic
         else if(wolfram_modes[wolfram_params.mode] ==  wolfram_modes[1]) { 
-            let total_seed_length = wolfram_params.kernel * (wolfram_params.base - 1) + 1
-            console.log('seed length',total_seed_length)
-            for(let i = 0; i < trad_seed_length; i++){
-                let num = i.toString(wolfram_params.base)
-                num = pad(num,wolfram_params.kernel)
-                let avg = 0;
-                for(let j = 0; j < wolfram_params.kernel; j++)
-                    avg += int(num[j])
-                avg = this.round(avg / wolfram_params.kernel / (wolfram_params.base - 1))
-                if(this.neighborhoods.indexOf(avg) == -1)
-                    this.neighborhoods.push(avg)
-            }
+            // let seed_length = Math.pow(wolfram_params.base,this.kernel.length)
+            // let total_seed_length = wolfram_params.kernel * (wolfram_params.base - 1) + 1
+            // console.log('seed length',total_seed_length)
+            // for(let i = 0; i < trad_seed_length; i++){
+            //     let num = i.toString(wolfram_params.base)
+            //     num = pad(num,wolfram_params.kernel)
+            //     let avg = 0;
+            //     let sum = 0;
+            //     for(let j = 0; j < wolfram_params.kernel; j++)
+            //         sum += int(num[j])
+            //     avg = this.round(sum / (wolfram_params.base))
+            //     console.log('NUM->',num,'AVG->',avg,'SUM->',sum)
+
+            //     // avg = this.round(avg / (wolfram_params.base + 1))
+            //     if(this.neighborhoods.indexOf(avg) == -1)
+            //         this.neighborhoods.push(avg)
+            // }
         }
+        this.seed_length = this.neighborhoods.length
         console.log(this.neighborhoods)
     }
 

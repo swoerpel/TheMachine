@@ -56,6 +56,7 @@ function Refresh(loaded_base_params = []){
   graphic = createGraphics(params.canvas.width,params.canvas.height);
   graphic.background(params.colors.background)
   drawTiles();
+  draw_index = 0;
 }
 
 
@@ -78,9 +79,13 @@ function drawWolfram(){
   for(let i = 0; i < grid.length; i++){
     for(let j = 0; j < grid[i].length; j++){
       let tile = grid[i][j];
-      let data = tile.generator.generateRow();
-      let row = data.row
-      let row_index = data.index
+      let row;
+      if(draw_index < tile.generator.kernel.dims.y){
+        row = tile.generator.getInitRow(draw_index);
+        // console.log(row)
+      }else{
+        row = tile.generator.generateRow();
+      }
       let sub_step_x = tile.width / wolfram_params.grid.width
       let sub_step_y = tile.height / wolfram_params.grid.height
       graphic.translate(tile.width * i,tile.height * j)
@@ -88,7 +93,7 @@ function drawWolfram(){
         let val = int(row[k])
         let color_val = val / wolfram_params.base
         graphic.fill(this.color_machine(color_val).hex())
-        graphic.rect(k * sub_step_x,row_index * sub_step_y,sub_step_x,sub_step_y)
+        graphic.rect(k * sub_step_x,draw_index * sub_step_y,sub_step_x,sub_step_y)
       }
       graphic.translate(-tile.width * i,-tile.height * j)
     }

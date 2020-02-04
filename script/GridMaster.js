@@ -117,25 +117,29 @@ class GridMaster {
 
     init_wolfram_params(){
         //base_seed returned as string to keep leading zeros
-        let base_seed = this.generate_wolfram_base_seed();
-        console.log('wolfram base params ->',base_seed)
+        
+        let seed_length;
         for(let i = 0; i < this.grid.length; i++){
             for(let j = 0; j < this.grid[i].length; j++){
-                this.grid[i][j].generator.Initialize(base_seed)
+                seed_length = this.grid[i][j].generator.Initialize()
+            }
+        }
+        console.log(seed_length)
+        let base_seed = this.generate_wolfram_base_seed(seed_length);
+        console.log('wolfram base params ->',base_seed)
+
+        for(let i = 0; i < this.grid.length; i++){
+            for(let j = 0; j < this.grid[i].length; j++){
+                this.grid[i][j].generator.SetSeed(base_seed)
             }
         }
     }
 
-    generate_wolfram_base_seed(){
-        if(wolfram_params.load == ''){
-            let b = wolfram_params.base
-            let k = wolfram_params.kernel
-            let l = Math.pow(b,k)
-            console.log('seed params->',b,k,l)
-            return this.param_machine.rand_int(b,l)
-        }
+    generate_wolfram_base_seed(seed_length){
+        if(wolfram_params.load == '')
+            return this.param_machine.rand_int(wolfram_params.base,seed_length)
         else{
-            let seed =  load_wolfram_saved_seed(wolfram_params.load)
+            let seed = load_wolfram_saved_seed(wolfram_params.load)
             return seed.value
         }
     }

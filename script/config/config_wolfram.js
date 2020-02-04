@@ -1,35 +1,50 @@
 var wolfram_params = {
     grid:{
-        width: 32,
-        height: 32
+        width: 80,
+        height: 80
     },
     load:'',
-    mode:1, //traditional,totalistic
-    base:2,
-    kernel:3,
+    mode:0, //traditional,totalistic
+    base:3,
     init_row: {
-        type:2, 
-        gap_size: 1
+        type:0, 
+        group_size: 2
     },
-    // kernel:{
-    //     A: [['xxx']],
-
-    //     shift:{
-    //         x: 0,
-    //         y: 0
-    //     }
-    // }
+    kernel:{
+        type: 'B',
+    }
 }
+
+
 var wolfram_modes = [
-    'traditional',
-    'totalistic',
+    'traditional',  //0
+    'totalistic',   //1 
 ]
 
 var wolfram_init_row_modes = [
-    'random',
-    'steps',
-    'alt_steps'
+    'random',       //0
+    'steps',        //1
+    'alt_steps',    //2
+    'center_group'  //3
 ]
+
+var wolfram_kernels = {
+    'A':[
+        [1,1,1]
+    ],
+
+    'B':[
+        [1,0,1],
+        [0,1,0],
+        [1,0,1]
+    ],
+
+    'C':[
+        [1,1,1,1,1],
+        [1,0,0,0,1],
+        [1,1,1,1,1]
+    ],
+}
 
 
 function load_wolfram_saved_seed(seed_id){
