@@ -1,7 +1,7 @@
 
 var trad_ifs_params = {
     zoom:{x:1,y:1},
-    stroke_weight:1,
+    stroke_weight:2,
     iterations_per_draw: 100,
     // load: '', //rand if blank
     // load: 'spiral_02', //rand if blank
@@ -10,7 +10,8 @@ var trad_ifs_params = {
     // load: 'roofing', //rand if blank
     // load: 'flowerBois', //rand if blank
     // load: 'helix', //rand if blank
-    load: 'califlower', //rand if blank
+    // load: 'califlower', //rand if blank
+    load: 'six_shooter', //rand if blank
     variance: 1, // +- params can be from zero
     function_count: 2,
     constant_count: 6
@@ -101,6 +102,9 @@ function load_trad_ifs_saved_seed(seed_id) {
         [[-0.9493900000000001, 0.22449999999999998, 0.46236, 0.22774, -0.35861, -0.84548],
         [0.82341, 0.66955, 0.04496, -1.1142100000000001, 0.30202, 0.26819000000000004]],
 
+        'six_shooter':
+        [[0.5989217035925556, -0.08687734212381684, -1.0429639878894374, -0.49879016340859017, 0.23685297036469996, 0.1568412427841738],
+        [0.3490091397934593, 0.6748203142690711, -0.6793931584559582, 0.3683276429844524, -0.7576468500640281, -0.13164035894084747]],
 
 
     }

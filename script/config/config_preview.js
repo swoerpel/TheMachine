@@ -3,28 +3,28 @@ let small = {
   height: 2400
 }
 let large = {
-  width: 4800 * 2,
+  width: 4800,
   height: 4800
 }
 
 
 var config_preview = {
-    canvas: {
-      width: large.width,
-      height: large.height
-    },
-    main_graphic:{
-      width: large.width,
-      height: large.height
-    },
     // canvas: {
-    //   width: small.width,
-    //   height: small.height
+    //   width: large.width,
+    //   height: large.height
     // },
     // main_graphic:{
-    //   width: small.width,
-    //   height: small.height
+    //   width: large.width,
+    //   height: large.height
     // },
+    canvas: {
+      width: small.width,
+      height: small.height
+    },
+    main_graphic:{
+      width: small.width,
+      height: small.height
+    },
     info_graphic:{
       active:true,
       background: 'grey',
@@ -32,8 +32,8 @@ var config_preview = {
     },
     colors: {
       background: 'black',
-      background_palette: 'binary',//['white','gold'],
-      points_palette:'',
+      background_palette: 'binary',
+      points_palette:'spectral',
       points:'',
       x: 'black',
       y: 'black',
@@ -45,10 +45,10 @@ var config_preview = {
       border_thickness: 0,
     },
     offset:{
-      stdev:0.05
+      stdev:0.15
     },
     data:{
       generator_type: 'wolfram',
       filter: 10000000
     }
-  }
+}

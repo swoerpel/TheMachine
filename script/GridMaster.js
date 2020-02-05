@@ -1,25 +1,9 @@
 // var config = require("./config/config_gridmaster.js");
 
-
 class GridMaster {
     constructor(params){
         console.log('Grid Master Initialized')
         this.params = params;
-    }
-
-
-    InitializeGenerator(){
-        this.grid.map((row)=>{
-            row.map((tile)=>{
-                console.log('tile ->',tile)
-                if(this.params.data.generator_type == 'trad_ifs')
-                    tile.generator = new TradIFS();
-                if(this.params.data.generator_type == 'trig_ifs')
-                    tile.generator = new TrigIFS();
-                if(this.params.data.generator_type == 'wolfram')
-                    tile.generator = new Wolfram();
-            });
-        });
     }
 
     InitializeGrid(){
@@ -69,6 +53,20 @@ class GridMaster {
         }
     }
 
+    InitializeGenerator(){
+        this.grid.map((row)=>{
+            row.map((tile)=>{
+                console.log('tile ->',tile)
+                if(this.params.data.generator_type == 'trad_ifs')
+                    tile.generator = new TradIFS();
+                if(this.params.data.generator_type == 'trig_ifs')
+                    tile.generator = new TrigIFS();
+                if(this.params.data.generator_type == 'wolfram')
+                    tile.generator = new Wolfram();
+            });
+        });
+    }
+
     InitializeParameters(){
         this.param_machine = new ParameterGenerator()
         if(this.params.data.generator_type == 'trad_ifs')
@@ -84,8 +82,16 @@ class GridMaster {
         let offset_matrix_x = [];
         let offset_matrix_y = [];
         for(let i = 0; i < trad_ifs_params.function_count; i++){
-            offset_matrix_x.push(this.param_machine.rand_param_list(trad_ifs_params.constant_count,config_preview.offset.stdev))
-            offset_matrix_y.push(this.param_machine.rand_param_list(trad_ifs_params.constant_count,config_preview.offset.stdev))
+            offset_matrix_x.push(
+                this.param_machine.rand_param_list(
+                    trad_ifs_params.constant_count,
+                    config_preview.offset.stdev
+            ));
+            offset_matrix_y.push(
+                this.param_machine.rand_param_list(
+                    trad_ifs_params.constant_count,
+                    config_preview.offset.stdev
+            ));
         }
         for(let i = 0; i < this.grid.length; i++){
             for(let j = 0; j < this.grid[i].length; j++){
@@ -171,12 +177,9 @@ class GridMaster {
         }
     }
 
-
-
     GetGrid(){
         return this.grid
     }
-
 
     PrintGrid(){
         console.log('===============GRID===============')

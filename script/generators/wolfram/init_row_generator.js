@@ -12,8 +12,8 @@ class InitRowGenerator{
             return this.step_row(base,length,group_size,offset)
         if(alg_index == 2)
             return this.alt_step_row(base,length,group_size,offset)
-        if(alg_index == 3)
-            return this.center_group_row(base,length,group_size,offset)
+        if(alg_index == 3 || alg_index == 4 || alg_index == 5)
+            return this.group_row(base,length,group_size,alg_index % 3)
     }
 
     rand_row(base,length,group_size,offset = 0){
@@ -54,26 +54,24 @@ class InitRowGenerator{
         return row
     }
 
-    center_group_row(base,length, group_size = 1, offset = 0){
-        let count = 1;
-        let row = [];
-        let center = Math.floor(length / 2)
-        let start_index = center - (base - 2)
-        let end_index = center + (base - 2)
-        // console.log('start and end index', start_index, end_index)
-        for(let i = 0; i < length; i++)
-            if(i == center)
-                row.push(count)
-                // row.push(count)
-                // if(i < center)
-                    // count++;
-                // else
-                    // count--;
-            else{
-                row.push(0)
+    group_row(base,length, group_size = 1, justify = 1){
+        // 0->left _ 1->center _ 2->right
+        let row = new Array(length).fill(0)
+        let center_index;
+        if (justify == 0)
+            center_index = (base - 1)
+        if (justify == 1)
+            center_index = Math.floor(length / 2)
+        if (justify == 2)
+            center_index = length - base
+        for(let i = 0; i < length; i++){
+            if (i == center_index){
+                for(let j = 0; j < base; j++)
+                    row[i + j] = ((base - 1) - j)
+                for(let j = 1; j < base; j++)
+                    row[i - j] = ((base - 1) - j)
             }
-            // for(let j = 0; j < group_size; j++)
-                // row.push(step[(i + offset) % step.length])
+        }
         return row
     }
 

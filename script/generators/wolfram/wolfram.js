@@ -19,7 +19,8 @@ class Wolfram{
         let row;
         if(wolfram_modes[wolfram_params.mode] ==  wolfram_modes[0])
             row = this.generateTraditionalRow()
-        // else if(wolfram_modes[wolfram_params.mode] ==  wolfram_modes[1])
+        else if(wolfram_modes[wolfram_params.mode] ==  wolfram_modes[1])
+            row = this.generateTotalisticRow()
         this.current_rows.pop()
         this.current_rows.push(row)
         return row
@@ -29,7 +30,6 @@ class Wolfram{
     generateTraditionalRow(){
         let next_row = []
         let kernel_slices = [];
-        // console.log('current rows->',JSON.stringify(this.current_rows))
         for(let i = 0; i < wolfram_params.grid.width; i++){
             let kernel_slice = '';
             for(let j = this.kernel.length - 1; j >= 0; j--){
@@ -38,39 +38,42 @@ class Wolfram{
                 if(x_index < 0)
                     x_index = wolfram_params.grid.width + x_index
                 kernel_slice += this.current_rows[y_index][x_index].toString()
-                // console.log(this.current_rows[y_index][x_index])
             }
             kernel_slices.push(kernel_slice)
-            // console.log('kernel_slice',kernel_slice,i)
         }
-        // console.log(kernel_slices)
         for(let j = 0; j < kernel_slices.length; j++){
             this.neighborhoods.map((n,index)=>{
-                if(kernel_slices[j] == n){
-                    // console.log(this.seed[index])
+                if(kernel_slices[j] == n)
                     next_row.push(int(this.seed[index]))
-                }
             });
         }
-        // console.log(next_row)
         return next_row
     }
 
-    generateTotalisticRow(i){
-        let kernel_slice = '';
-        for(let j = 0; j < wolfram_params.kernel; j++){
-            kernel_slice += this.current_row[(i + j) % wolfram_params.grid.width]
+    generateTotalisticRow(){
+        let next_row = []
+        let kernel_slices = [];
+        for(let i = 0; i < wolfram_params.grid.width; i++){
+            let kernel_slice = '';
+            for(let j = this.kernel.length - 1; j >= 0; j--){
+                let x_index = (i + this.kernel.offsets[j].x) % (wolfram_params.grid.width)
+                let y_index = this.kernel.offsets[j].y
+                if(x_index < 0)
+                    x_index = wolfram_params.grid.width + x_index
+                kernel_slice += this.current_rows[y_index][x_index].toString()
+            }
+            kernel_slices.push(kernel_slice)
         }
-        let avg_val = 0;
-        for(let j = 0; j < wolfram_params.kernel; j++)
-            avg_val += int(kernel_slice[j])
-        avg_val = this.round(avg_val / wolfram_params.kernel / (wolfram_params.base - 1))
-        for(let j = 0; j < this.neighborhoods.length; j++){
-            if(this.neighborhoods[j] == avg_val)
-                this.next_row[(i + Math.floor(wolfram_params.kernel / 2)) % wolfram_params.grid.width] = this.seed[j]
+        for(let j = 0; j < kernel_slices.length; j++){
+            this.neighborhoods.map((n,index)=>{
+                let avg = 0;
+                [...kernel_slices[j]].forEach(v => avg += int(v))
+                avg = this.round((avg / this.kernel.length) / (wolfram_params.base - 1))
+                if(avg == n)
+                    next_row.push(int(this.seed[index]))
+            });
         }
-        return new Object(this.next_row)
-
+        return next_row
     }
 
     Initialize(){
@@ -119,31 +122,23 @@ class Wolfram{
                 let num = i.toString(wolfram_params.base)
                 this.neighborhoods.push(pad(num,this.kernel.length))
             }
-            
         }
-
         //totalistic
         else if(wolfram_modes[wolfram_params.mode] ==  wolfram_modes[1]) { 
-            // let seed_length = Math.pow(wolfram_params.base,this.kernel.length)
-            // let total_seed_length = wolfram_params.kernel * (wolfram_params.base - 1) + 1
-            // console.log('seed length',total_seed_length)
-            // for(let i = 0; i < trad_seed_length; i++){
-            //     let num = i.toString(wolfram_params.base)
-            //     num = pad(num,wolfram_params.kernel)
-            //     let avg = 0;
-            //     let sum = 0;
-            //     for(let j = 0; j < wolfram_params.kernel; j++)
-            //         sum += int(num[j])
-            //     avg = this.round(sum / (wolfram_params.base))
-            //     console.log('NUM->',num,'AVG->',avg,'SUM->',sum)
-
-            //     // avg = this.round(avg / (wolfram_params.base + 1))
-            //     if(this.neighborhoods.indexOf(avg) == -1)
-            //         this.neighborhoods.push(avg)
-            // }
+            let seed_length = Math.pow(wolfram_params.base,this.kernel.length)
+            for(let i = 0; i < seed_length; i++){
+                let num = pad(i.toString(wolfram_params.base),this.kernel.length)
+                let avg = 0;
+                [...num].forEach(v => avg += int(v))
+                avg = this.round((avg / this.kernel.length) / (wolfram_params.base - 1))
+                if(!this.neighborhoods.includes(avg)){
+                    console.log(num,avg)
+                    this.neighborhoods.push(avg)
+                }
+            }
         }
         this.seed_length = this.neighborhoods.length
-        console.log(this.neighborhoods)
+        console.log('neighborhoods',this.neighborhoods)
     }
 
     round(N,acc = 100000){

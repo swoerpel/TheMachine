@@ -1,17 +1,17 @@
 var wolfram_params = {
     grid:{
-        width: 551 * 2,
-        height: 551
+        width: 301,
+        height: 301
     },
-    load:'large_triangles',
-    mode:0, //traditional,totalistic
-    base:2,
+    load:'',
+    mode:1, //traditional,totalistic
+    base:9,   // < 10
     init_row: {
-        type:0, 
-        group_size: 1
+        type:4, 
+        group_size: 6
     },
     kernel:{
-        type: 'A',
+        type: 'B',
     }
 }
 
@@ -25,12 +25,14 @@ var wolfram_init_row_modes = [
     'random',       //0
     'steps',        //1
     'alt_steps',    //2
-    'center_group'  //3
+    'left_group',   //3
+    'center_group', //4
+    'right_group',  //5
 ]
 
 var wolfram_kernels = {
     'A':[
-        [1,1,1,1,1]
+        [1,1,1]
     ],
 
     'B':[
@@ -49,9 +51,11 @@ var wolfram_kernels = {
 
 function load_wolfram_saved_seed(seed_id){
     let seeds = {
+        '000':{
+            value: '201111210021012021010101222',
+        },
         'large_triangles':{
             value: '00111100010000110011011001001111',
-            // value: '‭11110010011011001100001000111100',
         },
         '110':{
             value: '00111110',
