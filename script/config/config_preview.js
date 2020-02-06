@@ -1,4 +1,4 @@
-let big_screen = true;
+let big_screen = false;
 let small = {
   width: 2400,
   height: 2400

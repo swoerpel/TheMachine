@@ -2,7 +2,7 @@
 
 class TrigIFS {
     constructor() {
-        this.t = 0;
+        this.t = 0.95;
         this.values = []
         this.filtered_values = []
         this.last_function_index = 0;
@@ -86,6 +86,8 @@ class TrigIFS {
                 v.y = this.Fy(v.x,v.y,this.t)
             })
             this.t += trig_ifs_params.delta_t
+            // if((this.t * 10000000) % 10 == 0)
+                // console.log('T->',this.t)
         }
 
         this.scaleValues();

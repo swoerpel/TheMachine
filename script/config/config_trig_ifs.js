@@ -2,7 +2,7 @@ var trig_ifs_params = {
     stroke_weight:0.5,
     variance: 2, // +- params can be from zero
     constant_count: 8,
-    delta_t: 0.0000002,
+    delta_t: 0.00000005,
     iterations_per_draw: 6000,
     zoom: {
         x:1,
