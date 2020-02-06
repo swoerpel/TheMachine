@@ -95,7 +95,7 @@ class Wolfram{
         this.current_rows = [];
         for(let i = 0; i < this.kernel.dims.y; i++){
             let row = this.init_row_machine.generate_row(
-                wolfram_params.init_row.type,
+                wolfram_params.init_row.mode,
                 wolfram_params.base,
                 wolfram_params.grid.width,
                 wolfram_params.init_row.group_size + i
@@ -131,10 +131,8 @@ class Wolfram{
                 let avg = 0;
                 [...num].forEach(v => avg += int(v))
                 avg = this.round((avg / this.kernel.length) / (wolfram_params.base - 1))
-                if(!this.neighborhoods.includes(avg)){
-                    console.log(num,avg)
+                if(!this.neighborhoods.includes(avg))
                     this.neighborhoods.push(avg)
-                }
             }
         }
         this.seed_length = this.neighborhoods.length

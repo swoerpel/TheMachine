@@ -1,29 +1,32 @@
+let big_screen = true;
 let small = {
   width: 2400,
   height: 2400
 }
 let large = {
-  width: 4800,
-  height: 4800
+  width: 12000,
+  height: 12000
+}
+let width;
+let height;
+if(big_screen){
+  width = large.width
+  height = large.height
+}
+else{
+  width = small.width
+  height = small.height
 }
 
-
 var config_preview = {
-    // canvas: {
-    //   width: large.width,
-    //   height: large.height
-    // },
-    // main_graphic:{
-    //   width: large.width,
-    //   height: large.height
-    // },
+    frame_rate: 1,
     canvas: {
-      width: small.width,
-      height: small.height
+      width: width,
+      height: height
     },
     main_graphic:{
-      width: small.width,
-      height: small.height
+      width: width,
+      height: height
     },
     info_graphic:{
       active:true,
@@ -33,7 +36,9 @@ var config_preview = {
     colors: {
       background: 'black',
       background_palette: 'binary',
+      // points_palette:'random',
       points_palette:'spectral',
+      // points_palette:'ylorrd',
       points:'',
       x: 'black',
       y: 'black',
@@ -48,7 +53,7 @@ var config_preview = {
       stdev:0.15
     },
     data:{
-      generator_type: 'wolfram',
+      generator_type: 'trig_ifs',
       filter: 10000000
     }
 }

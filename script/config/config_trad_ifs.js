@@ -2,7 +2,7 @@
 var trad_ifs_params = {
     zoom:{x:1,y:1},
     stroke_weight:2,
-    iterations_per_draw: 100,
+    iterations_per_draw: 400,
     // load: '', //rand if blank
     // load: 'spiral_02', //rand if blank
     // load: 'forest_03', //rand if blank

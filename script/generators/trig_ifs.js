@@ -2,9 +2,7 @@
 
 class TrigIFS {
     constructor() {
-        this.vectors = []
         this.t = 0;
-        this.t_inc = 0.001;
         this.values = []
         this.filtered_values = []
         this.last_function_index = 0;
@@ -27,25 +25,27 @@ class TrigIFS {
 
 
     setupInitialPoints(){
-        for(let i = 0; i < trig_ifs_params.init_point_count; i++){
-            this.vectors.push({
-                x: 2 * (1 - Math.random()), 
-                y: 2 * (1 - Math.random()), 
-            })
-        }
-        // console.log('initial vectors', this.vectors)
+        this.vectors = []
+        this.vectors.push({x:0,y:0})
+        this.vectors.push({x:1,y:0})
+        this.vectors.push({x:0,y:1})
+        this.vectors.push({x:1,y:1})
+        this.vectors.push({x:-1,y:0})
+        this.vectors.push({x:0,y:-1})
+        this.vectors.push({x:-1,y:-1})
+        console.log(JSON.stringify(this.vectors))
     }
 
     setupFunctions(){
         console.log('functions being setup..',this.params)
         this.Fx = (x,y,t) =>{
-            let a = Math.sin(this.params[0] * y)
-            let b = Math.cos(this.params[1] * x)
+            let a = Math.sin(this.params[0] * y + t)
+            let b = Math.cos(this.params[1] * x + t)
             return a - b
         }
         this.Fy = (x,y,t) =>{
-            let a = Math.sin(this.params[2] * x)
-            let b = Math.cos(this.params[3] * y)
+            let a = Math.sin(this.params[2] * x + t)
+            let b = Math.cos(this.params[3] * y + t)
             return a - b
         }
     }
@@ -79,12 +79,13 @@ class TrigIFS {
                 this.values.push(new Object({
                     x: v.x,
                     y: v.y,
-                    i: index
+                    i: index,
+                    t: this.t
                 }));
                 v.x = this.Fx(v.x,v.y,this.t)
                 v.y = this.Fy(v.x,v.y,this.t)
             })
-            this.t += this.t_inc
+            this.t += trig_ifs_params.delta_t
         }
 
         this.scaleValues();

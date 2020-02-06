@@ -1,15 +1,21 @@
 var wolfram_params = {
     grid:{
-        width: 301,
-        height: 301
+        width: 81,
+        height: 81
     },
     load:'',
-    mode:1, //traditional,totalistic
-    base:9,   // < 10
+
+    // 1->trad
+    // 2->total
+    mode:1,
+
+    base:4,   // < 10
+
     init_row: {
-        type:4, 
-        group_size: 6
+        mode:0, 
+        group_size: 2
     },
+
     kernel:{
         type: 'B',
     }
@@ -51,6 +57,19 @@ var wolfram_kernels = {
 
 function load_wolfram_saved_seed(seed_id){
     let seeds = {
+        '001':{
+            value: '0112110332',
+            //totalistic
+            //base 4
+            //kernel _
+        },
+        'elaborate':{
+            value: '30704354884367603371136332181017622432501',
+            //totalistic
+            //base 9
+            //kernel X
+        },
+        
         '000':{
             value: '201111210021012021010101222',
         },

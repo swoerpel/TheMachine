@@ -23,17 +23,6 @@ class GridMaster {
                     x: origin.x + this.tile_width / 2,
                     y: origin.y + this.tile_height / 2
                 }
-
-                let color = {
-                    function_color_vals: Array.from({
-                        length: trad_ifs_params.function_count
-                    }, () => Math.random()),
-                    background_val:1,
-                    vals : [
-                        1 / Math.sqrt(i*i + j*j),
-                        1 - (1 / Math.sqrt(i*i + j*j))
-                    ]
-                }
                 let tile = {
                     id: index,
                     x:i,
@@ -42,10 +31,8 @@ class GridMaster {
                     height: this.tile_height,
                     origin: origin,
                     center: center,
-                    color: color,
                     points: [],
                 }
-                
                 index++;
                 row.push(tile);
             }
@@ -107,15 +94,17 @@ class GridMaster {
 
     init_trig_ifs_params(){
         let base_params = this.generate_trig_ifs_base_params();
-        let offset_matrix_x = this.param_machine.rand_param_list(trig_ifs_params.constant_count,config_preview.offset.stdev)
-        let offset_matrix_y = this.param_machine.rand_param_list(trig_ifs_params.constant_count,config_preview.offset.stdev)
-        // console.log('offset x,y',offset_matrix_x,',',offset_matrix_y)
+        let offset_matrix_x = this.param_machine.rand_param_list(
+            trig_ifs_params.constant_count,
+            trig_ifs_params.variance)
+        let offset_matrix_y = this.param_machine.rand_param_list(
+            trig_ifs_params.constant_count,
+            trig_ifs_params.variance)
         for(let i = 0; i < this.grid.length; i++){
             for(let j = 0; j < this.grid[i].length; j++){
                 let base_params_copy = new Object(base_params)
                 let current_params = this.param_machine.apply_offset_matrix_1d(base_params_copy,offset_matrix_x, i)
                 current_params = this.param_machine.apply_offset_matrix_1d(current_params,offset_matrix_y, j)
-                // console.log('CHET->',i,j,current_params)
                 this.grid[i][j].generator.Initialize([...current_params])  
             }
         }
