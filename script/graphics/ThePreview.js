@@ -121,19 +121,21 @@ function drawTradIFS(tile){
 }
 
 function drawTrigIFS(tile){
-  let avg_point = tile.generator.getAvgPoint();
-  let sx = avg_point.x * tile.width / 2 * trig_ifs_params.zoom.x
-  let sy = avg_point.y * tile.height / 2 * trig_ifs_params.zoom.y
+  // let avg_point = tile.generator.getAvgPoint();
+  // let sx = avg_point.x * tile.width / 2 
+  // let sy = avg_point.y * tile.height / 2 
+  // let max_color_val = tile.width * Math.sqrt(2)
+
   graphic.translate((tile.width / 2),(tile.height / 2))
   let points = tile.generator.generatePoints(trig_ifs_params.iterations_per_draw);
+  // console.log(points)
   graphic.strokeWeight(trig_ifs_params.stroke_weight)
-  let max_color_val = tile.width * Math.sqrt(2)
   points.map((p)=>{
     let px = p.x * tile.width / 2
     let py = p.y * tile.height / 2
-    color_val = Math.sqrt((px - sx)*(px - sx) + (py - sy)*(py - sy)) / max_color_val
+    // color_val = Math.sqrt((px - sx)*(px - sx) + (py - sy)*(py - sy)) / max_color_val
     graphic.strokeWeight(trig_ifs_params.stroke_weight)
-    graphic.stroke(color_machine((1 + Math.sin(color_val + p.t)) / 2).hex())
+    graphic.stroke(color_machine((1 + Math.sin(p.t)) / 2).hex())
     graphic.point(px,py)
   })
   graphic.translate(- (tile.width / 2),-(tile.height / 2))

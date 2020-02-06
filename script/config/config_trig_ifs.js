@@ -1,14 +1,18 @@
+let g_zoom = 2
+
 var trig_ifs_params = {
-    stroke_weight:0.5,
+    stroke_weight:1,
     variance: 2, // +- params can be from zero
     constant_count: 8,
-    delta_t: 0.00000005,
-    iterations_per_draw: 6000,
-    zoom: {
-        x:1,
-        y:1
+    delta_t: 0.0000001,
+    iterations_per_draw: 4000,
+    bounds: {
+        xmin:1,
+        xmax:g_zoom,
+        ymin:0,
+        ymax:1,
     },
-    load: '001', //rand if blank
+    load: '000', //rand if blank
 }
 
 

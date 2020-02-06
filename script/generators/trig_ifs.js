@@ -7,6 +7,7 @@ class TrigIFS {
         this.filtered_values = []
         this.last_function_index = 0;
         this.filter = 100000;
+        this.first_gen = true;
         this.colors = []; // holds one or many colors for plotting
         this.stdev = {
             x:0,
@@ -21,6 +22,7 @@ class TrigIFS {
         this.setupFunctions()
         this.generatePoints(1000)
         this.calculateExtrema();
+        this.scaleValues();
     }
 
 
@@ -74,23 +76,33 @@ class TrigIFS {
     // generates raw values, no scaling
     generatePoints(iterations) {
         this.values = []
+        // console.log(trig_ifs_params.bounds)
         for (let i = 0; i < iterations; i++) {
             this.vectors.map((v, index)=>{
-                this.values.push(new Object({
-                    x: v.x,
-                    y: v.y,
-                    i: index,
-                    t: this.t
-                }));
+                let x_in = (v.x >= trig_ifs_params.bounds.xmin) && (v.x <= trig_ifs_params.bounds.xmax) 
+                let y_in = (v.y >= trig_ifs_params.bounds.ymin) && (v.y <= trig_ifs_params.bounds.ymax) 
+                // console.log('x->',v.x,'in range ->', x_in,'y->',v.y,'in range ->', y_in,)
+                if(x_in && y_in){
+                    this.values.push(new Object({
+                        x: v.x,
+                        y: v.y,
+                        i: index,
+                        t: this.t
+                    }));
+
+                }
                 v.x = this.Fx(v.x,v.y,this.t)
                 v.y = this.Fy(v.x,v.y,this.t)
             })
             this.t += trig_ifs_params.delta_t
-            // if((this.t * 10000000) % 10 == 0)
-                // console.log('T->',this.t)
         }
+        
 
-        this.scaleValues();
+        if(!this.first_gen){
+            // this.first_gen = false;
+            this.scaleValues();
+        }
+        this.first_gen = false;
         return this.values
     }
 
@@ -101,10 +113,28 @@ class TrigIFS {
     // for zooming and displaying IFSs 
     // off screen boundaries
     scaleValues() {
+            //scale by extrema
+
+        // console.log(this.extrema.width / 2)
         for(let i = 0; i < this.values.length; i++){
-            this.values[i].x = this.round(this.values[i].x / 2)
-            this.values[i].y = this.round(this.values[i].y / 2)
+            this.values[i].x = (this.values[i].x - this.extrema.center_x) / (this.extrema.width / 2)
+            this.values[i].y = (this.values[i].y - this.extrema.center_y) / (this.extrema.height / 2)
+            // if(this.values[i].x < this.extrema.center_x)
+            //     this.values[i].x = (this.extrema.center_x - this.values[i].x) / (this.extrema.width / 2) * -1
+            // else
+            //     this.values[i].x = (this.extrema.x.max - this.values[i].x) / (this.extrema.width / 2)
+
+            // if(this.values[i].y < this.extrema.center_y)
+            //     this.values[i].y = (this.extrema.center_y - this.values[i].y) / (this.extrema.height / 2) * -1
+            // else
+            //     this.values[i].y = (this.extrema.y.max - this.values[i].y) / (this.extrema.height / 2)
+
+            // this.values[i].x = this.round(this.values[i].x / 2)
+            // this.values[i].y = this.round(this.values[i].y / 2)
+            // console.log(JSON.stringify(this.values[i]))
         }
+        // console.log(this.values)
+
     }
     // returns filtered values
     getValues() {
@@ -162,6 +192,9 @@ class TrigIFS {
             },
             width: maxx - minx,
             height: maxy - miny,
+            center_x: ((maxx - minx) / 2) + minx,
+            center_y: ((maxy - miny) / 2) + miny,
         }
+        console.log('extrema ->',this.extrema)
     }
 }

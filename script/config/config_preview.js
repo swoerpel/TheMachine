@@ -1,11 +1,11 @@
-let big_screen = false;
+let big_screen = true;
 let small = {
   width: 2400,
   height: 2400
 }
 let large = {
-  width: 12000,
-  height: 12000
+  width: 4800,
+  height: 4800
 }
 let width;
 let height;
@@ -19,7 +19,7 @@ else{
 }
 
 var config_preview = {
-    frame_rate: 1,
+    frame_rate: 32,
     canvas: {
       width: width,
       height: height
