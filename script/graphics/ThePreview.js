@@ -91,10 +91,34 @@ function drawWolfram(tile){
   let sub_step_x = tile.width / wolfram_params.grid.width
   let sub_step_y = tile.height / wolfram_params.grid.height
   for(let k = 0; k < row.length; k++){
+    let org = {
+      x: k,
+      y: draw_index
+    }
     let val = int(row[k])
     let color_val = val / (wolfram_params.base - 1)
     graphic.fill(this.color_machine(color_val).hex())
-    graphic.circle(k * sub_step_x,draw_index * sub_step_y,sub_step_x / Math.sqrt(2))
+    if(wolfram_params.draw_shape == 0){
+      graphic.rect(
+        org.x * sub_step_x,
+        org.y * sub_step_y,
+        sub_step_x,
+        sub_step_y);
+    }else if(wolfram_params.draw_shape == 1){
+      graphic.circle(
+        org.x * sub_step_x,
+        org.y * sub_step_y,
+        sub_step_x / Math.sqrt(2));
+    }else if(wolfram_params.draw_shape == 2){
+      graphic.triangle(
+        org.x * sub_step_x,
+        org.y * sub_step_y,
+        org.x * sub_step_x + sub_step_x,
+        org.y * sub_step_y + sub_step_y,
+        org.x * sub_step_x,
+        org.y * sub_step_y + sub_step_y,
+      )
+    }
   }
 }
 
@@ -121,11 +145,6 @@ function drawTradIFS(tile){
 }
 
 function drawTrigIFS(tile){
-  // let avg_point = tile.generator.getAvgPoint();
-  // let sx = avg_point.x * tile.width / 2 
-  // let sy = avg_point.y * tile.height / 2 
-  // let max_color_val = tile.width * Math.sqrt(2)
-
   graphic.translate((tile.width / 2),(tile.height / 2))
   let points = tile.generator.generatePoints(trig_ifs_params.iterations_per_draw);
   // console.log(points)

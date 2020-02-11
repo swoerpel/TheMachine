@@ -52,6 +52,7 @@ class TrigIFS {
         }
     }
 
+
     calculateSTDEV(){
         let sumx = 0;
         let sumy = 0;

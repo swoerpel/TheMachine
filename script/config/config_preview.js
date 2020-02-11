@@ -1,11 +1,11 @@
-let big_screen = true;
+let big_screen = false;
 let small = {
   width: 2400,
   height: 2400
 }
 let large = {
-  width: 4800,
-  height: 4800
+  width: 3600,
+  height: 2500
 }
 let width;
 let height;
@@ -53,7 +53,7 @@ var config_preview = {
       stdev:0.15
     },
     data:{
-      generator_type: 'trig_ifs',
+      generator_type: 'wolfram',
       filter: 10000000
     }
 }

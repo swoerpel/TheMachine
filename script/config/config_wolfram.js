@@ -1,7 +1,7 @@
 var wolfram_params = {
     grid:{
-        width: 81,
-        height: 81
+        width: 64,
+        height: 64
     },
     load:'',
 
@@ -9,8 +9,8 @@ var wolfram_params = {
     // 2->total
     mode:1,
 
-    base:4,   // < 10
-
+    base:3,   // < 10
+    draw_shape: 2,
     init_row: {
         mode:0, 
         group_size: 2
@@ -20,7 +20,6 @@ var wolfram_params = {
         type: 'B',
     }
 }
-
 
 var wolfram_modes = [
     'traditional',  //0
