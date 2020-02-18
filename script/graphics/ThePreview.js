@@ -73,6 +73,8 @@ function draw() {
           drawTrigIFS(tile);
         if(params.data.generator_type == 'wolfram')
           drawWolfram(tile);
+        if(params.data.generator_type == 'ant_colony')
+          drawAntColony(tile);
         graphic.translate(-tile.width * i,-tile.height * j)
       }
     }
@@ -80,6 +82,25 @@ function draw() {
     draw_index++;
   }
 }  
+
+function drawAntColony(tile){
+  // graphic.translate(tile.width / 2, tile.height / 2)
+  console.log(tile)
+
+  let sub_step_x = tile.width / config_ant_colony.grid.width
+  let sub_step_y = tile.height / config_ant_colony.grid.height
+  let current_grid = tile.generator.updateGrid(config_ant_colony.steps_per_draw);
+  for(let i = 0; i < config_ant_colony.grid.width; i++){
+    for(let j = 0; j < config_ant_colony.grid.height; j++){
+      graphic.fill(this.color_machine(Math.random()).hex())
+      graphic.rect(sub_step_x * i, sub_step_y * j,sub_step_x,sub_step_y)
+      graphic.circle(sub_step_x * i, sub_step_y * j,sub_step_x/2)
+      // graphic.circle(tile.origin.x,tile.origin.y, sub_step_x)
+    } 
+  }
+  // graphic.translate(-tile.width / 2, -tile.height / 2)
+
+}
 
 
 function drawWolfram(tile){
@@ -98,6 +119,7 @@ function drawWolfram(tile){
     let val = int(row[k])
     let color_val = val / (wolfram_params.base - 1)
     graphic.fill(this.color_machine(color_val).hex())
+    graphic.stroke(this.color_machine(color_val).hex())
     if(wolfram_params.draw_shape == 0){
       graphic.rect(
         org.x * sub_step_x,

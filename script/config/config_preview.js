@@ -45,15 +45,15 @@ var config_preview = {
       
     },
     grid: {
-      width: 1,
-      height:1,
+      width: 2,
+      height:2,
       border_thickness: 0,
     },
     offset:{
       stdev:0.15
     },
     data:{
-      generator_type: 'wolfram',
+      generator_type: 'ant_colony',
       filter: 10000000
     }
 }

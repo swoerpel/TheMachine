@@ -50,6 +50,8 @@ class GridMaster {
                     tile.generator = new TrigIFS();
                 if(this.params.data.generator_type == 'wolfram')
                     tile.generator = new Wolfram();
+                if(this.params.data.generator_type == 'ant_colony')
+                    tile.generator = new AntColony();
             });
         });
     }
@@ -62,6 +64,8 @@ class GridMaster {
             this.init_trig_ifs_params();
         if(this.params.data.generator_type == 'wolfram')
             this.init_wolfram_params();
+        if(this.params.data.generator_type == 'ant_colony')
+            this.init_ant_colony_params();
     }
 
     init_trad_ifs_params(){
@@ -129,6 +133,18 @@ class GridMaster {
             }
         }
     }
+
+
+    init_ant_colony_params(){
+        console.log('chetttt')
+        for(let i = 0; i < this.grid.length; i++){
+            for(let j = 0; j < this.grid[i].length; j++){
+                this.grid[i][j].generator.Initialize()
+            }
+        }
+    }
+
+
 
     generate_wolfram_base_seed(seed_length){
         if(wolfram_params.load == '')
