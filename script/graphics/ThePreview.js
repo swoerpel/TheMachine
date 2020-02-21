@@ -105,8 +105,10 @@ function draw() {
 function drawAntColony(tile){
   let sub_step_x = tile.width / ant_colony_params.grid.width
   let sub_step_y = tile.height / ant_colony_params.grid.height
-  let current_grid = tile.generator.updateGrid(ant_colony_params.steps_per_draw);
+  let ant_grid = tile.generator.updateGrid();
+  // console.log(ant_grid)
   graphic.translate(sub_step_x / 2, sub_step_y / 2)
+
   for(let i = 0; i < ant_colony_params.grid.width; i++){
     for(let j = 0; j < ant_colony_params.grid.height; j++){
       let shape_params = {
@@ -117,7 +119,7 @@ function drawAntColony(tile){
         width: sub_step_x,
         height: sub_step_y,
         subshape_size: 1,
-        color_value: Math.random()
+        color_value: ant_grid[i][j].state / 4 //temporary jus to see output
       }
       shape_machine.generateShape(shape_params,graphic)
     } 
@@ -125,17 +127,11 @@ function drawAntColony(tile){
   graphic.translate(-sub_step_x / 2, -sub_step_y / 2)
 }
 
-
 function drawWolfram(tile){
-
-
   let sub_step_x = tile.width / wolfram_params.grid.width
   let sub_step_y = tile.height / wolfram_params.grid.height
-
-
   let row;
   let row_index = draw_index;//tile.generator.getRowIndex();
-
   (row_index < tile.generator.kernel.dims.y) ?
     row = tile.generator.getInitRow(row_index):
     row = tile.generator.generateRow()

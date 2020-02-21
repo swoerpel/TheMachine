@@ -47,8 +47,8 @@ var config_preview = {
 
     shape: {
       // type: 'rectangle'
-      type: 'circle'
-      // type: 'triangle'
+      // type: 'circle'
+      type: 'triangle'
       // type: 'block'
     },
 
@@ -61,6 +61,8 @@ var config_preview = {
       stdev:0.15
     },
     data:{
+      // generator_type: 'trig_ifs',
+      // generator_type: 'trad_ifs',
       generator_type: 'ant_colony',
       // generator_type: 'wolfram',
       filter: 10000000
