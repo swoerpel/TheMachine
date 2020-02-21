@@ -28,6 +28,7 @@ class Wolfram{
 
 
     generateTraditionalRow(){
+        
         let next_row = []
         let kernel_slices = [];
         for(let i = 0; i < wolfram_params.grid.width; i++){
@@ -47,7 +48,12 @@ class Wolfram{
                     next_row.push(int(this.seed[index]))
             });
         }
+        this.row_index++;
         return next_row
+    }
+
+    getRowIndex(){
+        return this.row_index;
     }
 
     generateTotalisticRow(){

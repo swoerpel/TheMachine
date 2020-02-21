@@ -1,7 +1,7 @@
 var wolfram_params = {
     grid:{
-        width: 64,
-        height: 64
+        width: 24,
+        height: 24
     },
     load:'',
 

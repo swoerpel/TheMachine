@@ -1,4 +1,4 @@
-var config_ant_colony = {
+var ant_colony_params = {
     step_shape: 'square',
     template: 'A',
     grid: {

@@ -1,7 +1,7 @@
 class AntColony{
     constructor(){
-        let selected_params = config_ant_colony.step_shape + '_' + config_ant_colony.template;
-        this.params = config_ant_colony[selected_params];
+        let selected_params = ant_colony_params.step_shape + '_' + ant_colony_params.template;
+        this.params = ant_colony_params[selected_params];
         console.log(this.params)
     }
 

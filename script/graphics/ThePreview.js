@@ -6,6 +6,7 @@ var pause = false;
 var color_palette;
 var color_palette_name;
 var color_machine;
+var shape_machine;
 var palettes;
 var palette_names;
 var params;
@@ -15,10 +16,12 @@ var color_offset = Math.random()
 
 function setup() {
   params = new Object(config_preview);
+  Refresh();
   build_color_library();
   setup_colors();
+  setup_shapes();
   frameRate(params.frame_rate)
-  Refresh();
+  
 }
 
 function build_color_library() {
@@ -45,6 +48,20 @@ function setup_colors(){
   console.log('color palette',color_palette_name,color_palette)
 }
 
+function setup_shapes(){
+  if(params.shape.type == 'rectangle')
+    shape_machine = new ShapeRectangle(color_machine);
+  if(params.shape.type == 'circle')
+    shape_machine =new ShapeCircle(color_machine);
+  if(params.shape.type == 'triangle')
+    shape_machine =new ShapeTriangle(color_machine);
+  if(params.shape.type == 'block')
+    shape_machine =new ShapeBlock(color_machine);
+  if(!shape_machine)
+    throw "ERROR: incorrect shape setting"
+  console.log('new shape machine', shape_machine)
+}
+
 function Refresh(loaded_base_params = []){
   let grid_master = new GridMaster(params);
   grid_master.InitializeGrid();
@@ -52,12 +69,13 @@ function Refresh(loaded_base_params = []){
   grid_master.InitializeParameters(loaded_base_params);
   // grid_master.PrintGrid();
   grid = grid_master.GetGrid();// must be last
+  console.log(params)
   let canvas = createCanvas(params.canvas.width,params.canvas.height);
   graphic = createGraphics(params.canvas.width,params.canvas.height);
   graphic.background(params.colors.background)
-  drawTiles();
   draw_index = 0;
 }
+
 
 
 
@@ -67,6 +85,7 @@ function draw() {
       for(let j = 0; j < grid[i].length; j++){
         let tile = grid[i][j];
         graphic.translate(tile.width * i,tile.height * j)
+
         if(params.data.generator_type == 'trad_ifs')
           drawTradIFS(tile);
         if(params.data.generator_type == 'trig_ifs')
@@ -84,64 +103,57 @@ function draw() {
 }  
 
 function drawAntColony(tile){
-  // graphic.translate(tile.width / 2, tile.height / 2)
-  console.log(tile)
-
-  let sub_step_x = tile.width / config_ant_colony.grid.width
-  let sub_step_y = tile.height / config_ant_colony.grid.height
-  let current_grid = tile.generator.updateGrid(config_ant_colony.steps_per_draw);
-  for(let i = 0; i < config_ant_colony.grid.width; i++){
-    for(let j = 0; j < config_ant_colony.grid.height; j++){
-      graphic.fill(this.color_machine(Math.random()).hex())
-      graphic.rect(sub_step_x * i, sub_step_y * j,sub_step_x,sub_step_y)
-      graphic.circle(sub_step_x * i, sub_step_y * j,sub_step_x/2)
-      // graphic.circle(tile.origin.x,tile.origin.y, sub_step_x)
+  let sub_step_x = tile.width / ant_colony_params.grid.width
+  let sub_step_y = tile.height / ant_colony_params.grid.height
+  let current_grid = tile.generator.updateGrid(ant_colony_params.steps_per_draw);
+  graphic.translate(sub_step_x / 2, sub_step_y / 2)
+  for(let i = 0; i < ant_colony_params.grid.width; i++){
+    for(let j = 0; j < ant_colony_params.grid.height; j++){
+      let shape_params = {
+        origin: {
+          x: sub_step_x * i, 
+          y: sub_step_y * j, 
+        },
+        width: sub_step_x,
+        height: sub_step_y,
+        subshape_size: 1,
+        color_value: Math.random()
+      }
+      shape_machine.generateShape(shape_params,graphic)
     } 
   }
-  // graphic.translate(-tile.width / 2, -tile.height / 2)
-
+  graphic.translate(-sub_step_x / 2, -sub_step_y / 2)
 }
 
 
 function drawWolfram(tile){
-  let row;
-  if(draw_index < tile.generator.kernel.dims.y)
-    row = tile.generator.getInitRow(draw_index);
-  else
-    row = tile.generator.generateRow();
+
+
   let sub_step_x = tile.width / wolfram_params.grid.width
   let sub_step_y = tile.height / wolfram_params.grid.height
+
+
+  let row;
+  let row_index = draw_index;//tile.generator.getRowIndex();
+
+  (row_index < tile.generator.kernel.dims.y) ?
+    row = tile.generator.getInitRow(row_index):
+    row = tile.generator.generateRow()
+  graphic.translate(sub_step_x / 2, sub_step_y / 2)
   for(let k = 0; k < row.length; k++){
-    let org = {
-      x: k,
-      y: draw_index
+    let shape_params = {
+      origin: {
+        x: k * sub_step_x, 
+        y: row_index * sub_step_y, 
+      },
+      width: sub_step_x,
+      height: sub_step_y,
+      subshape_size: 1,
+      color_value: int(row[k]) / (wolfram_params.base - 1)
     }
-    let val = int(row[k])
-    let color_val = val / (wolfram_params.base - 1)
-    graphic.fill(this.color_machine(color_val).hex())
-    graphic.stroke(this.color_machine(color_val).hex())
-    if(wolfram_params.draw_shape == 0){
-      graphic.rect(
-        org.x * sub_step_x,
-        org.y * sub_step_y,
-        sub_step_x,
-        sub_step_y);
-    }else if(wolfram_params.draw_shape == 1){
-      graphic.circle(
-        org.x * sub_step_x,
-        org.y * sub_step_y,
-        sub_step_x / Math.sqrt(2));
-    }else if(wolfram_params.draw_shape == 2){
-      graphic.triangle(
-        org.x * sub_step_x,
-        org.y * sub_step_y,
-        org.x * sub_step_x + sub_step_x,
-        org.y * sub_step_y + sub_step_y,
-        org.x * sub_step_x,
-        org.y * sub_step_y + sub_step_y,
-      )
-    }
+    shape_machine.generateShape(shape_params,graphic)
   }
+  graphic.translate(-sub_step_x / 2, -sub_step_y / 2)
 }
 
 function drawTradIFS(tile){
@@ -182,18 +194,6 @@ function drawTrigIFS(tile){
   graphic.translate(- (tile.width / 2),-(tile.height / 2))
 }
 
-function drawTiles(){
-  for(let i = 0; i < grid.length; i++){
-    for(let j = 0; j < grid[i].length; j++){
-      let tile = grid[i][j];
-      graphic.strokeWeight(this.params.grid.border_thickness);
-      graphic.stroke('white')
-      graphic.fill(params.colors.background);
-      graphic.rect(tile.origin.x,tile.origin.y,tile.width,tile.height)
-    }
-  }
-}
-
 function keyPressed() {
   if(keyCode === 32) //'space' pause/play
     pause = !pause
@@ -227,7 +227,6 @@ function keyPressed() {
     Refresh();
   }
   console.log('key pressed:', keyCode)
-  console.log(mouse)
 }
 
 function mousePressed() {

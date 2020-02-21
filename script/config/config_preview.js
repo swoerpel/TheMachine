@@ -36,17 +36,25 @@ var config_preview = {
     colors: {
       background: 'black',
       background_palette: 'binary',
-      // points_palette:'random',
       points_palette:'spectral',
+      // points_palette:'random',
       // points_palette:'ylorrd',
       points:'',
       x: 'black',
       y: 'black',
       
     },
+
+    shape: {
+      // type: 'rectangle'
+      type: 'circle'
+      // type: 'triangle'
+      // type: 'block'
+    },
+
     grid: {
-      width: 2,
-      height:2,
+      width: 1,
+      height:1,
       border_thickness: 0,
     },
     offset:{
@@ -54,6 +62,7 @@ var config_preview = {
     },
     data:{
       generator_type: 'ant_colony',
+      // generator_type: 'wolfram',
       filter: 10000000
     }
 }
