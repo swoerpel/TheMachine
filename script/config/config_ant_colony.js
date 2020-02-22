@@ -6,13 +6,14 @@ var ant_colony_params = {
         height: 32,
     },
     color_spread: 7,
-    steps_per_draw: 10,
-    ant_count: 4,
-    max_state: 4,
+    steps_per_update: 50,
+    ant_count: 8,
+    max_state: 120,
     
-    shape_sizes: [1,.5],
+    shape_sizes: [1,2,4],
     sub_shape_values: [1,2],
     sub_shape_sizes: [1],
+    rotation: [0,90,180],
     // rotation : {
     //   initial : 0,
     //   incremental: 0,
@@ -21,10 +22,6 @@ var ant_colony_params = {
 
 
 
-    stroke_weights: [1,.5],
-    rotation: [0],
-    sub_shapes: [1,2],
-    sub_stroke_weights: [1]
     
     // implement in preview
     // step_path: 3, 

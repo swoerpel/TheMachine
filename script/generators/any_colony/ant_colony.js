@@ -5,7 +5,20 @@ class AntColony{
 
     Initialize(){
         this.initGrid();
+        this.initAntTypes();
         this.initAnts();
+        
+    }
+
+    initAntTypes(){
+        this.tile_max_values = {
+            'color_value_a':ant_colony_params.max_state,
+            'shape_size': ant_colony_params.shape_sizes.length,
+            'sub_shapes': ant_colony_params.sub_shape_values.length,
+            'sub_shape_size': ant_colony_params.sub_shape_sizes.length,
+            'rotation': ant_colony_params.rotation.length
+        }
+        this.ant_types = Object.keys(this.tile_max_values);
     }
 
     initAnts(){
@@ -14,9 +27,10 @@ class AntColony{
             this.ants.push({
                 id: i,
                 direction: i % this.direction_count,
+                type: this.ant_types[i % this.ant_types.length],
                 tile_param: this.tile_keys[i % this.tile_keys.length],
-                x: Math.floor(ant_colony_params.grid.width / 2),
-                y: Math.floor(ant_colony_params.grid.height / 2),
+                x: Math.floor((ant_colony_params.grid.width - 1) / 2),
+                y: Math.floor((ant_colony_params.grid.height - 1) / 2),
                 step_size: 1,
                 ruleset: this.generateAntRuleset()
             })
@@ -41,7 +55,9 @@ class AntColony{
                     color_value_a: Math.random() / 2,
                     color_value_b: Math.random() / 2,
                     shape_size: 0,
+                    sub_shapes: 0,
                     sub_shape_size: 0,
+                    rotation:0,
                     state: 0,
                 }
                 row.push(tile)
@@ -49,22 +65,20 @@ class AntColony{
             this.grid.push(row)
         }
         this.tile_keys = Object.keys(this.grid[0][0])
-        console.log(this.grid,this.tile_keys)
+        // console.log(this.grid,this.tile_keys)
     }
 
 
 
     updateGrid(){
-        this.ants.map((ant)=>{
-            console.log(ant)
-            this.grid[ant.x][ant.y].state = (this.grid[ant.x][ant.y].state + 1) % ant_colony_params.max_state
-
-            //need to update other tile values as well!
-
-
-
-            this.updateAnt(ant,this.grid[ant.x][ant.y].state);
-        })
+        for(let i = 0; i < ant_colony_params.steps_per_update; i++){
+            this.ants.map((ant, index)=>{
+                this.grid[ant.x][ant.y].state = (this.grid[ant.x][ant.y].state + 1) % ant_colony_params.max_state
+                this.grid[ant.x][ant.y][ant.type] = (this.grid[ant.x][ant.y][ant.type] + 1) % this.tile_max_values[ant.type]
+                // console.log(ant.type, this.tile_max_values[ant.type])
+                this.updateAnt(ant,this.grid[ant.x][ant.y].state);
+            })
+        }
         return this.grid
     }
     

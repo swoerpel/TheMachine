@@ -1,11 +1,12 @@
 let big_screen = false;
+// let big_screen = true;
 let small = {
   width: 2400,
   height: 2400
 }
 let large = {
-  width: 3600,
-  height: 2500
+  width: 4800,
+  height: 4800
 }
 let width;
 let height;
@@ -63,8 +64,8 @@ var config_preview = {
     data:{
       // generator_type: 'trig_ifs',
       // generator_type: 'trad_ifs',
-      generator_type: 'ant_colony',
-      // generator_type: 'wolfram',
+      // generator_type: 'ant_colony',
+      generator_type: 'wolfram',
       filter: 10000000
     }
 }

@@ -73,6 +73,7 @@ function Refresh(loaded_base_params = []){
   let canvas = createCanvas(params.canvas.width,params.canvas.height);
   graphic = createGraphics(params.canvas.width,params.canvas.height);
   graphic.background(params.colors.background)
+  graphic.strokeWeight(0)
   draw_index = 0;
 }
 
@@ -108,18 +109,23 @@ function drawAntColony(tile){
   let ant_grid = tile.generator.updateGrid();
   // console.log(ant_grid)
   graphic.translate(sub_step_x / 2, sub_step_y / 2)
-
+  
   for(let i = 0; i < ant_colony_params.grid.width; i++){
     for(let j = 0; j < ant_colony_params.grid.height; j++){
+
+      // console.log(ant_grid[i][j])
+      let shape_size_scaler = ant_colony_params.shape_sizes[ ant_grid[i][j]['shape_size']]
+      let rotation_value = ant_colony_params.rotation[ ant_grid[i][j]['rotation']]
       let shape_params = {
         origin: {
-          x: sub_step_x * i, 
-          y: sub_step_y * j, 
+          x: sub_step_x * i + (sub_step_x / 2), 
+          y: sub_step_y * j + (sub_step_y / 2), 
         },
-        width: sub_step_x,
-        height: sub_step_y,
+        width: sub_step_x * shape_size_scaler,// * ant_colony_params['shape_size'][],
+        height: sub_step_y * shape_size_scaler,
         subshape_size: 1,
-        color_value: ant_grid[i][j].state / 4 //temporary jus to see output
+        rotation: rotation_value,
+        color_value: ant_grid[i][j].state / 40 //temporary jus to see output
       }
       shape_machine.generateShape(shape_params,graphic)
     } 
@@ -139,12 +145,13 @@ function drawWolfram(tile){
   for(let k = 0; k < row.length; k++){
     let shape_params = {
       origin: {
-        x: k * sub_step_x, 
-        y: row_index * sub_step_y, 
+        x: k * sub_step_x + (sub_step_x / 2), 
+        y: row_index * sub_step_y + (sub_step_y / 2), 
       },
       width: sub_step_x,
       height: sub_step_y,
       subshape_size: 1,
+      rotation: 0,
       color_value: int(row[k]) / (wolfram_params.base - 1)
     }
     shape_machine.generateShape(shape_params,graphic)
