@@ -21,6 +21,7 @@ class Wolfram{
             row = this.generateTraditionalRow()
         else if(wolfram_modes[wolfram_params.mode] ==  wolfram_modes[1])
             row = this.generateTotalisticRow()
+        // console.log(row)
         this.current_rows.pop()
         this.current_rows.push(row)
         return row
@@ -70,6 +71,7 @@ class Wolfram{
             }
             kernel_slices.push(kernel_slice)
         }
+        console.log(kernel_slices)
         for(let j = 0; j < kernel_slices.length; j++){
             this.neighborhoods.map((n,index)=>{
                 let avg = 0;
@@ -120,7 +122,8 @@ class Wolfram{
     initNeighborhoods(){
         this.neighborhoods = [];
         let pad = (num, places) => String(num).padStart(places, '0')
-
+        console.log(wolfram_modes, wolfram_params.mode)
+        console.log(wolfram_modes[wolfram_params.mode])
         //traditional
         if(wolfram_modes[wolfram_params.mode] ==  wolfram_modes[0]){
             let seed_length = Math.pow(wolfram_params.base,this.kernel.length)
@@ -132,6 +135,7 @@ class Wolfram{
         //totalistic
         else if(wolfram_modes[wolfram_params.mode] ==  wolfram_modes[1]) { 
             let seed_length = Math.pow(wolfram_params.base,this.kernel.length)
+            // console.log(seed_length)
             for(let i = 0; i < seed_length; i++){
                 let num = pad(i.toString(wolfram_params.base),this.kernel.length)
                 let avg = 0;

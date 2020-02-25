@@ -108,7 +108,7 @@ function drawAntColony(tile){
   let sub_step_y = tile.height / ant_colony_params.grid.height
   let ant_grid = tile.generator.updateGrid();
   // console.log(ant_grid)
-  graphic.translate(sub_step_x / 2, sub_step_y / 2)
+  // graphic.translate(sub_step_x / 2, sub_step_y / 2)
   
   for(let i = 0; i < ant_colony_params.grid.width; i++){
     for(let j = 0; j < ant_colony_params.grid.height; j++){
@@ -116,21 +116,33 @@ function drawAntColony(tile){
       // console.log(ant_grid[i][j])
       let shape_size_scaler = ant_colony_params.shape_sizes[ ant_grid[i][j]['shape_size']]
       let rotation_value = ant_colony_params.rotation[ ant_grid[i][j]['rotation']]
+      
+      // console.log('rotation_value',rotation_value)
       let shape_params = {
         origin: {
-          x: sub_step_x * i + (sub_step_x / 2), 
-          y: sub_step_y * j + (sub_step_y / 2), 
+          x: sub_step_x * i, //center
+          y: sub_step_y * j, //
+          cx: sub_step_x * i + (sub_step_x / 2),
+          cy: sub_step_y * j + (sub_step_y / 2)
         },
-        width: sub_step_x * shape_size_scaler,// * ant_colony_params['shape_size'][],
-        height: sub_step_y * shape_size_scaler,
-        subshape_size: 1,
-        rotation: rotation_value,
-        color_value: ant_grid[i][j].state / 40 //temporary jus to see output
+        shape_sizes: [1],
+        tile_width: sub_step_x * shape_size_scaler,// * ant_colony_params['shape_size'][],
+        tile_height: sub_step_y * shape_size_scaler,
+        subshape_sizes: (Math.random() > 0.5) ? [1] : [1],
+        subshapes: (Math.random() > 0.25) ? 1:2,
+        rotation: {
+          initial: 0,
+          stack: [0,180]
+        },
+        color_value: ant_grid[i][j].state / 24 //temporary jus to see output
       }
-      shape_machine.generateShape(shape_params,graphic)
+
+
+
+      shape_machine.generateShapeGroup(shape_params,graphic)
     } 
   }
-  graphic.translate(-sub_step_x / 2, -sub_step_y / 2)
+  // graphic.translate(-sub_step_x / 2, -sub_step_y / 2)
 }
 
 function drawWolfram(tile){
@@ -142,6 +154,7 @@ function drawWolfram(tile){
     row = tile.generator.getInitRow(row_index):
     row = tile.generator.generateRow()
   graphic.translate(sub_step_x / 2, sub_step_y / 2)
+  // console.log(row)
   for(let k = 0; k < row.length; k++){
     let shape_params = {
       origin: {
@@ -151,13 +164,15 @@ function drawWolfram(tile){
       width: sub_step_x,
       height: sub_step_y,
       subshape_size: 1,
-      rotation: 0,
+      rotation: wolfram_params.rotation[Math.floor(Math.random() * wolfram_params.rotation.length)],
       color_value: int(row[k]) / (wolfram_params.base - 1)
     }
     shape_machine.generateShape(shape_params,graphic)
   }
   graphic.translate(-sub_step_x / 2, -sub_step_y / 2)
 }
+
+
 
 function drawTradIFS(tile){
   let avg_point = tile.generator.getAvgPoint();

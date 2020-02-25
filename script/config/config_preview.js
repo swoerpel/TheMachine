@@ -64,8 +64,8 @@ var config_preview = {
     data:{
       // generator_type: 'trig_ifs',
       // generator_type: 'trad_ifs',
-      // generator_type: 'ant_colony',
-      generator_type: 'wolfram',
+      generator_type: 'ant_colony',
+      // generator_type: 'wolfram',
       filter: 10000000
     }
 }

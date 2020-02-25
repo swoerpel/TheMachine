@@ -1,20 +1,23 @@
 var wolfram_params = {
     grid:{
-        width: 24,
-        height: 24
+        width: 180,
+        height: 180
     },
     load:'',
 
-    // 1->trad
-    // 2->total
-    mode:1,
+    // 0->trad
+    // 1->total
+    mode:0,
 
-    base:3,   // < 10
+    base:4,   // < 10
     draw_shape: 2,
     init_row: {
         mode:0, 
         group_size: 2
     },
+
+    //evaluate if necessary to delete
+    rotation: [0,90,180],
 
     kernel:{
         type: 'B',
