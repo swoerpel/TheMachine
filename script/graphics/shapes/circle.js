@@ -8,7 +8,6 @@ class ShapeCircle {
     }
 
     generateShapeGroup(params,graphic){
-        
         graphic.strokeWeight(params.stroke_weight)
         let sub_tile_width = params.tile_width / params.subshapes
         let sub_tile_height = params.tile_height / params.subshapes

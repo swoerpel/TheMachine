@@ -55,8 +55,14 @@ function setup_shapes(){
     shape_machine =new ShapeCircle(color_machine);
   if(params.shape.type == 'triangle')
     shape_machine =new ShapeTriangle(color_machine);
-  if(params.shape.type == 'block')
-    shape_machine =new ShapeBlock(color_machine);
+  if(params.shape.type == 'custom')
+    shape_machine =new ShapeCustom(color_machine);
+  // if(params.shape.type == '')
+    // shape_machine =new ShapeBlock(color_machine);
+  // if(params.shape.type == '')
+    // shape_machine =new ShapeBlock(color_machine);
+  // if(params.shape.type == '')
+  //   shape_machine =new ShapeBlock(color_machine);
   if(!shape_machine)
     throw "ERROR: incorrect shape setting"
   console.log('new shape machine', shape_machine)
@@ -125,16 +131,21 @@ function drawAntColony(tile){
           cx: sub_step_x * i + (sub_step_x / 2),
           cy: sub_step_y * j + (sub_step_y / 2)
         },
-        shape_sizes: [1],
-        tile_width: sub_step_x * shape_size_scaler,// * ant_colony_params['shape_size'][],
-        tile_height: sub_step_y * shape_size_scaler,
-        subshape_sizes: (Math.random() > 0.5) ? [1] : [1],
-        subshapes: (Math.random() > 0.25) ? 1:2,
+        shape_sizes: [.5],
+        tile_width: sub_step_x,// * shape_size_scaler,// * ant_colony_params['shape_size'][],
+        tile_height: sub_step_y,// * shape_size_scaler,
+        subshape_sizes: [1],
+        subshapes: 1,
+        
+        // subshape_sizes: (Math.random() > 0.5) ? [1,.5] : [1],
+        // subshapes: (Math.random() > 0.25) ? 1:2,
         rotation: {
           initial: 0,
-          stack: [0,180]
+          stack: [0] 
         },
-        color_value: ant_grid[i][j].state / 24 //temporary jus to see output
+        stroke_weight: 0,
+         //temporary jus to see output
+        color_value: ant_grid[i][j].state / ant_colony_params.max_state
       }
 
 

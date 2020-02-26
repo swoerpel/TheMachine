@@ -49,8 +49,8 @@ var config_preview = {
     shape: {
       // type: 'rectangle'
       // type: 'circle'
-      type: 'triangle'
-      // type: 'block'
+      // type: 'triangle'
+      type: 'custom'
     },
 
     grid: {

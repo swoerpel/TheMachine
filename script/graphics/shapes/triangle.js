@@ -76,7 +76,7 @@ class ShapeTriangle {
             },
         ]
         points = this.rotatePoints(points,origin,rotation)
-        graphic.fill(this.color_machine(Math.random()).hex())
+        graphic.fill(this.color_machine()).hex())
         graphic.beginShape();
         points.map((p) => {
             graphic.vertex(p.x,p.y)
