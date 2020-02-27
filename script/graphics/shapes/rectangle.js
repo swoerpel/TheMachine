@@ -2,9 +2,8 @@
 
 
 class ShapeRectangle {
-    constructor(color_machine){
-        this.color_machine = color_machine;
-        console.log('rectangle_machine',color_machine)
+    constructor(color_machines){
+        this.color_machines = color_machines;
     }
 
     generateShapeGroup(params, graphic){
@@ -24,12 +23,12 @@ class ShapeRectangle {
                 }  
                 if(params.subshapes == 1){
                     params.shape_sizes.map((scaler)=>{
-                        graphic.fill(this.color_machine(Math.random()).hex())
+                        graphic.fill(this.color_machines[0](Math.random()).hex())
                         graphic.rect(sub_origin.cx,sub_origin.cy,sub_tile_width * scaler, sub_tile_height * scaler)
                     })
                 }else{
                     params.subshape_sizes.map((scaler)=>{
-                        graphic.fill(this.color_machine(Math.random()).hex())
+                        graphic.fill(this.color_machines(Math.random()).hex())
                         graphic.rect(sub_origin.cx,sub_origin.cy,sub_tile_width * scaler, sub_tile_height * scaler)
                     })   
                 }

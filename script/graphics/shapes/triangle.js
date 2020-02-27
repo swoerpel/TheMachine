@@ -1,6 +1,6 @@
 class ShapeTriangle {
-    constructor(color_machine){
-        this.color_machine = color_machine;
+    constructor(color_machines){
+        this.color_machines = color_machines;
         console.log('triangle_machine')
     }
 
@@ -84,7 +84,7 @@ class ShapeTriangle {
         //     },
         // ]
         points = this.rotatePoints(points,origin,rotation)
-        graphic.fill(this.color_machine(Math.random()).hex())
+        graphic.fill(this.color_machines[0](Math.random()).hex())
         graphic.beginShape();
         points.map((p) => {
             graphic.vertex(p.x,p.y)

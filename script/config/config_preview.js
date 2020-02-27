@@ -37,13 +37,12 @@ var config_preview = {
     colors: {
       background: 'white',
       background_palette: 'binary',
-      // points_palette:'spectral',
-      points_palette:'binary',
-      // points_palette:'random',
-      // points_palette:'ylorrd',
+      // points_palette:['spectral'],
+      // points_palette:['binary'],
+      // points_palette:['random'],
+      // points_palette:['ylorrd'],
+      palettes:['binary'],
       points:'',
-      x: 'black',
-      y: 'black',
       
     },
 

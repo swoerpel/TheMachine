@@ -2,8 +2,8 @@
 
 
 class ShapeCircle {
-    constructor(color_machine){
-        this.color_machine = color_machine;
+    constructor(color_machines){
+        this.color_machines = color_machines;
         console.log('circle_machine')
     }
 
@@ -24,12 +24,12 @@ class ShapeCircle {
                 if(params.subshapes == 1){
                     params.shape_sizes.map((scaler,index)=>{
                         if(index == 0)
-                            graphic.fill(this.color_machine(params.color_value).hex())
+                            graphic.fill(this.color_machines[0](params.color_value).hex())
                         graphic.circle(sub_origin.cx,sub_origin.cy,sub_tile_width * scaler / 2)
                     })
                 }else{
                     params.subshape_sizes.map((scaler)=>{
-                        graphic.fill(this.color_machine(Math.random()).hex())
+                        graphic.fill(this.color_machines[0](Math.random()).hex())
                         graphic.circle(sub_origin.cx,sub_origin.cy,sub_tile_width * scaler / 2)
                     })   
                 }

@@ -2,13 +2,14 @@
 
 
 class ShapeCustom {
-    constructor(color_machine){
+    constructor(color_machines){
         // expecting array of color_machines
         // IN CUSTOM ONLY
-        this.color_machine = color_machine;
-        console.log('circle_machine')
+        this.color_machines = color_machines;
+        // console.log('circle_machine',this.color_machines )
         this.index = 0;
         this.first = true;
+        
     }
 
     generateShapeGroup(params,graphic){
@@ -16,7 +17,8 @@ class ShapeCustom {
         graphic.strokeWeight(params.stroke_weight)
         console.log(params)
         params.shape_sizes.map((size, index)=>{
-            graphic.fill(this.color_machine(1/(index + 1)).hex())
+            // console.log(this.color_machines)
+            graphic.fill(this.color_machines[0](1/(index + 1)).hex())
 
             graphic.circle(
                 params.origin.cx,

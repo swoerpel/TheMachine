@@ -5,7 +5,7 @@ var mouse;
 var pause = false;
 var color_palette;
 var color_palette_name;
-var color_machine;
+var color_machines;
 var shape_machine;
 var palettes;
 var palette_names;
@@ -36,28 +36,36 @@ function build_color_library() {
 }
 
 function setup_colors(){
-  if(params.colors.points_palette == 'random' || params.colors.points_palette == ''){
-    let keys = Object.keys(palettes)
-    let rand_index = Math.floor(Math.random() * keys.length)
-    color_palette_name = keys[rand_index]
-  }else{
-    color_palette_name = params.colors.points_palette
+  color_machines = [];
+  
+  for(let i = 0; i < params.colors.palettes.length; i++){
+    let pal = params.colors.palettes[i];
+    if(pal == 'random'){
+      let keys = Object.keys(palettes)
+      let rand_index = Math.floor(Math.random() * keys.length)
+      pal = keys[rand_index]
+    }else{
+      pal = params.colors.palettes[i]
+    }
+    console.log(palettes)
+    color_palette = palettes[pal]
+    console.log(color_palette)
+    color_machines.push(chroma.scale(color_palette));
   }
-  color_palette = palettes[color_palette_name]
-  color_machine = chroma.scale(color_palette)
-  console.log('color palette',color_palette_name,color_palette)
+  console.log('color machines -> ',color_machines)
+
 }
 
 function setup_shapes(){
   // console.log(ShapeTriangle)
   if(params.shape.type == 'rectangle')
-    shape_machine = new ShapeRectangle(color_machine);
+    shape_machine = new ShapeRectangle(color_machines);
   if(params.shape.type == 'circle')
-    shape_machine =new ShapeCircle(color_machine);
+    shape_machine =new ShapeCircle(color_machines);
   if(params.shape.type == 'triangle')
-    shape_machine =new ShapeTriangle(color_machine);
+    shape_machine =new ShapeTriangle(color_machines);
   if(params.shape.type == 'custom')
-    shape_machine =new ShapeCustom(color_machine);
+    shape_machine =new ShapeCustom(color_machines);
   // if(params.shape.type == '')
     // shape_machine =new ShapeBlock(color_machine);
   // if(params.shape.type == '')
@@ -237,7 +245,7 @@ function drawTradIFS(tile){
     let px = p.x * tile.width / 2
     let py = p.y * tile.height / 2
     color_val = Math.sqrt((px - sx)*(px - sx) + (py - sy)*(py - sy)) / max_color_val
-    graphic.stroke(color_machine(p.function_index % 2 == 0? color_val : 1 - color_val).hex())
+    graphic.stroke(color_machines[0](p.function_index % 2 == 0? color_val : 1 - color_val).hex())
     graphic.point(px,py)
   })
   graphic.translate(-(trans_x + offset_x),-(trans_y + offset_y))
@@ -253,7 +261,7 @@ function drawTrigIFS(tile){
     let py = p.y * tile.height / 2
     // color_val = Math.sqrt((px - sx)*(px - sx) + (py - sy)*(py - sy)) / max_color_val
     graphic.strokeWeight(trig_ifs_params.stroke_weight)
-    graphic.stroke(color_machine((1 + Math.sin(p.t)) / 2).hex())
+    graphic.stroke(color_machines[0]((1 + Math.sin(p.t)) / 2).hex())
     graphic.point(px,py)
   })
   graphic.translate(- (tile.width / 2),-(tile.height / 2))
