@@ -49,6 +49,7 @@ function setup_colors(){
 }
 
 function setup_shapes(){
+  // console.log(ShapeTriangle)
   if(params.shape.type == 'rectangle')
     shape_machine = new ShapeRectangle(color_machine);
   if(params.shape.type == 'circle')
@@ -91,6 +92,8 @@ function draw() {
     for(let i = 0; i < grid.length; i++){
       for(let j = 0; j < grid[i].length; j++){
         let tile = grid[i][j];
+        // console.log(grid[i][j])
+
         graphic.translate(tile.width * i,tile.height * j)
 
         if(params.data.generator_type == 'trad_ifs')
@@ -101,6 +104,8 @@ function draw() {
           drawWolfram(tile);
         if(params.data.generator_type == 'ant_colony')
           drawAntColony(tile);
+        if(params.data.generator_type == 'pulley')
+          drawPulley(tile);
         graphic.translate(-tile.width * i,-tile.height * j)
       }
     }
@@ -108,6 +113,37 @@ function draw() {
     draw_index++;
   }
 }  
+
+
+function drawPulley(tile){
+  let sub_step_x = tile.width / pulley_params.grid.width
+  let sub_step_y = tile.height / pulley_params.grid.height
+  let pulley_grid = tile.generator.getGrid()
+  for(let i = 0; i < pulley_params.grid.width; i++){
+    for(let j = 0; j < pulley_params.grid.height; j++){
+      let shape_params = {
+        origin: {
+          x: sub_step_x * i, 
+          y: sub_step_y * j, 
+          cx: sub_step_x * i + (sub_step_x / 2),
+          cy: sub_step_y * j + (sub_step_y / 2)
+        },
+        shape_sizes: pulley_grid[i][j].shape_sizes,
+        tile_width: sub_step_x,
+        tile_height: sub_step_y,
+        subshape_sizes: [1], // not implemented on pulley
+        subshapes: 1,        // not implemented on pulley
+        rotation: {          // not implemented on pulley
+          initial: 0,
+          stack: [0] 
+        },
+        stroke_weight: 10,
+        color_value: pulley_grid[i][j].state,
+      }
+      shape_machine.generateShapeGroup(shape_params,graphic)
+    } 
+  }
+}
 
 function drawAntColony(tile){
   let sub_step_x = tile.width / ant_colony_params.grid.width
@@ -131,7 +167,7 @@ function drawAntColony(tile){
           cx: sub_step_x * i + (sub_step_x / 2),
           cy: sub_step_y * j + (sub_step_y / 2)
         },
-        shape_sizes: [.5],
+        shape_sizes: [1,.5,.3,.25],
         tile_width: sub_step_x,// * shape_size_scaler,// * ant_colony_params['shape_size'][],
         tile_height: sub_step_y,// * shape_size_scaler,
         subshape_sizes: [1],
@@ -141,7 +177,7 @@ function drawAntColony(tile){
         // subshapes: (Math.random() > 0.25) ? 1:2,
         rotation: {
           initial: 0,
-          stack: [0] 
+          stack: [0,45,90] 
         },
         stroke_weight: 0,
          //temporary jus to see output

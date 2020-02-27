@@ -3,11 +3,39 @@
 
 class ShapeCustom {
     constructor(color_machine){
+        // expecting array of color_machines
+        // IN CUSTOM ONLY
         this.color_machine = color_machine;
         console.log('circle_machine')
         this.index = 0;
         this.first = true;
     }
+
+    generateShapeGroup(params,graphic){
+        graphic.angleMode(DEGREES)
+        graphic.strokeWeight(params.stroke_weight)
+        console.log(params)
+        params.shape_sizes.map((size, index)=>{
+            graphic.fill(this.color_machine(1/(index + 1)).hex())
+
+            graphic.circle(
+                params.origin.cx,
+                params.origin.cy,
+                size * params.tile_width / 2)
+        })
+
+        if(false){//debug
+            graphic.stroke('red')
+            graphic.strokeWeight(100)
+            graphic.point(params.origin.x,params.origin.y)
+            graphic.strokeWeight(25)
+            graphic.point(params.origin.cx,params.origin.cy)
+            graphic.strokeWeight(5)
+            graphic.line(0,0,params.tile_width,params.tile_height,)
+        }
+        this.index++;
+    }
+
 
     initTriangleGroup(params){
         this.triangle_count = 3;
@@ -44,26 +72,26 @@ class ShapeCustom {
         console.log('TRIANGLES',this.triangles)
     }
     
-    generateShapeGroup(params,graphic){
-        if(this.first){
-            this.first = false;
-            this.initTriangleGroup(params);
-        }
-        graphic.angleMode(DEGREES)
-        graphic.strokeWeight(params.stroke_weight)
-        this.drawBackground(params,graphic)
-        this.drawTriangleGroup(graphic)
-        if(true){//debug
-            graphic.stroke('red')
-            graphic.strokeWeight(100)
-            graphic.point(params.origin.x,params.origin.y)
-            graphic.strokeWeight(25)
-            graphic.point(params.origin.cx,params.origin.cy)
-            graphic.strokeWeight(5)
-            graphic.line(0,0,params.tile_width,params.tile_height,)
-        }
-        this.index++;
-    }
+    // generateShapeGroup(params,graphic){
+    //     if(this.first){
+    //         this.first = false;
+    //         this.initTriangleGroup(params);
+    //     }
+    //     graphic.angleMode(DEGREES)
+    //     graphic.strokeWeight(params.stroke_weight)
+    //     this.drawBackground(params,graphic)
+    //     this.drawTriangleGroup(graphic)
+    //     if(true){//debug
+    //         graphic.stroke('red')
+    //         graphic.strokeWeight(100)
+    //         graphic.point(params.origin.x,params.origin.y)
+    //         graphic.strokeWeight(25)
+    //         graphic.point(params.origin.cx,params.origin.cy)
+    //         graphic.strokeWeight(5)
+    //         graphic.line(0,0,params.tile_width,params.tile_height,)
+    //     }
+    //     this.index++;
+    // }
 
     generateHexVertices(origin, hex_diameter, v = 12, rotation = 0) {
         let angle = Math.PI * 2 / v

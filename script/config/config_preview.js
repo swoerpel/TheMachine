@@ -35,9 +35,10 @@ var config_preview = {
       margin:{x:0.125, y:0.0625} 
     },
     colors: {
-      background: 'black',
+      background: 'white',
       background_palette: 'binary',
-      points_palette:'spectral',
+      // points_palette:'spectral',
+      points_palette:'binary',
       // points_palette:'random',
       // points_palette:'ylorrd',
       points:'',
@@ -66,6 +67,7 @@ var config_preview = {
       // generator_type: 'trad_ifs',
       generator_type: 'ant_colony',
       // generator_type: 'wolfram',
+      // generator_type: 'pulley',
       filter: 10000000
     }
 }

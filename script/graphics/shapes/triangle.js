@@ -1,12 +1,8 @@
-
-
-
 class ShapeTriangle {
     constructor(color_machine){
         this.color_machine = color_machine;
         console.log('triangle_machine')
     }
-
 
     generateShapeGroup(params,graphic){
         graphic.angleMode(DEGREES)
@@ -56,27 +52,39 @@ class ShapeTriangle {
                 }
             }
         }
-
-
     }
 
     drawTriangle(origin,bound_width, bound_height,rotation){
         let points = [
             {
-                x: origin.cx - bound_width / 2,
-                y: origin.cy - bound_height / 2,
+                x: origin.cx,// - bound_width / 2,
+                y: origin.y,// - bound_height / 2,
             },
             {
-                x: origin.cx + bound_width / 2,
-                y: origin.cy + bound_height / 2
+                x: origin.x + bound_width,
+                y: origin.y + bound_height
             },
             {
-                x: origin.cx - bound_width / 2,
-                y: origin.cy + bound_height / 2
+                x: origin.x,
+                y: origin.y + bound_height
             },
         ]
+        // let points = [
+        //     {
+        //         x: origin.cx - bound_width / 2,
+        //         y: origin.cy - bound_height / 2,
+        //     },
+        //     {
+        //         x: origin.cx + bound_width / 2,
+        //         y: origin.cy + bound_height / 2
+        //     },
+        //     {
+        //         x: origin.cx - bound_width / 2,
+        //         y: origin.cy + bound_height / 2
+        //     },
+        // ]
         points = this.rotatePoints(points,origin,rotation)
-        graphic.fill(this.color_machine()).hex())
+        graphic.fill(this.color_machine(Math.random()).hex())
         graphic.beginShape();
         points.map((p) => {
             graphic.vertex(p.x,p.y)

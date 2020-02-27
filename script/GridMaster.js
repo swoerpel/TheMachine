@@ -52,6 +52,8 @@ class GridMaster {
                     tile.generator = new Wolfram();
                 if(this.params.data.generator_type == 'ant_colony')
                     tile.generator = new AntColony();
+                if(this.params.data.generator_type == 'pulley')
+                    tile.generator = new Pulley();
             });
         });
     }
@@ -66,6 +68,8 @@ class GridMaster {
             this.init_wolfram_params();
         if(this.params.data.generator_type == 'ant_colony')
             this.init_ant_colony_params();
+        if(this.params.data.generator_type == 'pulley')
+            this.init_pulley_params();
     }
 
     init_trad_ifs_params(){
@@ -136,6 +140,14 @@ class GridMaster {
 
 
     init_ant_colony_params(){
+        for(let i = 0; i < this.grid.length; i++){
+            for(let j = 0; j < this.grid[i].length; j++){
+                this.grid[i][j].generator.Initialize()
+            }
+        }
+    }
+    
+    init_pulley_params(){
         for(let i = 0; i < this.grid.length; i++){
             for(let j = 0; j < this.grid[i].length; j++){
                 this.grid[i][j].generator.Initialize()

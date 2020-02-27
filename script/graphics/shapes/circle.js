@@ -22,8 +22,9 @@ class ShapeCircle {
                     cy: params.origin.cy + (sub_tile_height * j) + y_off,
                 }  
                 if(params.subshapes == 1){
-                    params.shape_sizes.map((scaler)=>{
-                        graphic.fill(this.color_machine(Math.random()).hex())
+                    params.shape_sizes.map((scaler,index)=>{
+                        if(index == 0)
+                            graphic.fill(this.color_machine(params.color_value).hex())
                         graphic.circle(sub_origin.cx,sub_origin.cy,sub_tile_width * scaler / 2)
                     })
                 }else{

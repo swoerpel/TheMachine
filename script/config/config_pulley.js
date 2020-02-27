@@ -1,15 +1,15 @@
-var ant_colony_params = {
+var pulley_params = {
     template: 'A',
     grid: {
-        width: 1,
-        height: 1,
+        width: 5,
+        height: 5,
     },
     // color_spread: 7,
     steps_per_update: 1,
     ant_count: 5,
     max_state: 10,
     
-    shape_sizes: [1], // not hooked up currently
+    shape_sizes: [.75], // not hooked up currently
     sub_shape_values: [1],
     sub_shape_sizes: [1],
     rotation: [0],
